@@ -1,16 +1,14 @@
 <?php
 
-use ColdTrick\ElasticSearch\Upgrades\RemoveLogs;
-
-if (!defined('ELASTICSEARCH_INDEXED_NAME')) {
-	define('ELASTICSEARCH_INDEXED_NAME', 'elasticsearch_last_indexed');
+if (!defined('OPENSEARCH_INDEXED_NAME')) {
+	define('OPENSEARCH_INDEXED_NAME', 'opensearch_last_indexed');
 }
 
 require_once(__DIR__ . '/lib/functions.php');
 
 return [
 	'plugin' => [
-		'version' => '7.0',
+		'version' => '1.0-beta.1',
 		'dependencies' => [
 			'search' => [
 				'position' => 'after',
@@ -26,167 +24,164 @@ return [
 		'decay_time_field' => 'time_created',
 	],
 	'actions' => [
-		'elasticsearch/admin_search' => [
+		'opensearch/admin_search' => [
 			'access' => 'admin',
 		],
-		'elasticsearch/admin/index_management' => [
+		'opensearch/admin/index_management' => [
 			'access' => 'admin',
 		],
-		'elasticsearch/admin/reindex' => [
+		'opensearch/admin/reindex' => [
 			'access' => 'admin',
 		],
-		'elasticsearch/admin/reindex_entity' => [
+		'opensearch/admin/reindex_entity' => [
 			'access' => 'admin',
 		],
-		'elasticsearch/admin/delete_entity' => [
+		'opensearch/admin/delete_entity' => [
 			'access' => 'admin',
 		],
 	],
 	'cli_commands' => [
-		\ColdTrick\ElasticSearch\Cli\Sync::class,
+		\ColdTrick\OpenSearch\Cli\Sync::class,
 	],
 	'events' => [
 		'ban' => [
 			'user' => [
-				'\ColdTrick\ElasticSearch\EventDispatcher::banUser' => [],
+				'\ColdTrick\OpenSearch\EventDispatcher::banUser' => [],
 			],
 		],
 		'create' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\EventDispatcher::create' => [],
+				'\ColdTrick\OpenSearch\EventDispatcher::create' => [],
 			],
 		],
 		'delete' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\EventDispatcher::delete' => [],
+				'\ColdTrick\OpenSearch\EventDispatcher::delete' => [],
 			],
 		],
 		'disable' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\EventDispatcher::disable' => [],
+				'\ColdTrick\OpenSearch\EventDispatcher::disable' => [],
 			],
 		],
 		'update' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\EventDispatcher::update' => [],
+				'\ColdTrick\OpenSearch\EventDispatcher::update' => [],
 			],
 		],
 	],
 	'hooks' => [
 		'cron' => [
 			'daily' => [
-				'\ColdTrick\ElasticSearch\Cron::dailyCleanup' => [],
+				'\ColdTrick\OpenSearch\Cron::dailyCleanup' => [],
 			],
 			'minute' => [
-				'\ColdTrick\ElasticSearch\Cron::minuteSync' => [],
+				'\ColdTrick\OpenSearch\Cron::minuteSync' => [],
 			],
 		],
 		'export:counters' => [
-			'elasticsearch' => [
-				'\ColdTrick\ElasticSearch\Export::exportGroupMemberCount' => [],
-				'\ColdTrick\ElasticSearch\Export::exportLikesCount' => [],
-				'\ColdTrick\ElasticSearch\Export::exportCommentsCount' => [],
+			'opensearch' => [
+				'\ColdTrick\OpenSearch\Export::exportGroupMemberCount' => [],
+				'\ColdTrick\OpenSearch\Export::exportLikesCount' => [],
+				'\ColdTrick\OpenSearch\Export::exportCommentsCount' => [],
 			],
 		],
 		'export:metadata_names' => [
-			'elasticsearch' => [
-				'\ColdTrick\ElasticSearch\Export::exportProfileMetadata' => [],
+			'opensearch' => [
+				'\ColdTrick\OpenSearch\Export::exportProfileMetadata' => [],
 			],
 		],
 		'register' => [
 			'menu:entity' => [
-				'\ColdTrick\ElasticSearch\Menus\Entity::inspect' => [],
+				'\ColdTrick\OpenSearch\Menus\Entity::inspect' => [],
 			],
 			'menu:page' => [
-				'\ColdTrick\ElasticSearch\Menus\Page::admin' => [],
+				'\ColdTrick\OpenSearch\Menus\Page::admin' => [],
 			],
 			'menu:search_list' => [
-				'\ColdTrick\ElasticSearch\Menus\SearchList::registerSortMenu' => [],
+				'\ColdTrick\OpenSearch\Menus\SearchList::registerSortMenu' => [],
 			],
 		],
 		'search:params' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchParams' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::searchParams' => [],
 			],
 		],
 		'search:fields' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchFields' => [
+				'\ColdTrick\OpenSearch\SearchHooks::searchFields' => [
 					'priority' => 999,
 				],
-				'\ColdTrick\ElasticSearch\SearchHooks::searchFieldsNameToTitle' => [
+				'\ColdTrick\OpenSearch\SearchHooks::searchFieldsNameToTitle' => [
 					'priority' => 999,
 				],
 			],
 			'group' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::groupSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::groupSearchFields' => [],
 			],
 			'object' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::objectSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::objectSearchFields' => [],
 			],
 			'user' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::userSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::userSearchFields' => [],
 			],
 		],
 		'search:options' => [
 			'all' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchOptions' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::searchOptions' => [],
 			],
 		],
 		'search:results' => [
 			'combined:all' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
 			],
 			'combined:objects' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
 			],
 			'entities' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
 			],
 		],
 		'search_params' => [
-			'elasticsearch' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::filterProfileFields' => [],
-				'\ColdTrick\ElasticSearch\SearchHooks::sortByGroupMembersCount' => [],
+			'opensearch' => [
+				'\ColdTrick\OpenSearch\SearchHooks::filterProfileFields' => [],
+				'\ColdTrick\OpenSearch\SearchHooks::sortByGroupMembersCount' => [],
 			],
 		],
 		'to:entity' => [
-			'elasticsearch' => [
-				'\ColdTrick\ElasticSearch\SearchHooks::sourceToEntity' => [],
+			'opensearch' => [
+				'\ColdTrick\OpenSearch\SearchHooks::sourceToEntity' => [],
 			],
 		],
 		'to:object' => [
 			'entity' => [
-				'\ColdTrick\ElasticSearch\Export::entityToObject' => [],
-				'\ColdTrick\ElasticSearch\Export::entityRelationshipsToObject' => [],
-				'\ColdTrick\ElasticSearch\Export::entityMetadataToObject' => [],
-				'\ColdTrick\ElasticSearch\Export::entityCountersToObject' => [],
-				'\ColdTrick\ElasticSearch\Export::profileTagFieldsToTags' => [],
-				'\ColdTrick\ElasticSearch\Export::stripTags' => [
+				'\ColdTrick\OpenSearch\Export::entityToObject' => [],
+				'\ColdTrick\OpenSearch\Export::entityRelationshipsToObject' => [],
+				'\ColdTrick\OpenSearch\Export::entityMetadataToObject' => [],
+				'\ColdTrick\OpenSearch\Export::entityCountersToObject' => [],
+				'\ColdTrick\OpenSearch\Export::profileTagFieldsToTags' => [],
+				'\ColdTrick\OpenSearch\Export::stripTags' => [
 					'priority' => 9999,
 				],
 			],
 		],
 		'view_vars' => [
 			'object/elements/imprint/contents' => [
-				'\ColdTrick\ElasticSearch\Views::displaySearchScoreInImprint' => [],
+				'\ColdTrick\OpenSearch\Views::displaySearchScoreInImprint' => [],
 			],
 			'resources/livesearch/users' => [
-				'\ColdTrick\ElasticSearch\Views::allowBannedUsers' => [
+				'\ColdTrick\OpenSearch\Views::allowBannedUsers' => [
 					'priority' => 600,
 				],
 			],
 			'search/entity' => [
-				'\ColdTrick\ElasticSearch\Views::preventSearchFieldChanges' => [],
+				'\ColdTrick\OpenSearch\Views::preventSearchFieldChanges' => [],
 			],
 		],
 	],
-	'upgrades' => [
-		RemoveLogs::class,
-	],
 	'view_extensions' => [
 		'admin.css' => [
-			'elasticsearch/admin.css' => [],
+			'opensearch/admin.css' => [],
 		],
 	],
 ];

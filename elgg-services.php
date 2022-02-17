@@ -1,8 +1,8 @@
 <?php
 
-use ColdTrick\ElasticSearch\Di\IndexManagementService;
-use ColdTrick\ElasticSearch\Di\IndexingService;
-use ColdTrick\ElasticSearch\Di\SearchService;
+use ColdTrick\OpenSearch\Di\IndexManagementService;
+use ColdTrick\OpenSearch\Di\IndexingService;
+use ColdTrick\OpenSearch\Di\SearchService;
 
 return [
 	IndexManagementService::name() => DI\create(IndexManagementService::class)

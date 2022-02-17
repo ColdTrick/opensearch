@@ -1,17 +1,17 @@
 {
-	"name": "coldtrick/elasticsearch",
-	"description": "An Elasticsearch implementation for Elgg",
+	"name": "coldtrick/opensearch",
+	"description": "An OpenSearch implementation for Elgg",
 	"homepage": "https://www.coldtrick.com",
 	"type": "elgg-plugin",
-	"keywords": ["elgg", "plugin", "search", "lucene", "elasticsearch"],
+	"keywords": ["elgg", "plugin", "search", "lucene", "opensearch"],
 	"license": "GPL-2.0-only",
 	"support": {
-		"source": "https://github.com/ColdTrick/elasticsearch",
-		"issues": "https://github.com/ColdTrick/elasticsearch/issues"
+		"source": "https://github.com/ColdTrick/opensearch",
+		"issues": "https://github.com/ColdTrick/opensearch/issues"
 	},
 	"require": {
 		"composer/installers": "^1.0.8",
-		"elasticsearch/elasticsearch": "~7.13.0"
+		"opensearch-project/opensearch-php": "~1.0.0"
 	},
 	"require-dev": {
 		"coldtrick/sniffs": "dev-master"

@@ -1,20 +1,20 @@
-# Elasticsearch
+# opensearch
 
 ![Elgg 4.1](https://img.shields.io/badge/Elgg-4.1-green.svg)
-![ElasticSearch 7.4](https://img.shields.io/badge/ElasticSearch-7.4-green.svg)
-[![Build Status](https://scrutinizer-ci.com/g/ColdTrick/elasticsearch/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/elasticsearch/build-status/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ColdTrick/elasticsearch/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/elasticsearch/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/coldtrick/elasticsearch/v/stable.svg)](https://packagist.org/packages/coldtrick/elasticsearch)
-[![License](https://poser.pugx.org/coldtrick/elasticsearch/license.svg)](https://packagist.org/packages/coldtrick/elasticsearch)
+![OpenSearch 1.1](https://img.shields.io/badge/OpenSearch-1.1-green.svg)
+[![Build Status](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/coldtrick/opensearch/v/stable.svg)](https://packagist.org/packages/coldtrick/opensearch)
+[![License](https://poser.pugx.org/coldtrick/opensearch/license.svg)](https://packagist.org/packages/coldtrick/opensearch)
 
-An Elasticsearch implementation for Elgg
+An opensearch implementation for Elgg
 
 ## Requirements
 
-A working [ElasticSearch](https://www.elastic.co/) server is required. Also the minute cron has to be working on your Elgg installation. 
+A working [OpenSearch](https://www.opensearch.org/) server is required. Also the minute cron has to be working on your Elgg installation. 
 The minute cron is used to update the index with all the required changes (create/update/delete).
 
-The current supported version of ElasticSearch is: 7.4.x
+The current supported version of OpenSearch is: 1.1.x
 
 ## Configuration
 
@@ -28,8 +28,8 @@ The plugin settings allow you to configure the following:
 
 ### Index Management
 
-The index management page (found under Administer -> ElasticSearch -> Indices in the admin sidebar) allows you to perform various actions on 
-all the indexes available on the ElastisSearch server. The following actions are supported:
+The index management page (found under Administer -> OpenSearch -> Indices in the admin sidebar) allows you to perform various actions on 
+all the indexes available on the OpenSearch server. The following actions are supported:
 
 - Create: This action can only be performed if the index configured in the plugin settings page is not yet available. 
 It will create the default index configuration to be used for search.
@@ -40,16 +40,16 @@ It will create the default index configuration to be used for search.
 
 ### Log files
 
-Based on the log level of your Elgg site, there will also be logging of the ElasticSearch PHP client library. 
+Based on the log level of your Elgg site, there will also be logging of the OpenSearch PHP client library. 
 Logging will appear in the same location as all other Elgg logs.
 
 ### Statistics
 
-You can find various statistics on the Administer -> ElasticSearch -> Statistics page. Elgg statistics report on the amount of 
+You can find various statistics on the Administer -> OpenSearch -> Statistics page. Elgg statistics report on the amount of 
 entities found in the Elgg database that should be in the index. It also reports on the amount of entities that need to be 
 added/updated/deleted in the index and that are currently waiting on the minute cron to process them.
 
-Also some statistics from the Elastic Cluster are shown like the status and the version information.
+Also some statistics from the OpenSearch Cluster are shown like the status and the version information.
 
 You can also find statistics for all available indexes on this page.
 
@@ -57,9 +57,9 @@ You can also find statistics for all available indexes on this page.
 
 CLI commands are available to be used with the default `elgg-cli` command
 
-#### elasticsearch:sync
+#### opensearch:sync
 
-This command will synchronize all pending entities to the Elasticsearch index. This is especialy usefull during the reindexing 
+This command will synchronize all pending entities to the OpenSearch index. This is especialy usefull during the reindexing 
 process of the database because a lot of entities need to be indexed. Using the normal cron task in this case could take a long time.
 
 ## Recommendations
@@ -71,9 +71,9 @@ plugin provides a menu to sort/order the results.
 
 ### Plugin hooks
 
-#### 'boostable_types', 'elasticsearch'
+#### 'boostable_types', 'opensearch'
 
-Return an array of type.subtype to be used for configuaring boosting in Elasticsearch.
+Return an array of type.subtype to be used for configuaring boosting in OpenSearch.
 
 In the format:
 ```php
@@ -82,19 +82,19 @@ In the format:
 ]
 ```
 
-Defaults to the registered searchable type/subtypes for Elasticsearch.
+Defaults to the registered searchable type/subtypes for OpenSearch.
 
-#### 'config:index', 'elasticsearch'
+#### 'config:index', 'opensearch'
 
-Return an array with the index configuration to be used by Elasticsearch.
+Return an array with the index configuration to be used by OpenSearch.
 
-#### 'config:mapping', 'elasticsearch'
+#### 'config:mapping', 'opensearch'
 
-Return an array with the mapping configuration to be used by Elasticsearch.
+Return an array with the mapping configuration to be used by OpenSearch.
 
-#### 'export:counters', 'elasticsearch'
+#### 'export:counters', 'opensearch'
 
-Return an array of counters to be exported to Elasticsearch. 
+Return an array of counters to be exported to OpenSearch. 
 
 In the format:
 ```php
@@ -106,16 +106,16 @@ In the format:
 Params contain:
 - `entity`: the `ElggEntity` being exported
 
-#### 'export:metadata_names', 'elasticsearch'
+#### 'export:metadata_names', 'opensearch'
 
-Return an array of metadata names to be exported to Elasticsearch.
+Return an array of metadata names to be exported to OpenSearch.
 
 Params contain:
 - `entity`: the `ElggEntity` being exported
 
-#### 'index_entity_type_subtypes', 'elasticsearch'
+#### 'index_entity_type_subtypes', 'opensearch'
 
-Return an array of type/subtypes allowed to be indexed by Elasticsearch.
+Return an array of type/subtypes allowed to be indexed by OpenSearch.
 
 In the format:
 ```php
@@ -126,16 +126,16 @@ In the format:
 
 Defaults to all registered searchable type/subtypes in Elgg.
 
-#### 'index:entity:prevent', 'elasticsearch'
+#### 'index:entity:prevent', 'opensearch'
 
-Return `true` if the provided entity shouldn't be added to the Elasticsearch index
+Return `true` if the provided entity shouldn't be added to the OpenSearch index
 
 Params contain:
 - `entity`: the `ElggEntity` about to be indexed
 
 Default: `false`
 
-#### 'index:entity:type', 'elasticsearch'
+#### 'index:entity:type', 'opensearch'
 
 Return a string under which type/subtype the entity should be indexed. This is used for type filtering during the search (eg. all blogs)
 
@@ -145,13 +145,13 @@ Params contain:
 
 Default: `{entity_type}.{entity_subtype}` (eg. `object.blog`)
 
-#### 'params', 'elasticsearch'
+#### 'params', 'opensearch'
 
-Return an array of parameters to be using in initializing the `\ColdTrick\ElasticSearch\Client` Elasticsearch client.
+Return an array of parameters to be using in initializing the `\ColdTrick\OpenSearch\Client` OpenSearch client.
 
 #### 'search', 'type_subtype_pairs'
 
-Return an array of type/subtypes allowed to be searched by Elasticsearch.
+Return an array of type/subtypes allowed to be searched by OpenSearch.
 
 In the format:
 ```php
@@ -162,35 +162,35 @@ In the format:
 
 Defaults to all registered searchable type/subtypes in Elgg.
 
-#### 'search_params', 'elasticsearch'
+#### 'search_params', 'opensearch'
 
-Return an `\ColdTrick\ElasticSearch\Di\SearchService` to be used for the search. This allows you to alter the search parameters 
-in Elasticsearch.
+Return an `\ColdTrick\OpenSearch\Di\SearchService` to be used for the search. This allows you to alter the search parameters 
+in opensearch.
 
 Params contain:
 - `search_params`: an array of the search parameters as provided by Elgg search
 
-#### 'to:entity:before', 'elasticsearch'
+#### 'to:entity:before', 'opensearch'
 
-Change the Elasticsearch hit data before it's converted to an `ElggEntity`
+Change the OpenSearch hit data before it's converted to an `ElggEntity`
 
 Params contain:
-- `hit`: the result from Elasticsearch
+- `hit`: the result from OpenSearch
 - `search_params`: an array of the search parameters as provided by Elgg search
 
-#### 'to:entity', 'elasticsearch'
+#### 'to:entity', 'opensearch'
 
-Return an `ElggEntity` based on the search result data from Elasticsearch.
+Return an `ElggEntity` based on the search result data from OpenSearch.
 
 Params contain:
-- `hit`: the result from Elasticsearch
+- `hit`: the result from OpenSearch
 - `search_params`: an array of the search parameters as provided by Elgg search
 
 ### Parameters passed to `elgg_search`
 
 #### field_boosting
 
-In the parameters passed to `elgg_search` you can add a configuration to control field boosting in Elasticsearch. Add the key
+In the parameters passed to `elgg_search` you can add a configuration to control field boosting in OpenSearch. Add the key
 `field_boosting` to the array which holds an array with fieldname and the boosting for that field.
 
 Example:

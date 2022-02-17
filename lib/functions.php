@@ -8,11 +8,11 @@ use Elgg\Database\Select;
 use Elgg\Values;
 
 /**
- * Get the type/subtypes to index in ElasticSearch
+ * Get the type/subtypes to index in OpenSearch
  *
  *  @return false|array
  */
-function elasticsearch_get_registered_entity_types() {
+function opensearch_get_registered_entity_types() {
 	
 	$type_subtypes = elgg_entity_types_with_capability('searchable');
 	foreach ($type_subtypes as $type => $subtypes) {
@@ -22,15 +22,15 @@ function elasticsearch_get_registered_entity_types() {
 		}
 	}
 	
-	return elgg_trigger_plugin_hook('index_entity_type_subtypes', 'elasticsearch', $type_subtypes, $type_subtypes);
+	return elgg_trigger_plugin_hook('index_entity_type_subtypes', 'opensearch', $type_subtypes, $type_subtypes);
 }
 
 /**
- * Get the type/subtypes for search in ElasticSearch
+ * Get the type/subtypes for search in OpenSearch
  *
  *  @return false|array
  */
-function elasticsearch_get_registered_entity_types_for_search() {
+function opensearch_get_registered_entity_types_for_search() {
 
 	$type_subtypes = elgg_entity_types_with_capability('searchable');
 	foreach ($type_subtypes as $type => $subtypes) {
@@ -44,12 +44,12 @@ function elasticsearch_get_registered_entity_types_for_search() {
 }
 
 /**
- * Returns the boostable types for ElasticSearch
+ * Returns the boostable types for OpenSearch
  *
  *  @return array
  */
-function elasticsearch_get_types_for_boosting() {
-	$type_subtypes = elasticsearch_get_registered_entity_types_for_search();
+function opensearch_get_types_for_boosting() {
+	$type_subtypes = opensearch_get_registered_entity_types_for_search();
 	
 	$result = [];
 	foreach ($type_subtypes as $type => $subtypes) {
@@ -63,19 +63,19 @@ function elasticsearch_get_types_for_boosting() {
 		}
 	}
 	
-	return elgg_trigger_plugin_hook('boostable_types', 'elasticsearch', $result, $result);
+	return elgg_trigger_plugin_hook('boostable_types', 'opensearch', $result, $result);
 }
 
 /**
- * Get the $options for elgg_get_entities in order to update the ElasticSearch index
+ * Get the $options for elgg_get_entities in order to update the OpenSearch index
  *
  * @param string $type which options to get
  *
  * @return false|array
  */
-function elasticsearch_get_bulk_options($type = 'no_index_ts') {
+function opensearch_get_bulk_options($type = 'no_index_ts') {
 	
-	$type_subtypes = elasticsearch_get_registered_entity_types();
+	$type_subtypes = opensearch_get_registered_entity_types();
 	if (empty($type_subtypes)) {
 		return false;
 	}
@@ -96,7 +96,7 @@ function elasticsearch_get_bulk_options($type = 'no_index_ts') {
 					function (QueryBuilder $qb, $main_alias) {
 						$select = Select::fromTable('private_settings', 'ps');
 						$select->select('ps.entity_guid')
-							->where($qb->compare('ps.name', '=', ELASTICSEARCH_INDEXED_NAME, ELGG_VALUE_STRING));
+							->where($qb->compare('ps.name', '=', OPENSEARCH_INDEXED_NAME, ELGG_VALUE_STRING));
 						
 						return $qb->compare("{$main_alias}.guid", 'NOT IN', $select->getSQL());
 					},
@@ -116,7 +116,7 @@ function elasticsearch_get_bulk_options($type = 'no_index_ts') {
 			break;
 		case 'reindex':
 			// a reindex has been initiated, so update all out of date entities
-			$setting = (int) elgg_get_plugin_setting('reindex_ts', 'elasticsearch');
+			$setting = (int) elgg_get_plugin_setting('reindex_ts', 'opensearch');
 			if ($setting < 1) {
 				return false;
 			}
@@ -124,12 +124,12 @@ function elasticsearch_get_bulk_options($type = 'no_index_ts') {
 			return  array_merge($defaults, [
 				'private_setting_name_value_pairs' => [
 					[
-						'name' => ELASTICSEARCH_INDEXED_NAME,
+						'name' => OPENSEARCH_INDEXED_NAME,
 						'value' => $setting,
 						'operand' => '<'
 					],
 					[
-						'name' => ELASTICSEARCH_INDEXED_NAME,
+						'name' => OPENSEARCH_INDEXED_NAME,
 						'value' => 0,
 						'operand' => '>'
 					],
@@ -142,7 +142,7 @@ function elasticsearch_get_bulk_options($type = 'no_index_ts') {
 			return  array_merge($defaults, [
 				'private_setting_name_value_pairs' => [
 					[
-						'name' => ELASTICSEARCH_INDEXED_NAME,
+						'name' => OPENSEARCH_INDEXED_NAME,
 						'value' => 0,
 					],
 				],
@@ -163,21 +163,21 @@ function elasticsearch_get_bulk_options($type = 'no_index_ts') {
 }
 
 /**
- * Saves an array of documents to be deleted from the elastic index
+ * Saves an array of documents to be deleted from the OpenSearch index
  *
  * @param int   $guid guid of the document to be deleted
  * @param array $info an array of information needed to be saved to be able to delete it from the index
  *
  * @return void
  */
-function elasticsearch_add_document_for_deletion($guid, $info) {
+function opensearch_add_document_for_deletion($guid, $info) {
 	
 	$guid = (int) $guid;
 	if ($guid < 1 || !is_array($info)) {
 		return;
 	}
 	
-	$plugin = elgg_get_plugin_from_id('elasticsearch');
+	$plugin = elgg_get_plugin_from_id('opensearch');
 	
 	$fh = new ElggFile();
 	$fh->owner_guid = $plugin->guid;
@@ -199,14 +199,14 @@ function elasticsearch_add_document_for_deletion($guid, $info) {
  *
  * @return void
  */
-function elasticsearch_remove_document_for_deletion($guid) {
+function opensearch_remove_document_for_deletion($guid) {
 	
 	$guid = (int) $guid;
 	if ($guid < 1) {
 		return;
 	}
 	
-	$plugin = elgg_get_plugin_from_id('elasticsearch');
+	$plugin = elgg_get_plugin_from_id('opensearch');
 	
 	$fh = new ElggFile();
 	$fh->owner_guid = $plugin->guid;
@@ -221,18 +221,18 @@ function elasticsearch_remove_document_for_deletion($guid) {
 	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES, function() use ($guid) {
 		$entity = get_entity($guid);
 		if ($entity instanceof ElggEntity) {
-			$entity->removePrivateSetting(ELASTICSEARCH_INDEXED_NAME);
+			$entity->removePrivateSetting(opensearch_INDEXED_NAME);
 		}
 	});
 }
 
 /**
- * Returns an array of documents to be deleted from the elastic index
+ * Returns an array of documents to be deleted from the OpenSearch index
  *
  * @return array
  */
-function elasticsearch_get_documents_for_deletion() {
-	$plugin = elgg_get_plugin_from_id('elasticsearch');
+function opensearch_get_documents_for_deletion() {
+	$plugin = elgg_get_plugin_from_id('opensearch');
 	
 	$locator = new \Elgg\EntityDirLocator($plugin->guid);
 	$documents_path = elgg_get_data_path() . $locator->getPath() . 'documents_for_deletion/';
@@ -286,14 +286,14 @@ function elasticsearch_get_documents_for_deletion() {
  *
  * @return void
  */
-function elasticsearch_reschedule_document_for_deletion($guid) {
+function opensearch_reschedule_document_for_deletion($guid) {
 	
 	$guid = (int) $guid;
 	if ($guid < 1) {
 		return;
 	}
 	
-	$plugin = elgg_get_plugin_from_id('elasticsearch');
+	$plugin = elgg_get_plugin_from_id('opensearch');
 	
 	$fh = new ElggFile();
 	$fh->owner_guid = $plugin->guid;
@@ -328,12 +328,12 @@ function elasticsearch_reschedule_document_for_deletion($guid) {
  * @param mixed $key                      the key to present
  * @param array $merged_values            the base array to show from
  * @param array $elgg_values              the Elgg values
- * @param array $elasticsearch_values the Elasticsearch values
+ * @param array $opensearch_values the opensearch values
  * @param int   $depth                    internal usage only
  *
  * @return false|array
  */
-function elasticsearch_inspect_show_values($key, $merged_values, $elgg_values, $elasticsearch_values, int $depth = 0) {
+function opensearch_inspect_show_values($key, $merged_values, $elgg_values, $opensearch_values, int $depth = 0) {
 	
 	if (empty($merged_values) || !is_array($merged_values)) {
 		return false;
@@ -348,7 +348,7 @@ function elasticsearch_inspect_show_values($key, $merged_values, $elgg_values, $
 	
 	foreach ($merged_values as $key => $values) {
 		if (is_array($values)) {
-			$subvalues = elasticsearch_inspect_show_values($key, $values, elgg_extract($key, $elgg_values), elgg_extract($key, $elasticsearch_values), $depth + 1);
+			$subvalues = opensearch_inspect_show_values($key, $values, elgg_extract($key, $elgg_values), elgg_extract($key, $opensearch_values), $depth + 1);
 			if (empty($subvalues)) {
 				continue;
 			}
@@ -361,7 +361,7 @@ function elasticsearch_inspect_show_values($key, $merged_values, $elgg_values, $
 		if (is_array($elgg_value)) {
 			$elgg_value = implode(', ', $elgg_value);
 		}
-		$es_value = elgg_extract($key, $elasticsearch_values);
+		$es_value = elgg_extract($key, $opensearch_values);
 		$class = [];
 		if ($elgg_value != $es_value) {
 			$class[] = 'elgg-state';

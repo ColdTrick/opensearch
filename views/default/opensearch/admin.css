@@ -1,0 +1,12 @@
+.opensearch-inspect-table {
+	tr {
+		th:first-child,
+		td:first-child {
+			white-space: nowrap;
+		}
+	}
+	
+	th {
+		font-weight: bold;
+	}
+}
