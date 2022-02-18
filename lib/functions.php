@@ -6,6 +6,7 @@
 use Elgg\Database\QueryBuilder;
 use Elgg\Database\Select;
 use Elgg\Values;
+use ColdTrick\OpenSearch\Di\DeleteQueue;
 
 /**
  * Get the type/subtypes to index in OpenSearch
@@ -165,62 +166,54 @@ function opensearch_get_bulk_options($type = 'no_index_ts') {
 /**
  * Saves an array of documents to be deleted from the OpenSearch index
  *
- * @param int   $guid guid of the document to be deleted
- * @param array $info an array of information needed to be saved to be able to delete it from the index
+ * @param int   $guid        GUID of the document to be deleted
+ * @param array $info        an array of information needed to be saved to be able to delete it from the index
+ * @param mixed $time_offset time offset to set the document in the delete queue (default: null)
  *
  * @return void
  */
-function opensearch_add_document_for_deletion($guid, $info) {
-	
-	$guid = (int) $guid;
-	if ($guid < 1 || !is_array($info)) {
+function opensearch_add_document_for_deletion(int $guid, array $info, $time_offset = null): void {
+	try {
+		$queue = DeleteQueue::instance();
+	} catch (\Exception $e) {
+		elgg_log($e, 'WARNING');
 		return;
 	}
 	
-	$plugin = elgg_get_plugin_from_id('opensearch');
+	if (isset($time_offset)) {
+		$current_time = $queue->getCurrentTime();
+		$date = Values::normalizeTime($time_offset);
+		$queue->setCurrentTime($date);
+	}
 	
-	$fh = new ElggFile();
-	$fh->owner_guid = $plugin->guid;
-	$fh->setFilename("documents_for_deletion/{$guid}");
+	try {
+		$queue->enqueue([
+			'guid' => $guid,
+			'info' => $info,
+		]);
+	} catch (\Exception $e) {
+		// just to make sure we can reset the time
+	}
 	
-	// set a timestamp for deletion
-	$info['time'] = time();
-	
-	if ($fh->open('write')) {
-		$fh->write(serialize($info));
-		$fh->close();
+	if (isset($time_offset)) {
+		// reset to previous time
+		$queue->setCurrentTime($current_time);
 	}
 }
 
 /**
- * Removes a file based on a guid
+ * Check if a deleted GUID from the OpenSearch index exists in Elgg and reset the indexing flag
  *
- * @param int $guid guid of the document to be deleted
+ * @param int $guid GUID of the entity which was removed
  *
  * @return void
  */
-function opensearch_remove_document_for_deletion($guid) {
-	
-	$guid = (int) $guid;
-	if ($guid < 1) {
-		return;
-	}
-	
-	$plugin = elgg_get_plugin_from_id('opensearch');
-	
-	$fh = new ElggFile();
-	$fh->owner_guid = $plugin->guid;
-	$fh->setFilename("documents_for_deletion/{$guid}");
-	
-	if ($fh->exists()) {
-		$fh->delete();
-	}
-	
+function opensearch_remove_document_for_deletion(int $guid): void {
 	// check if the entity still exists in Elgg (could be unregistered as searchable)
 	// and remove indexing timestamp so it can be reindexed when needed
 	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES, function() use ($guid) {
 		$entity = get_entity($guid);
-		if ($entity instanceof ElggEntity) {
+		if ($entity instanceof \ElggEntity) {
 			$entity->removePrivateSetting(opensearch_INDEXED_NAME);
 		}
 	});
@@ -231,95 +224,31 @@ function opensearch_remove_document_for_deletion($guid) {
  *
  * @return array
  */
-function opensearch_get_documents_for_deletion() {
-	$plugin = elgg_get_plugin_from_id('opensearch');
-	
-	$locator = new \Elgg\EntityDirLocator($plugin->guid);
-	$documents_path = elgg_get_data_path() . $locator->getPath() . 'documents_for_deletion/';
-	
-	if (!is_dir($documents_path)) {
-		return [];
-	}
-	
+function opensearch_get_documents_for_deletion(): array {
 	try {
-		$dir = new DirectoryIterator($documents_path);
-	} catch (Exception $e) {
-		elgg_log($e->getMessage(), 'WARNING');
+		$queue = DeleteQueue::instance();
+	} catch (\Exception $e) {
+		elgg_log($e, 'WARNING');
 		return [];
 	}
 	
-	$documents = [];
-	/* @var $fileinfo SplFileInfo */
-	foreach ($dir as $fileinfo) {
-		if (!$fileinfo->isFile() || !$fileinfo->isReadable()) {
+	$documents = $queue->dequeue();
+	if (empty($documents)) {
+		return [];
+	}
+	
+	$result = [];
+	foreach ($documents as $document) {
+		$guid = elgg_extract('guid', $document);
+		$info = elgg_extract('info', $document);
+		if (empty($guid) || empty($info)) {
 			continue;
 		}
 		
-		$contents = file_get_contents($fileinfo->getRealPath());
-		if (empty($contents)) {
-			continue;
-		}
-		
-		$contents = unserialize($contents);
-		if (!is_array($contents)) {
-			continue;
-		}
-		
-		$deletion_time = elgg_extract('time', $contents);
-		if (!empty($deletion_time) && $deletion_time > time()) {
-			// not yet scheduled for deletion, (only if deletion failed once before)
-			continue;
-		}
-		
-		unset($contents['time']);
-		
-		$documents[$fileinfo->getFilename()] = $contents;
+		$result[$guid] = $info;
 	}
 	
-	return $documents;
-}
-
-/**
- * Reschedule a document for deletion, because something failed
- *
- * @param int $guid the document to be rescheduled
- *
- * @return void
- */
-function opensearch_reschedule_document_for_deletion($guid) {
-	
-	$guid = (int) $guid;
-	if ($guid < 1) {
-		return;
-	}
-	
-	$plugin = elgg_get_plugin_from_id('opensearch');
-	
-	$fh = new ElggFile();
-	$fh->owner_guid = $plugin->guid;
-	$fh->setFilename("documents_for_deletion/{$guid}");
-	
-	if (!$fh->exists()) {
-		// shouldn't happen
-		return;
-	}
-	
-	$contents = $fh->grabFile();
-	if (empty($contents)) {
-		return;
-	}
-	
-	$contents = unserialize($contents);
-	if (!is_array($contents)) {
-		return;
-	}
-	
-	// try again in an hour
-	$contents['time'] = Values::normalizeTimestamp('+1 hour');
-	
-	$fh->open('write');
-	$fh->write(serialize($contents));
-	$fh->close();
+	return $result;
 }
 
 /**

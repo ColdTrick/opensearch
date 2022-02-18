@@ -103,40 +103,44 @@ class IndexingService extends BaseClientService {
 			return true;
 		}
 		
-		$params = [
-			'body' => [],
-		];
-		foreach ($documents as $document) {
-			$params['body'][] = ['delete' => $document];
-		}
-		
-		try {
-			$result = $this->getClient()->bulk($params);
-			if (empty($result)) {
+		while (!empty($documents)) {
+			$params = [
+				'body' => [],
+			];
+			foreach ($documents as $document) {
+				$params['body'][] = ['delete' => $document];
+			}
+			
+			try {
+				$result = $this->getClient()->bulk($params);
+				if (empty($result)) {
+					return false;
+				}
+				
+				$items = elgg_extract('items', $result);
+				foreach ($items as $action) {
+					
+					$status = elgg_extract('status', $action['delete']);
+					$guid = (int) elgg_extract('_id', $action['delete']);
+					
+					if ($status === 200 || $status === 404) {
+						// document was removed
+						opensearch_remove_document_for_deletion($guid);
+					} else {
+						// some error occured, reschedule delete
+						opensearch_add_document_for_deletion($guid, $documents[$guid], '+1 hour');
+					}
+				}
+			} catch (OpenSearchException $e) {
+				$this->logger->error($e);
 				return false;
 			}
 			
-			$items = elgg_extract('items', $result);
-			foreach ($items as $action) {
-				
-				$status = elgg_extract('status', $action['delete']);
-				$guid = (int) elgg_extract('_id', $action['delete']);
-				
-				if ($status === 200 || $status === 404) {
-					// document was removed
-					opensearch_remove_document_for_deletion($guid);
-				} else {
-					// some error occured, reschedule delete
-					opensearch_reschedule_document_for_deletion($guid);
-				}
-			}
-			
-			return true;
-		} catch (OpenSearchException $e) {
-			$this->logger->error($e);
+			// get next batch
+			$documents = opensearch_get_documents_for_deletion();
 		}
 		
-		return false;
+		return true;
 	}
 	
 	/**

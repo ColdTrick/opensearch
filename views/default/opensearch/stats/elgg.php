@@ -1,5 +1,7 @@
 <?php
 
+use ColdTrick\OpenSearch\Di\DeleteQueue;
+
 $content = '<table class="elgg-table">';
 
 // sync enabled
@@ -72,7 +74,13 @@ $content .= '</td>';
 $content .= "<td>{$count}</td>";
 $content .= '</tr>';
 
-$count = count(opensearch_get_documents_for_deletion());
+$count = 0;
+try {
+	$count = DeleteQueue::instance()->size();
+} catch (\Exception $e) {
+	// something went wrong
+	$count = elgg_echo('unknown');
+}
 
 $content .= '<tr>';
 $content .= '<td>' . elgg_echo('opensearch:stats:elgg:delete') . '</td>';
