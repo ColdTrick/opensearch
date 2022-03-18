@@ -96,7 +96,12 @@ class SearchHooks {
 		}
 		
 		$query = elgg_extract('query', $search_params);
-		$query = filter_var($query, FILTER_SANITIZE_STRING);
+		
+		// this is the replacement for the deprecated PHP 8.1 filter_var($query, FILTER_SANITIZE_STRING);
+		$query = elgg_strip_tags($query);
+		$query = filter_var($query, FILTER_SANITIZE_SPECIAL_CHARS);
+		$query = str_replace('&#38;', '&', $query);
+		
 		$query = trim($query);
 		$query = rtrim($query, '*');
 		
