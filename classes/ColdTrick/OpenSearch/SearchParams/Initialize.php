@@ -411,7 +411,7 @@ trait Initialize {
 		}
 		
 		$access_filter = [];
-		$access_filter[]['terms']['access_id'] = $access_ids;
+		$access_filter['terms']['access_id'] = $access_ids;
 		
 		$filter = [];
 		$filter['bool']['must'][] = $access_filter;
