@@ -214,7 +214,7 @@ function opensearch_remove_document_for_deletion(int $guid): void {
 	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES, function() use ($guid) {
 		$entity = get_entity($guid);
 		if ($entity instanceof \ElggEntity) {
-			$entity->removePrivateSetting(opensearch_INDEXED_NAME);
+			$entity->removePrivateSetting(OPENSEARCH_INDEXED_NAME);
 		}
 	});
 }
