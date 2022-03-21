@@ -25,7 +25,7 @@ class Sync extends Command {
 		
 		if (!$service->isClientReady()) {
 			$this->error(elgg_echo('opensearch:cli:error:client'));
-			return 1;
+			return self::FAILURE;
 		}
 		
 		// log helper
@@ -61,6 +61,6 @@ class Sync extends Command {
 			$write($action, $result);
 		}
 		
-		return 0;
+		return self::SUCCESS;
 	}
 }
