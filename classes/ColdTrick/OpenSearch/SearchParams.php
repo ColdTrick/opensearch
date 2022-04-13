@@ -536,6 +536,18 @@ class SearchParams {
 					'suggest_mode' => 'popular',
 				],
 			],
+			'size' => 1,
+			'collate' => [
+				'query' => [
+					'source' => [
+						'simple_query_string' => [
+							'fields' => ['title'],
+							'query' => '{{suggestion}}',
+							'default_operator' => 'AND',
+						],
+					],
+				],
+			],
 		];
 	}
 }

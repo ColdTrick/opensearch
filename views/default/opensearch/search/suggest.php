@@ -45,4 +45,4 @@ $url = elgg_view('output/url', [
 
 $query = elgg_format_element('i', [], $query);
 
-echo elgg_echo('opensearch:suggest', [$url, $query]);
+echo elgg_format_element('div', ['class' => ['pbm', 'opensearch-suggestion']], elgg_echo('opensearch:suggest', [$url, $query]));
