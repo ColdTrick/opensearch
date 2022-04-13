@@ -183,5 +183,8 @@ return [
 		'admin.css' => [
 			'opensearch/admin.css' => [],
 		],
+		'forms/search' => [
+			'opensearch/search/suggest' => [],
+		],
 	],
 ];

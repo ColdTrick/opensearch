@@ -163,4 +163,5 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:action:admin:delete_entity:success' => "The entity is scheduled for deletion from the index",
 	
 	'opensearch:search_score' => "Score: %s",
+	'opensearch:suggest' => "Did you mean %s instead of %s?",
 );

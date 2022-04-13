@@ -138,4 +138,5 @@ Meer informatie over content type boosting kun je kijken op de OpenSearch docume
   'opensearch:action:admin:index_management:add_mappings' => 'Mappings voor de index \'%s\' zijn aangemaakt',
   'opensearch:action:admin:index_management:add_alias' => 'De alias \'%s\' is toegevoegd aan de index \'%s\'',
   'opensearch:action:admin:index_management:delete_alias' => 'De alias \'%s\' is verwijderd van de index \'%s\'',
+  'opensearch:suggest' => "Bedoelde je %s in plaats van %s?",
 );

@@ -88,6 +88,15 @@ class SearchResult {
 	}
 	
 	/**
+	 * Get search suggestions
+	 *
+	 * @return array
+	 */
+	public function getSuggestions(): array {
+		return elgg_extract('suggest', $this->result, []);
+	}
+	
+	/**
 	 * Convert search results to entities
 	 *
 	 * @param array $params additional params

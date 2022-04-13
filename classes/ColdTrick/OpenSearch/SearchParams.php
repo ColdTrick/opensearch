@@ -97,6 +97,12 @@ class SearchParams {
 				$result['body']['sort'] = $this->getParam('sort');
 			}
 			
+			// suggestion
+			if (!empty($this->getParam('suggest')) && ($this->service->getSuggestions() == null)) {
+				// only fetch suggestion once
+				$result['body']['suggest'] = $this->getParam('suggest');
+			}
+			
 			// highlighting
 			if (!empty($this->getParam('highlight'))) {
 				$result['body']['highlight'] = $this->getParam('highlight');
@@ -506,5 +512,30 @@ class SearchParams {
 	 */
 	public function getAggregation() {
 		return $this->getParam('aggregation');
+	}
+	
+	/**
+	 * Set suggestion params for search
+	 *
+	 * @param string $query search query
+	 *
+	 * @return void
+	 */
+	public function setSuggestion(string $query = null): void {
+		if (empty($query)) {
+			unset($this->params['suggest']);
+			return;
+		}
+		
+		$this->params['suggest']['text'] = $query;
+		$this->params['suggest']['suggestions']['phrase'] = [
+			'field' => 'title',
+			'direct_generator' => [
+				[
+					'field' => 'title',
+					'suggest_mode' => 'popular',
+				],
+			],
+		];
 	}
 }
