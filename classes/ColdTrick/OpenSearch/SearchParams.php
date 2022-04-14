@@ -529,10 +529,10 @@ class SearchParams {
 		
 		$this->params['suggest']['text'] = $query;
 		$this->params['suggest']['suggestions']['phrase'] = [
-			'field' => 'title',
+			'field' => 'title.suggestion',
 			'direct_generator' => [
 				[
-					'field' => 'title',
+					'field' => 'title.suggestion',
 					'suggest_mode' => 'popular',
 				],
 			],
@@ -541,7 +541,7 @@ class SearchParams {
 				'query' => [
 					'source' => [
 						'simple_query_string' => [
-							'fields' => ['title'],
+							'fields' => ['title.suggestion'],
 							'query' => '{{suggestion}}',
 							'default_operator' => 'AND',
 						],

@@ -375,26 +375,42 @@ class IndexManagementService extends BaseClientService {
 					],
 				],
 				'properties' => [
-					'name' => [
-						'type' => 'text',
-						'copy_to' => 'title'
-					],
 					'description' => [
-						'type' => 'text'
+						'type' => 'text',
 					],
-					'relationships' => [
-						'type' => 'nested',
+					'indexed_type' => [
+						'type' => 'keyword',
 					],
 					'metadata' => [
 						'type' => 'nested',
 						'include_in_parent' => true,
 					],
+					'name' => [
+						'type' => 'text',
+						'copy_to' => 'title',
+					],
+					'relationships' => [
+						'type' => 'nested',
+					],
 					'tags' => [
 						'type' => 'text',
 						'analyzer' => 'case_insensitive_sort',
 					],
-					'indexed_type' => [
-						'type' => 'keyword',
+					'title' => [
+						'type' => 'text',
+						'analyzer' => 'default',
+						'fields' => [
+							'raw' => [
+								'type' => 'keyword',
+								'normalizer' => 'case_insensitive',
+							],
+							// this field is used for suggestions, make sure it's present in custom mappings
+							// you can change the analyzer to what you want
+							'suggestion' => [
+								'type' => 'text',
+								'analyzer' => 'default',
+							],
+						],
 					],
 				],
 			],
