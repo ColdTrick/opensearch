@@ -1,6 +1,11 @@
 Version history
 ===============
 
+1.1 (2022-04-20):
+
+- added: search suggestions
+- added: suggestion mappings
+
 1.0 (2022-03-30):
 
 - initial release
