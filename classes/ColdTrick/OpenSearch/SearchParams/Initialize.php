@@ -27,6 +27,7 @@ trait Initialize {
 		$this->setLimit(elgg_extract('limit', $search_params, elgg_get_config('default_limit')));
 		
 		$this->initializeQuery($search_params);
+		$this->initializeGUID($search_params);
 		$this->initializeContainerGUID($search_params);
 		$this->initializeOwnerGUID($search_params);
 		$this->initializeSorting($search_params);
@@ -177,6 +178,29 @@ trait Initialize {
 	}
 	
 	/**
+	 * Apply guid filter
+	 *
+	 * @param array $search_params search params as used by elgg_search()
+	 *
+	 * @return void
+	 */
+	protected function initializeGUID(array $search_params = []) {
+		
+		$guid = (array) elgg_extract('guids', $search_params, []);
+		$guid = array_filter(array_map(function ($v) {
+			return (int) $v;
+		}, $guid));
+		
+		if (empty($guid)) {
+			return;
+		}
+		
+		$guid_filter = [];
+		$guid_filter['bool']['must'][]['terms']['guid'] = $guid;
+		$this->addFilter($guid_filter);
+	}
+	
+	/**
 	 * Apply container_guid filter
 	 *
 	 * @param array $search_params search params as used by elgg_search()
@@ -189,6 +213,7 @@ trait Initialize {
 		$container_guid = array_filter(array_map(function ($v) {
 			return (int) $v;
 		}, $container_guid));
+		
 		if (empty($container_guid)) {
 			return;
 		}
@@ -211,6 +236,7 @@ trait Initialize {
 		$owner_guid = array_filter(array_map(function ($v) {
 			return (int) $v;
 		}, $owner_guid));
+		
 		if (empty($owner_guid)) {
 			return;
 		}
