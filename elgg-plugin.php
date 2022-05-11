@@ -8,7 +8,7 @@ require_once(__DIR__ . '/lib/functions.php');
 
 return [
 	'plugin' => [
-		'version' => '1.1',
+		'version' => '1.2',
 		'dependencies' => [
 			'search' => [
 				'position' => 'after',

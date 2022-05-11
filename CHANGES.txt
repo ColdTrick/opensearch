@@ -1,6 +1,10 @@
 Version history
 ===============
 
+1.2 (2022-05-11):
+
+- added: passing guids to elgg_search
+
 1.1 (2022-04-20):
 
 - added: search suggestions
