@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66a97ea7d9eea2dc69652ebebb3db49d",
+    "content-hash": "8d0f228cce6989577d855ca2e9ffc418",
     "packages": [
         {
             "name": "composer/installers",
@@ -269,16 +269,16 @@
         },
         {
             "name": "opensearch-project/opensearch-php",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opensearch-project/opensearch-php.git",
-                "reference": "d6345b5715e35cf9b14cca15cea277d2f877c742"
+                "reference": "d54af5ff2167bee3eb68d02e210283314ef74712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opensearch-project/opensearch-php/zipball/d6345b5715e35cf9b14cca15cea277d2f877c742",
-                "reference": "d6345b5715e35cf9b14cca15cea277d2f877c742",
+                "url": "https://api.github.com/repos/opensearch-project/opensearch-php/zipball/d54af5ff2167bee3eb68d02e210283314ef74712",
+                "reference": "d54af5ff2167bee3eb68d02e210283314ef74712",
                 "shasum": ""
             },
             "require": {
@@ -327,9 +327,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opensearch-project/opensearch-php/issues",
-                "source": "https://github.com/opensearch-project/opensearch-php/tree/1.0.1"
+                "source": "https://github.com/opensearch-project/opensearch-php/tree/1.0.2"
             },
-            "time": "2022-02-01T05:34:22+00:00"
+            "time": "2022-02-08T08:37:31+00:00"
         },
         {
             "name": "psr/log",
@@ -566,5 +566,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -1,6 +1,6 @@
 # opensearch
 
-![Elgg 4.1](https://img.shields.io/badge/Elgg-4.1-green.svg)
+![Elgg 4.2](https://img.shields.io/badge/Elgg-4.2-green.svg)
 ![OpenSearch 1.1](https://img.shields.io/badge/OpenSearch-1.1-green.svg)
 [![Build Status](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/?branch=master)
