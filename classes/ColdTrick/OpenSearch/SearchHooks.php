@@ -692,7 +692,7 @@ class SearchHooks {
 		$row->enabled = 'yes';
 	
 		try {
-			return entity_row_to_elggstar($row);
+			return _elgg_services()->entityTable->rowToElggStar($row);
 		} catch (\Exception $e) {
 			elgg_log($e->getMessage(), 'NOTICE');
 		}
