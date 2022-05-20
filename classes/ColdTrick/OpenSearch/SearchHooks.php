@@ -553,14 +553,10 @@ class SearchHooks {
 	protected static function detectUnsupportedSearchParams(array $params) {
 		
 		$keys = [
-			'joins',
 			'metadata_name_value_pair',
 			'metadata_name_value_pairs',
-			'order_by',
-			'order_by_metadata',
 			'relationship',
 			'relationship_guid',
-			'wheres',
 		];
 		
 		foreach ($keys as $key) {
