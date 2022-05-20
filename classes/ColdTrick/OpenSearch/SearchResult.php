@@ -14,7 +14,13 @@ class SearchResult {
 	 */
 	protected $search_params;
 	
-	public function __construct($result = [], $search_params) {
+	/**
+	 * Create a new SearchResults helper
+	 *
+	 * @param array $result        results from OpenSearch
+	 * @param array $search_params original search params
+	 */
+	public function __construct(array $result, array $search_params) {
 		$this->result = $result;
 		$this->search_params = $search_params;
 	}
