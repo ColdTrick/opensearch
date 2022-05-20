@@ -98,9 +98,6 @@ return [
 			'menu:page' => [
 				'\ColdTrick\OpenSearch\Menus\Page::admin' => [],
 			],
-			'menu:search_list' => [
-				'\ColdTrick\OpenSearch\Menus\SearchList::registerSortMenu' => [],
-			],
 		],
 		'search:params' => [
 			'all' => [
