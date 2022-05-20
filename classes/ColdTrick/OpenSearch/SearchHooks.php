@@ -31,6 +31,7 @@ class SearchHooks {
 		
 		self::transformSearchParamFields($search_params);
 		self::transformSearchParamQueryInLivesearch($search_params);
+		self::transformSearchParamSorting($search_params);
 		
 		return $search_params;
 	}
@@ -106,6 +107,46 @@ class SearchHooks {
 		$query = rtrim($query, '*');
 		
 		$search_params['query'] = "{$query}|{$query}*";
+	}
+	
+	/**
+	 * Transform sort options to the correct sort_by options
+	 *
+	 * @param array $search_params the search params
+	 *
+	 * @return void
+	 */
+	protected static function transformSearchParamSorting(array &$search_params) {
+		$sort = elgg_extract('sort', $search_params, 'relevance');
+		if ($sort === 'time_created' && !get_input('sort')) {
+			// default sorting by Elgg is time_created
+			$sort = 'relevance';
+		}
+		
+		$sort_by = elgg_extract('sort_by', $search_params, []);
+		if (isset($sort_by['property_type'])) {
+			$sort_by = [$sort_by];
+		}
+		
+		switch ($sort) {
+			case 'relevance':
+				$sort_by = []; // ignore previously set sorts
+				$sort_by[] = [
+					'property_type' => 'score',
+					'property' => '_score',
+					'direction' => elgg_extract('order', $search_params, 'desc'),
+				];
+				$sort_by[] = [
+					'property_type' => 'attribute',
+					'property' => 'time_created',
+					'direction' => 'desc',
+				];
+				$sort = null;
+				break;
+		}
+		
+		$search_params['sort'] = $sort;
+		$search_params['sort_by'] = $sort_by;
 	}
 	
 	/**

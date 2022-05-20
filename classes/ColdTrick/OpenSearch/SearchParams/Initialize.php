@@ -255,55 +255,65 @@ trait Initialize {
 	 */
 	protected function initializeSorting(array $search_params = []) {
 		
-		$sort = elgg_extract('sort', $search_params, 'relevance');
-		$order = elgg_extract('order', $search_params, 'desc');
-		$sort_field = false;
-		
-		switch ($sort) {
-			case 'newest':
-				$sort_field = 'time_created';
-				$order = 'desc';
-				break;
-			case 'oldest':
-				$sort_field = 'time_created';
-				$order = 'asc';
-				break;
-			case 'alpha_az':
-				$sort_field = 'title.raw';
-				$order = 'asc';
-				break;
-			case 'alpha_za':
-				$sort_field = 'title.raw';
-				$order = 'desc';
-				break;
-			case 'alpha':
-				$sort_field = 'title.raw';
-				break;
-			case 'relevance':
-				// if there is no specific sorting requested, sort by score
-				// in case of identical score, sort by time created (newest first)
-			
-				$this->addSort('_score', []);
-				$sort_field = 'time_created';
-				$sort = 'desc';
-				break;
-			// support default elgg sort fields
-			case 'time_created':
-			case 'time_updated':
-			case 'last_action':
-				$sort_field = $sort;
-				break;
-			case 'name':
-				$sort_field = 'title.raw';
-				break;
+		$sort_by = elgg_extract('sort_by', $search_params, []);
+		if (isset($sort_by['property_type'])) {
+			$sort_by = [$sort_by];
 		}
 		
-		if (!empty($sort_field)) {
-			$this->addSort($sort_field, [
-				'order' => $order,
-				'unmapped_type' => 'long',
-				'missing' => '_last',
-			]);
+		foreach ($sort_by as $clause) {
+			$property_type = elgg_extract('property_type', $clause);
+			$property = elgg_extract('property', $clause);
+			$direction = elgg_extract('direction', $clause, 'desc');
+			
+			switch ($property_type) {
+				case 'attribute':
+					$this->addSort($property, [
+						'order' => $direction,
+						'unmapped_type' => 'long',
+						'missing' => '_last',
+					]);
+					break;
+				case 'metadata':
+					if (in_array($property, ['name', 'title'])) {
+						$this->addSort('title.raw', [
+							'order' => $direction,
+							'unmapped_type' => 'long',
+							'missing' => '_last',
+						]);
+					} elseif (in_array($property, ['description', 'tags'])) {
+						$this->addSort($property, [
+							'order' => $direction,
+							'unmapped_type' => 'long',
+							'missing' => '_last',
+						]);
+					} else {
+						$this->addSort("metadata.{$property}", [
+							'order' => $direction,
+							'unmapped_type' => 'long',
+							'missing' => '_last',
+						]);
+					}
+					
+					break;
+				case 'private_setting':
+				case 'annotation':
+				case 'relationship':
+					// not supported yet
+					break;
+				case 'score':
+					$this->addSort($property, [
+						'order' => $direction,
+					]);
+					break;
+				case 'counter':
+				case 'counters':
+					$this->addSort("counters.{$property}", [
+						'order' => $direction,
+						'unmapped_type' => 'long',
+						'missing' => '_last',
+					]);
+					break;
+			}
 		}
 	}
 	
