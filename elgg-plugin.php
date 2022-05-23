@@ -160,6 +160,9 @@ return [
 					'priority' => 600,
 				],
 			],
+			'resources/search/index' => [
+				'\ColdTrick\OpenSearch\Views::setDefaultSearchSorting' => [],
+			],
 			'search/entity' => [
 				'\ColdTrick\OpenSearch\Views::preventSearchFieldChanges' => [],
 			],

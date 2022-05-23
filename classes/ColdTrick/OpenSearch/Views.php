@@ -83,4 +83,22 @@ class Views {
 		
 		return $vars;
 	}
+	
+	/**
+	 * Set the default sorting on the search result page to 'relevance'
+	 *
+	 * @param \Elgg\Hook $hook 'view_vars', 'resources/search/index'
+	 *
+	 * @return void
+	 */
+	public static function setDefaultSearchSorting(\Elgg\Hook $hook): void {
+		$sort = get_input('sort');
+		$sort_by = get_input('sort_by');
+		
+		if (!empty($sort) || !empty($sort_by)) {
+			return;
+		}
+		
+		set_input('sort', 'relevance');
+	}
 }

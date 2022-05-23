@@ -117,15 +117,15 @@ class SearchHooks {
 	 * @return void
 	 */
 	protected static function transformSearchParamSorting(array &$search_params) {
-		$sort = elgg_extract('sort', $search_params, 'relevance');
-		if ($sort === 'time_created' && !get_input('sort')) {
-			// default sorting by Elgg is time_created
-			$sort = 'relevance';
-		}
-		
+		$sort = elgg_extract('sort', $search_params);
 		$sort_by = elgg_extract('sort_by', $search_params, []);
 		if (isset($sort_by['property_type'])) {
 			$sort_by = [$sort_by];
+		}
+		
+		if (empty($sort) && empty($sort_by)) {
+			// default to relevance
+			$sort = 'relevance';
 		}
 		
 		switch ($sort) {
