@@ -134,6 +134,11 @@ return [
 				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
 			],
 		],
+		'search_params' => [
+			'opensearch' => [
+				'\ColdTrick\OpenSearch\SearchHooks::filterProfileFields' => [],
+			],
+		],
 		'to:entity' => [
 			'opensearch' => [
 				'\ColdTrick\OpenSearch\SearchHooks::sourceToEntity' => [],
