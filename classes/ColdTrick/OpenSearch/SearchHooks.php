@@ -143,40 +143,24 @@ class SearchHooks {
 				];
 				$sort = null;
 				break;
+			case 'member_count':
+				$sort_by = []; // ignore previously set sorts
+				$sort_by[] = [
+					'property_type' => 'counter',
+					'property' => $sort,
+					'direction' => elgg_extract('order', $search_params, 'desc'),
+				];
+				$sort_by[] = [
+					'property_type' => 'score',
+					'property' => '_score',
+					'direction' => 'desc',
+				];
+				$sort = null;
+				break;
 		}
 		
 		$search_params['sort'] = $sort;
 		$search_params['sort_by'] = $sort_by;
-	}
-	
-	/**
-	 * Set some search options before doing actual search
-	 *
-	 * @param \Elgg\Hook $hook 'search:options', 'all'
-	 *
-	 * @return void|array
-	 */
-	public static function searchOptions(\Elgg\Hook $hook) {
-		
-		if (!self::handleSearch()) {
-			return;
-		}
-		
-		$return = $hook->getValue();
-		if (elgg_extract('_opensearch_supported', $return) === false) {
-			return;
-		}
-		
-		$sort = elgg_extract('sort', $return, 'relevance');
-		if ($sort === 'time_created' && !get_input('sort')) {
-			// default sorting by Elgg is time_created
-			$sort = 'relevance';
-		}
-		
-		$return['sort'] = $sort;
-		$return['order'] = elgg_extract('order', $return, 'desc');
-		
-		return $return;
 	}
 	
 	/**
@@ -662,38 +646,6 @@ class SearchHooks {
 		$service->getSearchParams()->addQuery($queries);
 		
 		return $service;
-	}
-		
-	/**
-	 * Hook to add profile field filters to search
-	 *
-	 * @param \Elgg\Hook $hook 'search_params', 'opensearch'
-	 *
-	 * @return void|SearchService
-	 */
-	public static function sortByGroupMembersCount(\Elgg\Hook $hook) {
-		
-		$search_params = $hook->getParam('search_params');
-		
-		$sort = elgg_extract('sort', $search_params);
-		$order = elgg_extract('order', $search_params, 'desc');
-		if ($sort !== 'member_count') {
-			return;
-		}
-		
-		$sort_config = [
-			'order' => $order,
-			'missing' => '_last',
-			'unmapped_type' => 'long',
-		];
-		
-		/* @var $return SearchService */
-		$return = $hook->getValue();
-		
-		$return->getSearchParams()->addSort('counters.member_count', $sort_config);
-		$return->getSearchParams()->addSort('_score');
-		
-		return $return;
 	}
 	
 	/**

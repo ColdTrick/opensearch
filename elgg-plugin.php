@@ -123,11 +123,6 @@ return [
 				'\ColdTrick\OpenSearch\SearchHooks::userSearchFields' => [],
 			],
 		],
-		'search:options' => [
-			'all' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchOptions' => [],
-			],
-		],
 		'search:results' => [
 			'combined:all' => [
 				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
@@ -137,12 +132,6 @@ return [
 			],
 			'entities' => [
 				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
-			],
-		],
-		'search_params' => [
-			'opensearch' => [
-				'\ColdTrick\OpenSearch\SearchHooks::filterProfileFields' => [],
-				'\ColdTrick\OpenSearch\SearchHooks::sortByGroupMembersCount' => [],
 			],
 		],
 		'to:entity' => [
