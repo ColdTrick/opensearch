@@ -265,6 +265,10 @@ trait Initialize {
 			$property = elgg_extract('property', $clause);
 			$direction = elgg_extract('direction', $clause, 'desc');
 			
+			if (!isset($property_type)) {
+				$property_type = in_array($property, \ElggEntity::PRIMARY_ATTR_NAMES) ? 'attribute' : 'metadata';
+			}
+			
 			switch ($property_type) {
 				case 'attribute':
 					$this->addSort($property, [
