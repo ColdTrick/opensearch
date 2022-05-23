@@ -256,7 +256,7 @@ trait Initialize {
 	protected function initializeSorting(array $search_params = []) {
 		
 		$sort_by = elgg_extract('sort_by', $search_params, []);
-		if (isset($sort_by['property_type'])) {
+		if (isset($sort_by['property'])) {
 			$sort_by = [$sort_by];
 		}
 		
