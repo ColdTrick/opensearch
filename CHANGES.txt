@@ -1,6 +1,13 @@
 Version history
 ===============
 
+2.0 (2022-06-01):
+
+- changed: increased minimal Elgg version to 4.2
+- changed: sort handling
+- fixed: default sorting by relevance
+- removed: unused menu hook
+
 1.2 (2022-05-11):
 
 - added: passing guids to elgg_search
