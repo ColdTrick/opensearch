@@ -7,32 +7,32 @@ class Views {
 	/**
 	 * Display the search score in the search results
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'object/elements/imprint/contents'
+	 * @param \Elgg\Hook $hook 'view_vars', 'object|user/elements/imprint/contents'
 	 *
 	 * @return void|array
 	 */
 	public static function displaySearchScoreInImprint(\Elgg\Hook $hook) {
 		
-		if (!elgg_is_admin_logged_in() || elgg_get_plugin_setting('search_score', 'opensearch') !== 'yes') {
+		$vars = $hook->getValue();
+		
+		if (!(bool) elgg_extract('show_search_score', $vars, false)) {
 			return;
 		}
 		
-		$result = $hook->getValue();
-		
-		$entity = elgg_extract('entity', $result);
+		$entity = elgg_extract('entity', $vars);
 		if (!$entity instanceof \ElggEntity || !$entity->getVolatileData('search_score')) {
 			return;
 		}
 		
-		$imprint = elgg_extract('imprint', $result, []);
+		$imprint = elgg_extract('imprint', $vars, []);
 		$imprint['opensearch_score'] = [
 			'icon_name' => 'search',
 			'content' => elgg_echo('opensearch:search_score', [$entity->getVolatileData('search_score')]),
 		];
 		
-		$result['imprint'] = $imprint;
+		$vars['imprint'] = $imprint;
 		
-		return $result;
+		return $vars;
 	}
 	
 	/**
@@ -80,6 +80,25 @@ class Views {
 		unset($search_params['fields']['attributes']);
 		
 		$vars['params'] = $search_params;
+		
+		return $vars;
+	}
+	
+	/**
+	 * Enable search score presentation (for admins when enabled)
+	 *
+	 * @param \Elgg\Hook $hook 'view_vars', 'search/entity'
+	 *
+	 * @return void|array
+	 */
+	public static function enableSearchScorePresentation(\Elgg\Hook $hook) {
+		
+		if (!elgg_is_admin_logged_in() || elgg_get_plugin_setting('search_score', 'opensearch') !== 'yes') {
+			return;
+		}
+		
+		$vars = $hook->getValue();
+		$vars['show_search_score'] = true;
 		
 		return $vars;
 	}

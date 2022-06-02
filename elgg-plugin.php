@@ -170,6 +170,10 @@ return [
 			],
 			'search/entity' => [
 				'\ColdTrick\OpenSearch\Views::preventSearchFieldChanges' => [],
+				'\ColdTrick\OpenSearch\Views::enableSearchScorePresentation' => [],
+			],
+			'user/elements/imprint/contents' => [
+				'\ColdTrick\OpenSearch\Views::displaySearchScoreInImprint' => [],
 			],
 		],
 	],
