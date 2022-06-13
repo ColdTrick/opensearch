@@ -273,7 +273,7 @@ trait Initialize {
 				case 'attribute':
 					$this->addSort($property, [
 						'order' => $direction,
-						'unmapped_type' => 'long',
+						'unmapped_type' => elgg_extract('unmapped_type', $clause, 'long'),
 						'missing' => '_last',
 					]);
 					break;
@@ -281,19 +281,19 @@ trait Initialize {
 					if (in_array($property, ['name', 'title'])) {
 						$this->addSort('title.raw', [
 							'order' => $direction,
-							'unmapped_type' => 'long',
+							'unmapped_type' => 'keyword',
 							'missing' => '_last',
 						]);
 					} elseif (in_array($property, ['description', 'tags'])) {
 						$this->addSort($property, [
 							'order' => $direction,
-							'unmapped_type' => 'long',
+							'unmapped_type' => $property === 'description' ? 'string' : 'keyword',
 							'missing' => '_last',
 						]);
 					} else {
 						$this->addSort("metadata.{$property}", [
 							'order' => $direction,
-							'unmapped_type' => 'long',
+							'unmapped_type' => elgg_extract('unmapped_type', $clause, 'long'),
 							'missing' => '_last',
 						]);
 					}
