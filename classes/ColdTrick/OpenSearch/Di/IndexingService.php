@@ -79,7 +79,7 @@ class IndexingService extends BaseClientService {
 		
 		try {
 			return $this->getClient()->bulk($params);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		

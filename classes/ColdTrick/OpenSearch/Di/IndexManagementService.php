@@ -27,7 +27,7 @@ class IndexManagementService extends BaseClientService {
 			$status = $this->getClient()->indices()->stats();
 			
 			return elgg_extract('indices', $status, false);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -46,7 +46,7 @@ class IndexManagementService extends BaseClientService {
 		
 		try {
 			return $this->getClient()->info();
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -69,7 +69,7 @@ class IndexManagementService extends BaseClientService {
 			return $this->getClient()->indices()->exists([
 				'index' => $index,
 			]);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -94,7 +94,7 @@ class IndexManagementService extends BaseClientService {
 				'index' => $index,
 				'name' => $alias,
 			]);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -120,7 +120,7 @@ class IndexManagementService extends BaseClientService {
 				'name' => $alias,
 			]);
 			return elgg_extract('acknowledged', $response, false);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -146,7 +146,7 @@ class IndexManagementService extends BaseClientService {
 			
 			$aliases = elgg_extract('aliases', elgg_extract($index, $response, []), []);
 			return array_keys($aliases);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -172,7 +172,7 @@ class IndexManagementService extends BaseClientService {
 				'name' => $alias,
 			]);
 			return elgg_extract('acknowledged', $response, false);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -198,7 +198,7 @@ class IndexManagementService extends BaseClientService {
 			
 			$failed_shards = elgg_extract('failed', elgg_extract('_shards', $response, []), 0);
 			return empty($failed_shards);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -222,7 +222,7 @@ class IndexManagementService extends BaseClientService {
 				'index' => $index,
 			]);
 			return elgg_extract('acknowledged', $response, false);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -246,7 +246,7 @@ class IndexManagementService extends BaseClientService {
 		try {
 			$response = $this->getClient()->indices()->create($config);
 			return elgg_extract('acknowledged', $response, false);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
@@ -269,7 +269,7 @@ class IndexManagementService extends BaseClientService {
 		
 		try {
 			return $this->getClient()->indices()->putMapping($config);
-		} catch (opensearchException $e) {
+		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
 		
