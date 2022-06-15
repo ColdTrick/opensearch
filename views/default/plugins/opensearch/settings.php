@@ -1,5 +1,7 @@
 <?php
 
+use Elgg\Database\DbConfig;
+
 /* @var $plugin \ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
@@ -39,10 +41,11 @@ $host .= elgg_view_field([
 	'always_empty' => false,
 ]);
 
+$db_config = _elgg_services()->dbConfig->getConnectionConfig();
 $host .= elgg_view_field([
 	'#type' => 'text',
 	'#label' => elgg_echo('opensearch:settings:index'),
-	'#help' => elgg_echo('opensearch:settings:index:help', [elgg_get_config('dbname')]),
+	'#help' => elgg_echo('opensearch:settings:index:help', [elgg_extract('database', $db_config)]),
 	'name' => 'params[index]',
 	'value' => $plugin->index,
 ]);
