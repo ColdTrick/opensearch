@@ -33,6 +33,7 @@ echo '</tr>';
 echo '</thead>';
 
 // begin content
+ksort($indices);
 $rows = [];
 foreach ($indices as $name => $status) {
 	$cells = [];

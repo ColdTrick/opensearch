@@ -18,6 +18,7 @@ if (empty($stats)) {
 	return;
 }
 
+ksort($stats);
 foreach ($stats as $index => $index_stats) {
 	
 	$content = '<thead>';
