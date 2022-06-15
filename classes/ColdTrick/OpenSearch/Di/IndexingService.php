@@ -64,7 +64,7 @@ class IndexingService extends BaseClientService {
 			// Set basic entity information for indexing
 			$params['body'][] = [
 				'index' => [
-					'_index' => $this->getIndex(),
+					'_index' => $this->getWriteAlias(),
 					'_id' => $entity->guid,
 				],
 			];

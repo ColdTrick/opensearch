@@ -15,8 +15,9 @@ if (!$service->ping()) {
 	return;
 }
 
-$elgg_index = elgg_get_plugin_setting('index', 'opensearch');
+$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
 $search_alias = elgg_get_plugin_setting('search_alias', 'opensearch');
+$elgg_index = $service->getElggIndex($index_prefix);
 $elgg_index_found = false;
 
 $indices = $service->getIndexStatus();
@@ -58,6 +59,13 @@ foreach ($indices as $name => $status) {
 	}
 	
 	if (!empty($aliases)) {
+		$aliases = array_map(function($value) use ($index_prefix) {
+			if (in_array($value, ["{$index_prefix}_read", "{$index_prefix}_write"])) {
+				$value = elgg_format_element('strong', [], $value);
+			}
+			
+			return $value;
+		}, $aliases);
 		$output_name .= ' [' . elgg_echo('opensearch:indices:aliases') . ': ' . implode(', ', $aliases) . ']';
 	}
 	
@@ -134,7 +142,7 @@ if (!$elgg_index_found) {
 		'text' => elgg_echo('create'),
 		'href' => elgg_generate_action_url('opensearch/admin/index_management', [
 			'task' => 'create',
-			'index' => $elgg_index,
+			'index' => $index_prefix,
 		]),
 		'link_class' => 'elgg-button elgg-button-action',
 		'confirm' => true,

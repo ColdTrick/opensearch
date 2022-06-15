@@ -43,7 +43,7 @@ class SearchParams {
 		$result = [];
 		
 		// index
-		$index = $this->service->getIndex();
+		$index = $this->service->getReadAlias();
 		if (!empty($this->getParam('index'))) {
 			$index = $this->getParam('index');
 			$result['index'] = $index;

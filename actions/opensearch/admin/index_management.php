@@ -28,12 +28,27 @@ switch ($task) {
 		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:delete', [$index]));
 	case 'create':
+		$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
 		
 		if ($exists) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create:exists', [$index]));
 		}
 		
+		// only allow the creation of the Elgg index
+		if ($index !== $index_prefix) {
+			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:task', [$task]));
+		}
+		
+		$index = $index . '_' . time();
 		if (!$service->create($index)) {
+			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create', [$index]));
+		}
+		
+		// add read/write aliases
+		if (!$service->addAlias($index, "{$index_prefix}_read")) {
+			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create', [$index]));
+		}
+		if (!$service->addAlias($index, "{$index_prefix}_write")) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create', [$index]));
 		}
 		

@@ -57,6 +57,12 @@ You can also find statistics for all available indexes on this page.
 
 CLI commands are available to be used with the default `elgg-cli` command
 
+#### opensearch:rebuild
+
+This command will rebuild the current OpenSearch index with new configuration and/or mappings. This only works when there is an active
+index.
+Only use this command when a change was made to the index configuration and/or mappings.
+
 #### opensearch:sync
 
 This command will synchronize all pending entities to the OpenSearch index. This is especialy usefull during the reindexing 

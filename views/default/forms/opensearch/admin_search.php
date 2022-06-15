@@ -31,7 +31,7 @@ echo elgg_view_field([
 	'#type' => 'select',
 	'name' => 'index',
 	'options' => $indices,
-	'value' => $index_client->getIndex(),
+	'value' => $index_client->getReadAlias(),
 ]);
 
 $footer = elgg_view_field([

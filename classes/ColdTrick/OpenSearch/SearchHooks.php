@@ -660,8 +660,8 @@ class SearchHooks {
 		$hit = $hook->getParam('hit');
 		$index = elgg_extract('_index', $hit);
 		
-		$elgg_index = elgg_get_plugin_setting('index', 'opensearch');
-		if ($index !== $elgg_index) {
+		$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
+		if (!preg_match("/^{$index_prefix}_[0-9]+$/", $index)) {
 			return;
 		}
 		

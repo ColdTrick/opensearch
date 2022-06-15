@@ -41,6 +41,7 @@ return [
 		],
 	],
 	'cli_commands' => [
+		\ColdTrick\OpenSearch\Cli\Rebuild::class,
 		\ColdTrick\OpenSearch\Cli\Sync::class,
 	],
 	'events' => [
@@ -176,6 +177,9 @@ return [
 				'\ColdTrick\OpenSearch\Views::displaySearchScoreInImprint' => [],
 			],
 		],
+	],
+	'upgrades' => [
+		\ColdTrick\OpenSearch\Upgrades\AddIndexAliases::class,
 	],
 	'view_extensions' => [
 		'admin.css' => [

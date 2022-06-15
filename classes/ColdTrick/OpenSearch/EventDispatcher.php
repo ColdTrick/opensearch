@@ -2,6 +2,8 @@
 
 namespace ColdTrick\OpenSearch;
 
+use ColdTrick\OpenSearch\Di\IndexingService;
+
 class EventDispatcher {
 	
 	/**
@@ -175,13 +177,13 @@ class EventDispatcher {
 			return;
 		}
 		
-		$index = elgg_get_plugin_setting('index', 'opensearch');
-		if (empty($index)) {
+		$service = IndexingService::instance();
+		if ($service->isClientReady()) {
 			return;
 		}
 		
 		opensearch_add_document_for_deletion($entity->guid, [
-			'_index' => $index,
+			'_index' => $service->getWriteAlias(),
 			'_id' => $entity->guid,
 		]);
 	}

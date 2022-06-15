@@ -31,8 +31,8 @@ class Cron {
 		$max_run_time = 30;
 		
 		// delete first
-		echo "Starting opensearch indexing: delete" . PHP_EOL;
-		elgg_log("Starting opensearch indexing: delete", 'NOTICE');
+		echo "Starting OpenSearch indexing: delete" . PHP_EOL;
+		elgg_log("Starting OpenSearch indexing: delete", 'NOTICE');
 		
 		$service->bulkDeleteDocuments();
 		
@@ -40,8 +40,8 @@ class Cron {
 		foreach (IndexingService::INDEXING_TYPES as $action) {
 			$batch_starttime = time();
 			
-			echo "Starting opensearch indexing: {$action}" . PHP_EOL;
-			elgg_log("Starting opensearch indexing: {$action}", 'NOTICE');
+			echo "Starting OpenSearch indexing: {$action}" . PHP_EOL;
+			elgg_log("Starting OpenSearch indexing: {$action}", 'NOTICE');
 			
 			$service->bulkIndexDocuments([
 				'type' => $action,
@@ -54,8 +54,8 @@ class Cron {
 			}
 		}
 		
-		echo 'Done with opensearch indexing' . PHP_EOL;
-		elgg_log('Done with opensearch indexing', 'NOTICE');
+		echo 'Done with OpenSearch indexing' . PHP_EOL;
+		elgg_log('Done with OpenSearch indexing', 'NOTICE');
 	}
 	
 	/**
@@ -77,28 +77,28 @@ class Cron {
 			return;
 		}
 		
-		echo 'Starting opensearch cleanup: ES' . PHP_EOL;
-		elgg_log('Starting opensearch cleanup: ES', 'NOTICE');
+		echo 'Starting OpenSearch cleanup: ES' . PHP_EOL;
+		elgg_log('Starting OpenSearch cleanup: ES', 'NOTICE');
 		
 		// find documents in ES which don't exist in Elgg anymore
-		self::cleanupopensearch();
+		self::cleanupOpenSearch();
 		
-		echo 'Starting opensearch cleanup: Elgg' . PHP_EOL;
-		elgg_log('Starting opensearch cleanup: Elgg', 'NOTICE');
+		echo 'Starting OpenSearch cleanup: Elgg' . PHP_EOL;
+		elgg_log('Starting OpenSearch cleanup: Elgg', 'NOTICE');
 		
 		// find entities in Elgg which should be in ES but aren't
 		self::checkElggIndex();
 		
-		echo 'Done with opensearch cleanup' . PHP_EOL;
-		elgg_log('Done with opensearch cleanup', 'NOTICE');
+		echo 'Done with OpenSearch cleanup' . PHP_EOL;
+		elgg_log('Done with OpenSearch cleanup', 'NOTICE');
 	}
 	
 	/**
-	 * Find documents in opensearch which don't exist in Elgg anymore
+	 * Find documents in OpenSearch which don't exist in Elgg anymore
 	 *
 	 * @return void
 	 */
-	protected static function cleanupopensearch() {
+	protected static function cleanupOpenSearch() {
 		
 		$service = SearchService::instance();
 		if (!$service->isClientReady()) {
@@ -110,7 +110,7 @@ class Cron {
 		
 		// prepare a search for all documents
 		$search_params = [
-			'index' => $service->getIndex(),
+			'index' => $service->getWriteAlias(),
 			'scroll' => '2m',
 			'body' => [
 				'query' => [
@@ -183,11 +183,11 @@ class Cron {
 					// remove all left over documents
 					foreach ($guids_not_in_elgg as $guid) {
 						
-						// need to get the hist from opensearch to get the type, since it's not in Elgg anymore
+						// need to get the hist from OpenSearch to get the type, since it's not in Elgg anymore
 						$hit = $search_result->getHit($guid);
 						
 						opensearch_add_document_for_deletion($guid, [
-							'_index' => $service->getIndex(),
+							'_index' => $service->getWriteAlias(),
 							'_type' => elgg_extract('_type', $hit),
 							'_id' => $guid,
 						]);
@@ -196,7 +196,7 @@ class Cron {
 			});
 		} catch (OpenSearchException $e) {
 			// probably reached the end of the scroll
-			// elgg_log('opensearch cleanup: ' . $e->getMessage(), 'ERROR');
+			// elgg_log('OpenSearch cleanup: ' . $e->getMessage(), 'ERROR');
 		}
 		
 		// clear scroll
@@ -208,7 +208,7 @@ class Cron {
 	}
 	
 	/**
-	 * Find entities in Elgg which aren't in opensearch but should be
+	 * Find entities in Elgg which aren't in OpenSearch but should be
 	 *
 	 * @return void
 	 */
@@ -275,7 +275,7 @@ class Cron {
 	}
 	
 	/**
-	 * Find Elgg GUIDs not present in opensearch
+	 * Find Elgg GUIDs not present in OpenSearch
 	 *
 	 * @param int[] $guids Elgg GUIDs
 	 *
@@ -293,7 +293,7 @@ class Cron {
 		}
 		
 		$search_params = [
-			'index' => $service->getIndex(),
+			'index' => $service->getWriteAlias(),
 			'size' => count($guids),
 			'body' => [
 				'query' => [

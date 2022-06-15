@@ -1,20 +1,39 @@
 <?php
 
 return array(
+	// admin sections
 	'admin:opensearch' => "OpenSearch",
 	'admin:opensearch:statistics' => "Statistics",
 	'admin:opensearch:search' => "Search",
 	'admin:opensearch:indices' => "Indices",
 	'admin:opensearch:inspect' => "Inspect",
 	
+	// upgrades
+	'opensearch:upgrade:2022061500:title' => "Add OpneSearch index aliases",
+	'opensearch:upgrade:2022061500:description' => "Due to some changes in the working of the plugin the OpenSearch index needs some additional aliases. This upgrade will add those to the index.",
+	
+	// menus
 	'opensearch:menu:entity:inspect' => "Inspect in OpenSearch",
 	
+	'opensearch:menu:search_list:sort:title' => "Change the sort order of the results",
+	'opensearch:menu:search_list:sort:relevance' => "Relevance",
+	'opensearch:menu:search_list:sort:alpha_az' => "Alphabetical (A-Z)",
+	'opensearch:menu:search_list:sort:alpha_za' => "Alphabetical (Z-A)",
+	'opensearch:menu:search_list:sort:newest' => "Newest first",
+	'opensearch:menu:search_list:sort:oldest' => "Oldest first",
+	'opensearch:menu:search_list:sort:member_count' => "Member count",
+	
+	// generic
 	'opensearch:index_management:exception:config:index' => "The hook 'config:index', 'opensearch' should return an array for the index configuration",
 	'opensearch:index_management:exception:config:mapping' => "The hook 'config:mapping', 'opensearch' should return an array for the mapping configuration",
 	
 	'opensearch:admin_search:results' => "Search Results",
 	'opensearch:admin_search:results:info' => "Results will be shown here",
 	
+	'opensearch:search_score' => "Score: %s",
+	'opensearch:suggest' => "Did you mean %s instead of %s?",
+	
+	// errors
 	'opensearch:error:no_client' => "Unable to create an OpenSearch client",
 	'opensearch:error:host_unavailable' => "OpenSearch API host unavailable",
 	'opensearch:error:no_index' => "No index provided for the given action",
@@ -22,6 +41,7 @@ return array(
 	'opensearch:error:alias_not_configured' => "No alias is configured in the plugin settings",
 	'opensearch:error:search' => "An error occured during your search operation. Please contact the site administrator if this problem persists.",
 	
+	// settings
 	'opensearch:settings:pattern:float' => "Only numbers (0-9) and period (.) are allowed",
 	
 	'opensearch:settings:host:header' => "OpenSearch host settings",
@@ -71,6 +91,7 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:settings:decay_time_field:time_updated' => "Last update",
 	'opensearch:settings:decay_time_field:last_action' => "Last action",
 	
+	// statistics
 	'opensearch:stats:cluster' => "Cluster information",
 	'opensearch:stats:cluster_name' => "Cluster name",
 	'opensearch:stats:es_version' => "OpenSearch version",
@@ -90,6 +111,7 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:stats:elgg:reindex:last_ts' => "Current time to be used to compare if reindex is needed: %s",
 	'opensearch:stats:elgg:delete' => "Content waiting to be deleted",
 	
+	// index management
 	'opensearch:indices:index' => "Index",
 	'opensearch:indices:alias' => "Alias",
 	'opensearch:indices:aliases' => "aliases",
@@ -97,6 +119,7 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:indices:mappings' => "Mappings",
 	'opensearch:indices:mappings:add' => "Add / update",
 	
+	// inspect
 	'opensearch:inspect:guid' => "Please enter the GUID of the entity you wish to inspect",
 	'opensearch:inspect:guid:help' => "All entities in Elgg have a GUID, mostly you can find this in the URL to the entity (eg blog/view/1234)",
 	'opensearch:inspect:submit' => "Inspect",
@@ -111,15 +134,6 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:inspect:result:last_indexed:time' => "This entity was last indexed: %s",
 	'opensearch:inspect:result:reindex' => "Schedule for reindexing",
 	'opensearch:inspect:result:delete' => "Remove entity from index",
-	
-	// menus
-	'opensearch:menu:search_list:sort:title' => "Change the sort order of the results",
-	'opensearch:menu:search_list:sort:relevance' => "Relevance",
-	'opensearch:menu:search_list:sort:alpha_az' => "Alphabetical (A-Z)",
-	'opensearch:menu:search_list:sort:alpha_za' => "Alphabetical (Z-A)",
-	'opensearch:menu:search_list:sort:newest' => "Newest first",
-	'opensearch:menu:search_list:sort:oldest' => "Oldest first",
-	'opensearch:menu:search_list:sort:member_count' => "Member count",
 	
 	// forms
 	'opensearch:forms:admin_search:query:placeholder' => "Enter your search query here",
@@ -142,6 +156,29 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:cli:sync:reindex' => "Reindexed documents in the index",
 	'opensearch:cli:sync:reindex:error' => "An error occured while reindexing documents in the index",
 	
+	// rebuild
+	'opensearch:cli:rebuild:description' => "Rebuild the index with new index configuration and/or mappings",
+	'opensearch:cli:rebuild:current_index:error' => "No current index could be found",
+	'opensearch:cli:rebuild:disable_indexing' => "Disabling indexing during the index rebuild",
+	'opensearch:cli:rebuild:create:error' => "An error occured while creating the new index",
+	'opensearch:cli:rebuild:create' => "New index created",
+	'opensearch:cli:rebuild:mapping:error' => "An error occured while adding the mappings to the index",
+	'opensearch:cli:rebuild:mapping' => "Mappings added to the index",
+	'opensearch:cli:rebuild:reindex_start' => "Starting the reindex process",
+	'opensearch:cli:rebuild:reindex:error' => "An error occured while reindexing",
+	'opensearch:cli:rebuild:reindex' => "Reindexing complete",
+	'opensearch:cli:rebuild:add_alias:read:error' => "An error occured while adding the 'read' alias to the new search index",
+	'opensearch:cli:rebuild:add_alias:read' => "The 'read' alias was successfully added to the new search index",
+	'opensearch:cli:rebuild:add_alias:write:error' => "An error occured while adding the 'write' alias to the new search index",
+	'opensearch:cli:rebuild:add_alias:write' => "The 'write' alias was successfully added to the new search index",
+	'opensearch:cli:rebuild:remove_alias:read:error' => "An error occured while removing the 'read' alias from the old searhc index",
+	'opensearch:cli:rebuild:remove_alias:read' => "The 'read' alias was successfully removed from the old searhc index",
+	'opensearch:cli:rebuild:remove_alias:write:error' => "An error occured while removing the 'write' alias from the old searhc index",
+	'opensearch:cli:rebuild:remove_alias:write' => "The 'write' alias was successfully removed from the old searhc index",
+	'opensearch:cli:rebuild:enable_indexing' => "Indexing has been enabled",
+	'opensearch:cli:rebuild:delete:error' => "An error occured while removing the old search index",
+	'opensearch:cli:rebuild:delete' => "The old search index was removed",
+	
 	// actions
 	'opensearch:action:admin:index_management:error:delete' => "An error occured during the deletion of the index: %s",
 	'opensearch:action:admin:index_management:error:create:exists' => "You can't create the index '%s' it already exists",
@@ -161,7 +198,4 @@ More information on query time boosting can be found in the OpenSearch documenta
 	
 	'opensearch:action:admin:reindex_entity:success' => "The entity is scheduled for reindexing",
 	'opensearch:action:admin:delete_entity:success' => "The entity is scheduled for deletion from the index",
-	
-	'opensearch:search_score' => "Score: %s",
-	'opensearch:suggest' => "Did you mean %s instead of %s?",
 );

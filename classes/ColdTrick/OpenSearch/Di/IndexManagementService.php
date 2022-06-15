@@ -54,6 +54,30 @@ class IndexManagementService extends BaseClientService {
 	}
 	
 	/**
+	 * Get the index name used for the Elgg search index
+	 *
+	 * @param string $index_prefix the index prefix
+	 *
+	 * @return string|null
+	 */
+	public function getElggIndex(string $index_prefix): ?string {
+		$indices = $this->getIndexStatus();
+		
+		foreach ($indices as $name => $status) {
+			if (!preg_match("/^{$index_prefix}_[0-9]+$/", $name)) {
+				continue;
+			}
+			
+			$aliases = $this->getAliases($name);
+			if (in_array("{$index_prefix}_read", $aliases) && in_array("{$index_prefix}_write", $aliases)) {
+				return $name;
+			}
+		}
+		
+		return '';
+	}
+	
+	/**
 	 * Check if an index exists with the given name
 	 *
 	 * @param string $index index name to check
@@ -268,7 +292,40 @@ class IndexManagementService extends BaseClientService {
 		$config = $this->getMappingConfiguration($index);
 		
 		try {
-			return $this->getClient()->indices()->putMapping($config);
+			$response = $this->getClient()->indices()->putMapping($config);
+			return elgg_extract('acknowledged', $response, false);
+		} catch (OpenSearchException $e) {
+			$this->logger->error($e);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Reindex data from one index into another index
+	 *
+	 * @param string $from_index source index
+	 * @param string $to_index   destination index
+	 *
+	 * @return false|array
+	 */
+	public function reindex(string $from_index, string $to_index) {
+		if (!$this->isClientReady()) {
+			return false;
+		}
+		
+		try {
+			return $this->getClient()->reindex([
+				'body' => [
+					'source' => [
+						'index' => $from_index,
+					],
+					'dest' => [
+						'index' => $to_index,
+					],
+				],
+				'wait_for_completion' => true,
+			]);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}

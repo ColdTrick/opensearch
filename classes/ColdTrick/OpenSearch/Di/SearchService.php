@@ -49,7 +49,7 @@ class SearchService extends BaseClientService {
 		try {
 			$result = $this->getClient()->get([
 				'id' => $guid,
-				'index' => $this->getIndex(),
+				'index' => $this->getReadAlias(),
 			]);
 			
 			if ($return_raw) {

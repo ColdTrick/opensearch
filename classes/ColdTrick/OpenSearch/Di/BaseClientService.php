@@ -20,9 +20,9 @@ abstract class BaseClientService {
 	private $client;
 	
 	/**
-	 * @var false|string
+	 * @var string
 	 */
-	private $index;
+	private $index_prefix;
 	
 	/**
 	 * @var false|string
@@ -79,21 +79,19 @@ abstract class BaseClientService {
 	 * @return false|\opensearch\Client
 	 */
 	protected function getClient() {
-		if (isset($this->client)) {
-			return $this->client;
-		}
-		
-		$this->client = false;
-		
-		$config = $this->getClientConfig();
-		if (empty($config)) {
-			return false;
-		}
-		
-		try {
-			$this->client = ClientBuilder::fromConfig($config);
-		} catch (RuntimeException $e) {
-			$this->logger->error($e);
+		if (!isset($this->client)) {
+			$this->client = false;
+			
+			$config = $this->getClientConfig();
+			if (empty($config)) {
+				return false;
+			}
+			
+			try {
+				$this->client = ClientBuilder::fromConfig($config);
+			} catch (RuntimeException $e) {
+				$this->logger->error($e);
+			}
 		}
 		
 		return $this->client;
@@ -143,31 +141,57 @@ abstract class BaseClientService {
 	/**
 	 * Get the name of the index that holds all information
 	 *
-	 * @return false|string
+	 * @return string
 	 */
-	public function getIndex() {
-		if (isset($this->index)) {
-			return $this->index;
+	protected function getIndexPrefix(): string {
+		if (!isset($this->index_prefix)) {
+			$this->index_prefix = '';
+			
+			$index = elgg_get_plugin_setting('index', 'opensearch');
+			if (!empty($index)) {
+				$this->index_prefix = $index;
+			}
 		}
 		
-		$this->index = false;
-		
-		$index = elgg_get_plugin_setting('index', 'opensearch');
-		if (!empty($index)) {
-			$this->index = $index;
+		return $this->index_prefix;
+	}
+	
+	/**
+	 * Get the read alias to use
+	 *
+	 * @return string
+	 */
+	public function getReadAlias(): string {
+		$prefix = $this->getIndexPrefix();
+		if (empty($prefix)) {
+			return '';
 		}
 		
-		return $this->index;
+		return "{$prefix}_read";
+	}
+	
+	/**
+	 * Get the write alias to use
+	 *
+	 * @return string
+	 */
+	public function getWriteAlias(): string {
+		$prefix = $this->getIndexPrefix();
+		if (empty($prefix)) {
+			return '';
+		}
+		
+		return "{$prefix}_write";
 	}
 	
 	/**
 	 * Get the index (or alias) to perform search operations in
 	 *
-	 * @return false|string
+	 * @return string
 	 */
 	public function getSearchIndex() {
 		if (!isset($this->search_alias)) {
-			$this->search_alias = false;
+			$this->search_alias = $this->getReadAlias();
 			
 			$setting = elgg_get_plugin_setting('search_alias', 'opensearch');
 			if (!empty($setting)) {
@@ -175,10 +199,6 @@ abstract class BaseClientService {
 			}
 		}
 		
-		if (!empty($this->search_alias)) {
-			return $this->search_alias;
-		}
-		
-		return $this->getIndex();
+		return $this->search_alias;
 	}
 }
