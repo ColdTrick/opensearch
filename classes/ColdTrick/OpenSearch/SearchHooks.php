@@ -661,7 +661,7 @@ class SearchHooks {
 		$index = elgg_extract('_index', $hit);
 		
 		$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
-		if (!preg_match("/^{$index_prefix}_[0-9]+$/", $index)) {
+		if (!preg_match("/^{$index_prefix}(_[0-9]+)?$/", $index)) {
 			return;
 		}
 		

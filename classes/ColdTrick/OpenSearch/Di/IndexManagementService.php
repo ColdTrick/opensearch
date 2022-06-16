@@ -64,7 +64,7 @@ class IndexManagementService extends BaseClientService {
 		$indices = $this->getIndexStatus();
 		
 		foreach ($indices as $name => $status) {
-			if (!preg_match("/^{$index_prefix}_[0-9]+$/", $name)) {
+			if (!preg_match("/^{$index_prefix}(_[0-9]+)?$/", $name)) {
 				continue;
 			}
 			
