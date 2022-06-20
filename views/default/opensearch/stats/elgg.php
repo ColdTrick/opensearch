@@ -7,13 +7,12 @@ $content = '<table class="elgg-table">';
 // sync enabled
 $sync_enabled = elgg_get_plugin_setting('sync', 'opensearch');
 $content .= '<tr>';
-$content .= '<td>' . elgg_echo('opensearch:settings:sync') . '</td>';
-$content .= '<td>' . elgg_echo("option:{$sync_enabled}") . '</td>';
+$content .= elgg_format_element('td', [], elgg_echo('opensearch:settings:sync'));
+$content .= elgg_format_element('td', [], elgg_echo("option:{$sync_enabled}"));
 $content .= '</tr>';
 
-// content to index
+// total content to index
 $options = opensearch_get_bulk_options('count');
-$count = elgg_get_entities($options);
 
 $content .= '<tr>';
 $content .= '<td>' . elgg_echo('opensearch:stats:elgg:total');
@@ -21,35 +20,30 @@ $content .= elgg_view('output/longtext', [
 	'value' => elgg_echo('opensearch:stats:elgg:total:help'),
 	'class' => 'elgg-subtext',
 ]) . '</td>';
-$content .= "<td>{$count}</td>";
+$content .= elgg_format_element('td', [], elgg_get_entities($options));
 $content .= '</tr>';
 
-// content to index
+// new content to index
 $options = opensearch_get_bulk_options();
-$options['count'] = true;
-$count = elgg_get_entities($options);
 
 $content .= '<tr>';
-$content .= '<td>' . elgg_echo('opensearch:stats:elgg:no_index_ts') . '</td>';
-$content .= "<td>{$count}</td>";
+$content .= elgg_format_element('td', [], elgg_echo('opensearch:stats:elgg:no_index_ts'));
+$content .= elgg_format_element('td', [], elgg_count_entities($options));
 $content .= '</tr>';
 
 // content to update
 $options = opensearch_get_bulk_options('update');
-$options['count'] = true;
-$count = elgg_get_entities($options);
 
 $content .= '<tr>';
-$content .= '<td>' . elgg_echo('opensearch:stats:elgg:update') . '</td>';
-$content .= "<td>{$count}</td>";
+$content .= elgg_format_element('td', [], elgg_echo('opensearch:stats:elgg:update'));
+$content .= elgg_format_element('td', [], elgg_count_entities($options));
 $content .= '</tr>';
 
 // content to reindex
 $options = opensearch_get_bulk_options('reindex');
 $count = 0;
 if (!empty($options)) {
-	$options['count'] = true;
-	$count = elgg_get_entities($options);
+	$count = elgg_count_entities($options);
 }
 
 $content .= '<tr>';
