@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.1 (2022-06-22):
+
+- added: CLI command to rebuild the index
+- fixed: search score presentation only on search page
+
 2.0 (2022-06-01):
 
 - changed: increased minimal Elgg version to 4.2
