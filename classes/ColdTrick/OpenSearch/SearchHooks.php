@@ -534,7 +534,7 @@ class SearchHooks {
 	 *
 	 * @return bool
 	 */
-	protected static function detectUnsupportedSearchParams(array $params) {
+	protected static function detectUnsupportedSearchParams(array $params): bool {
 		
 		$keys = [
 			'metadata_name_value_pair',
@@ -546,6 +546,28 @@ class SearchHooks {
 		foreach ($keys as $key) {
 			if (!empty($params[$key])) {
 				return true;
+			}
+		}
+		
+		if (!elgg_in_context('search')) {
+			// make sure all supplied type_subtype_pairs are supported for search
+			// if a non supported type/subtype is found don't handle the search through OpenSearch
+			// if not in the search context
+			$temp = new SearchParams();
+			$normalized_params = $temp->normalizeOptions($params);
+			
+			$type_subtypes = elgg_extract('type_subtype_pairs', $normalized_params, []);
+			$supported_type_subtypes = elgg_entity_types_with_capability('searchable');
+			
+			foreach ($type_subtypes as $type => $subtypes) {
+				if (!isset($supported_type_subtypes[$type])) {
+					return true;
+				}
+				
+				$diff = array_diff($subtypes, $supported_type_subtypes[$type]);
+				if (!empty($diff)) {
+					return true;
+				}
 			}
 		}
 		
