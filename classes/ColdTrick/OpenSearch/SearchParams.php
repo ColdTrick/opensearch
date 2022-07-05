@@ -28,7 +28,7 @@ class SearchParams {
 	 * @param array $params Array of injectable parameters
 	 */
 	public function __construct(array $params = []) {
-		$this->service = $params['service'];
+		$this->service = elgg_extract('service', $params);
 		$this->params = [];
 	}
 	
