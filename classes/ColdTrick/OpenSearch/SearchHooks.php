@@ -564,6 +564,10 @@ class SearchHooks {
 					return true;
 				}
 				
+				if (!is_array($subtypes)) {
+					$subtypes = [$type];
+				}
+				
 				$diff = array_diff($subtypes, $supported_type_subtypes[$type]);
 				if (!empty($diff)) {
 					return true;
