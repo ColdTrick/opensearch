@@ -1,6 +1,11 @@
 Version history
 ===============
 
+2.1.1 (2022-07-12):
+
+- fixed: correctly extract search service
+- fixed: don't handle search with unsupported type/subtype pairs
+
 2.1 (2022-06-22):
 
 - added: CLI command to rebuild the index
