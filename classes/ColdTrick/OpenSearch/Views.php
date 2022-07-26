@@ -111,6 +111,10 @@ class Views {
 	 * @return void
 	 */
 	public static function setDefaultSearchSorting(\Elgg\Hook $hook): void {
+		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
+			return;
+		}
+		
 		$sort = get_input('sort');
 		$sort_by = get_input('sort_by');
 		
