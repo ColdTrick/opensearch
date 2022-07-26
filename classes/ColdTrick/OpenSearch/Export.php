@@ -2,6 +2,8 @@
 
 namespace ColdTrick\OpenSearch;
 
+use Elgg\Database\QueryBuilder;
+
 class Export {
 	
 	/**
@@ -247,11 +249,13 @@ class Export {
 			return;
 		}
 	
-		$relationships = get_entity_relationships($entity->guid);
-		if (empty($relationships)) {
-			return;
-		}
-	
+		$relationships = elgg_get_relationships([
+			'batch' => true,
+			'wheres' => function(QueryBuilder $qb, $main_alias) use ($entity) {
+				return $qb->compare("{$main_alias}.guid_one", '=', $entity->guid, ELGG_VALUE_GUID);
+			}
+		]);
+		
 		$result = [];
 		/* @var $relationship \ElggRelationship */
 		foreach ($relationships as $relationship) {
@@ -262,6 +266,10 @@ class Export {
 				'guid_two' => (int) $relationship->guid_two,
 				'relationship' => $relationship->relationship,
 			];
+		}
+		
+		if (empty($result)) {
+			return;
 		}
 		
 		$return = $hook->getValue();

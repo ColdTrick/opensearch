@@ -19,7 +19,7 @@ class Page {
 			return;
 		}
 		
-		$current_path = parse_url(current_page_url(), PHP_URL_PATH);
+		$current_path = parse_url(elgg_get_current_url(), PHP_URL_PATH);
 		$site_path = parse_url(elgg_get_site_url(), PHP_URL_PATH);
 		$parsed_path = substr($current_path, strlen($site_path));
 		

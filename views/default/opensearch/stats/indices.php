@@ -54,7 +54,7 @@ foreach ($stats as $index => $index_stats) {
 	$title = elgg_view('output/url', [
 		'text' => elgg_echo('opensearch:stats:index:index', [$index]),
 		'href' => "#index_{$index}",
-		'rel' => 'toggle',
+		'class' => 'elgg-toggle',
 	]);
 	
 	echo elgg_view_module('info', $title, $content);

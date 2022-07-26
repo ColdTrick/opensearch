@@ -445,7 +445,7 @@ class SearchParams {
 		}
 		
 		// add acl filter
-		$access_array = get_access_array($user_guid);
+		$access_array = elgg_get_access_array($user_guid);
 		if (!empty($access_array)) {
 			$access_filter[]['terms']['access_id'] = $access_array;
 		}
