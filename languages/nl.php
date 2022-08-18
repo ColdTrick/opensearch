@@ -1,10 +1,33 @@
 <?php
 /**
- * This file was created by Translation Editor v9.0.1
- * On 2022-02-17 16:06
+ * This file was created by Translation Editor v10.1.1
+ * On 2022-08-18 12:39
  */
 
 return array (
+  'opensearch:upgrade:2022061500:title' => 'Voeg aliassen toe aan de OpenSearch index',
+  'opensearch:upgrade:2022061500:description' => 'Wegens een aanpassing in de werking van de plugin moet de OpenSearch index een aantal extra aliassen krijgen. Deze upgrade zal deze toevoegen aan de index.',
+  'opensearch:cli:rebuild:description' => 'Herbouw de index met een nieuwe configuratie en/of mappings',
+  'opensearch:cli:rebuild:current_index:error' => 'Er kon geen huidige index worden gevonden',
+  'opensearch:cli:rebuild:disable_indexing' => 'Indexeren uitgeschakeld tijdens het herbouwen van de index',
+  'opensearch:cli:rebuild:create:error' => 'Er is een fout opgetreden tijdens het aanmaken van de nieuwe index',
+  'opensearch:cli:rebuild:create' => 'Nieuwe index is aangemaakt',
+  'opensearch:cli:rebuild:mapping:error' => 'Er is een fout opgetreden tijdens het toepassen van de mappings op de index',
+  'opensearch:cli:rebuild:mapping' => 'Mappings zijn toegepast op de index',
+  'opensearch:cli:rebuild:reindex_start' => 'Het herindexeren van de index is gestart',
+  'opensearch:cli:rebuild:reindex:error' => 'Er is een fout opgetreden tijdens het herindexeren',
+  'opensearch:cli:rebuild:reindex' => 'Herindexatie afgerond',
+  'opensearch:cli:rebuild:add_alias:read:error' => 'Er is een fout opgetreden tijdens het toevoegen van de \'read\' alias op de nieuwe index',
+  'opensearch:cli:rebuild:add_alias:read' => 'De \'read\' alias is succesvol toegevoegd aan de nieuwe index',
+  'opensearch:cli:rebuild:add_alias:write:error' => 'Er is een fout opgetreden tijdens het toevoegen van de \'write\' alias op de nieuwe index',
+  'opensearch:cli:rebuild:add_alias:write' => 'De \'write\' alias is succesvol toegevoegd aan de nieuwe index',
+  'opensearch:cli:rebuild:remove_alias:read:error' => 'Er is een fout opgetreden tijdens het verwijderen van de \'read\' alias van de oude index',
+  'opensearch:cli:rebuild:remove_alias:read' => 'De \'read\' alias is succesvol verwijderd van de oude index',
+  'opensearch:cli:rebuild:remove_alias:write:error' => 'Er is een fout opgetreden tijdens het verwijderen van de \'write\' alias van de oude index',
+  'opensearch:cli:rebuild:remove_alias:write' => 'De \'write\' alias is succesvol verwijderd van de oude index',
+  'opensearch:cli:rebuild:enable_indexing' => 'Indexatie is ingeschakeld',
+  'opensearch:cli:rebuild:delete:error' => 'Er is een fout opgetreden tijdens het verwijderen van de oude index',
+  'opensearch:cli:rebuild:delete' => 'De oude index is succesvol verwijderd',
   'opensearch:settings:username' => 'Gebruikersnaam',
   'opensearch:settings:username:help' => 'Indien je OpenSearch cluster is beveiligd met een gebruikersnaam/wachtwoord, geef dan hier de gebruikersnaam op',
   'opensearch:settings:password' => 'Wachtwoord',
@@ -138,5 +161,5 @@ Meer informatie over content type boosting kun je kijken op de OpenSearch docume
   'opensearch:action:admin:index_management:add_mappings' => 'Mappings voor de index \'%s\' zijn aangemaakt',
   'opensearch:action:admin:index_management:add_alias' => 'De alias \'%s\' is toegevoegd aan de index \'%s\'',
   'opensearch:action:admin:index_management:delete_alias' => 'De alias \'%s\' is verwijderd van de index \'%s\'',
-  'opensearch:suggest' => "Bedoelde je %s in plaats van %s?",
+  'opensearch:suggest' => 'Bedoelde je %s in plaats van %s?',
 );
