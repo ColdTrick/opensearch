@@ -9,7 +9,7 @@ return array(
 	'admin:opensearch:inspect' => "Inspect",
 	
 	// upgrades
-	'opensearch:upgrade:2022061500:title' => "Add OpneSearch index aliases",
+	'opensearch:upgrade:2022061500:title' => "Add OpenSearch index aliases",
 	'opensearch:upgrade:2022061500:description' => "Due to some changes in the working of the plugin the OpenSearch index needs some additional aliases. This upgrade will add those to the index.",
 	
 	// menus
@@ -171,10 +171,10 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:cli:rebuild:add_alias:read' => "The 'read' alias was successfully added to the new search index",
 	'opensearch:cli:rebuild:add_alias:write:error' => "An error occured while adding the 'write' alias to the new search index",
 	'opensearch:cli:rebuild:add_alias:write' => "The 'write' alias was successfully added to the new search index",
-	'opensearch:cli:rebuild:remove_alias:read:error' => "An error occured while removing the 'read' alias from the old searhc index",
-	'opensearch:cli:rebuild:remove_alias:read' => "The 'read' alias was successfully removed from the old searhc index",
-	'opensearch:cli:rebuild:remove_alias:write:error' => "An error occured while removing the 'write' alias from the old searhc index",
-	'opensearch:cli:rebuild:remove_alias:write' => "The 'write' alias was successfully removed from the old searhc index",
+	'opensearch:cli:rebuild:remove_alias:read:error' => "An error occured while removing the 'read' alias from the old search index",
+	'opensearch:cli:rebuild:remove_alias:read' => "The 'read' alias was successfully removed from the old search index",
+	'opensearch:cli:rebuild:remove_alias:write:error' => "An error occured while removing the 'write' alias from the old search index",
+	'opensearch:cli:rebuild:remove_alias:write' => "The 'write' alias was successfully removed from the old search index",
 	'opensearch:cli:rebuild:enable_indexing' => "Indexing has been enabled",
 	'opensearch:cli:rebuild:delete:error' => "An error occured while removing the old search index",
 	'opensearch:cli:rebuild:delete' => "The old search index was removed",
