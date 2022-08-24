@@ -1,6 +1,11 @@
 Version history
 ===============
 
+3.0 (2022-08-24):
+
+- changed: updated for Elgg 4.3
+- fixed: do not change default sorting behaviour if search not enabled
+
 2.1.1 (2022-07-12):
 
 - fixed: correctly extract search service
