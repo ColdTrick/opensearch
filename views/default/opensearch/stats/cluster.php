@@ -18,6 +18,7 @@ if ($alive) {
 } else {
 	$content .= elgg_format_element('td', [], elgg_echo('unknown_error'));
 }
+
 $content .= '</tr>';
 
 if (!$alive) {

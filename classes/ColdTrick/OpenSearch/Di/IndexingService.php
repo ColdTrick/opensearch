@@ -7,6 +7,9 @@ use Elgg\Cli\Progress;
 use OpenSearch\Common\Exceptions\OpenSearchException;
 use Symfony\Component\Console\Helper\ProgressBar;
 
+/**
+ * Indexing service
+ */
 class IndexingService extends BaseClientService {
 
 	/**
@@ -18,34 +21,30 @@ class IndexingService extends BaseClientService {
 		'reindex',
 	];
 	
-	/**
-	 * @var ProgressBar
-	 */
-	protected $progress_bar;
+	protected ?ProgressBar $progress_bar;
 	
 	/**
 	 * @var int[] GUIDs to skip during indexing
 	 */
-	protected $skip_guids;
+	protected array $skip_guids;
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
-	public static function name() {
+	public static function name(): string {
 		return 'opensearch.indexingservice';
 	}
 	
 	/**
-	 * Add or update entities in the opensearch index
+	 * Add or update entities in the OpenSearch index
 	 *
 	 * @param array $entities an array of \ElggEntity or of guids
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function addEntitiesToIndex(array $entities = []) {
-		
+	public function addEntitiesToIndex(array $entities = []): ?array {
 		if (empty($entities) || !$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		$params = [
@@ -74,7 +73,7 @@ class IndexingService extends BaseClientService {
 		}
 		
 		if (empty($params)) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -83,7 +82,7 @@ class IndexingService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
@@ -91,8 +90,7 @@ class IndexingService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function bulkDeleteDocuments() {
-		
+	public function bulkDeleteDocuments(): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -119,7 +117,6 @@ class IndexingService extends BaseClientService {
 				
 				$items = elgg_extract('items', $result);
 				foreach ($items as $action) {
-					
 					$status = elgg_extract('status', $action['delete']);
 					$guid = (int) elgg_extract('_id', $action['delete']);
 					
@@ -147,13 +144,13 @@ class IndexingService extends BaseClientService {
 	 * Bulk index documents based on a given type
 	 *
 	 * @param array $params indexing parameters
-	 *  - (string) type: the type of documents to index
-	 *  - (int) max_run_time: the maximum number of seconds to spend on the indexing action (default: 30)
-	 *  - (\Elgg\Cli\Progress) progress: a provided cli progress for nice output (default: false)
+	 *                      - (string) type: the type of documents to index
+	 *                      - (int) max_run_time: the maximum number of seconds to spend on the indexing action (default: 30)
+	 *                      - (\Elgg\Cli\Progress) progress: a provided cli progress for nice output (default: false)
 	 *
 	 * @return bool
 	 */
-	public function bulkIndexDocuments(array $params) {
+	public function bulkIndexDocuments(array $params): bool {
 		$defaults = [
 			'max_run_time' => 30,
 			'progress' => false,
@@ -206,13 +203,12 @@ class IndexingService extends BaseClientService {
 			
 			/* @var $entity \ElggEntity */
 			foreach ($entities as $entity) {
-				
 				// is this entity prevented from being indexed
 				$hook_params = [
 					'entity' => $entity,
 				];
 				
-				if ((bool) elgg_trigger_plugin_hook('index:entity:prevent', 'opensearch', $hook_params, false)) {
+				if ((bool) elgg_trigger_event_results('index:entity:prevent', 'opensearch', $hook_params, false)) {
 					$this->markEntityDone($entity);
 					continue;
 				}
@@ -252,8 +248,7 @@ class IndexingService extends BaseClientService {
 	 *
 	 * @return array
 	 */
-	protected function getBodyFromEntity(\ElggEntity $entity) {
-		
+	protected function getBodyFromEntity(\ElggEntity $entity): array {
 		elgg_push_context('search:index');
 		
 		$result = (array) $entity->toObject();
@@ -270,8 +265,8 @@ class IndexingService extends BaseClientService {
 	 *
 	 * @return void
 	 */
-	protected function markEntityDone(\ElggEntity $entity) {
-		$entity->setPrivateSetting(OPENSEARCH_INDEXED_NAME, time());
+	protected function markEntityDone(\ElggEntity $entity): void {
+		$entity->{OPENSEARCH_INDEXED_NAME} = time();
 		$entity->invalidateCache();
 		
 		// advance progress bar
@@ -283,11 +278,11 @@ class IndexingService extends BaseClientService {
 	/**
 	 * Process a batch of entities for indexing
 	 *
-	 * @param \ElggEntity[] $entities
+	 * @param \ElggEntity[] $entities entities to index
 	 *
 	 * @return void
 	 */
-	protected function processBulkIndexEntities(array $entities) {
+	protected function processBulkIndexEntities(array $entities): void {
 		$result = $this->addEntitiesToIndex($entities);
 		if (empty($result)) {
 			return;
@@ -303,7 +298,7 @@ class IndexingService extends BaseClientService {
 				$this->skip_guids[] = $guid;
 				
 				$error = elgg_extract('error', elgg_extract('index', $item));
-				elgg_log("opensearch failed to index {$guid} with error [{$status}][{$error['type']}]: {$error['reason']}", 'WARNING');
+				elgg_log("OpenSearch failed to index {$guid} with error [{$status}][{$error['type']}]: {$error['reason']}", 'WARNING');
 				continue;
 			}
 			
@@ -322,7 +317,7 @@ class IndexingService extends BaseClientService {
 	 *
 	 * @return void
 	 */
-	protected function clearCaches() {
+	protected function clearCaches(): void {
 		_elgg_services()->accessCache->clear();
 		_elgg_services()->dataCache->clear();
 		_elgg_services()->entityCache->clear();

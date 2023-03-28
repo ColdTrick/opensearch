@@ -3,28 +3,31 @@
 namespace ColdTrick\OpenSearch;
 
 use Elgg\Database\QueryBuilder;
+use Elgg\Export\Data;
 
+/**
+ * Entity export handler
+ */
 class Export {
 	
 	/**
 	 * Hook to adjust exportable values of basic entities for search
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return \stdClass
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function entityToObject(\Elgg\Hook $hook) {
-		
+	public static function entityToObject(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 	
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 	
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		// add some extra values to be submitted to the search index
 		$return->last_action = date('c', $entity->last_action);
@@ -43,7 +46,7 @@ class Export {
 	 *
 	 * @return string
 	 */
-	protected static function getEntityIndexType(\ElggEntity $entity) {
+	protected static function getEntityIndexType(\ElggEntity $entity): string {
 		$parts = [
 			$entity->getType(),
 			$entity->getSubtype(),
@@ -58,25 +61,24 @@ class Export {
 			'default' => $index_type,
 		];
 		
-		return elgg_trigger_plugin_hook('index:entity:type', 'opensearch', $params, $index_type);
+		return elgg_trigger_event_results('index:entity:type', 'opensearch', $params, $index_type);
 	}
 
 	/**
 	 * Hook to export entity metadata for search
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return void
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function entityMetadataToObject(\Elgg\Hook $hook) {
-		
+	public static function entityMetadataToObject(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 	
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
 		$defaults = [];
@@ -86,10 +88,12 @@ class Export {
 				$defaults[] = 'username';
 				$defaults[] = 'language';
 				break;
+			
 			case 'object':
 				$defaults[] = 'title';
 				$defaults[] = 'description';
 				break;
+			
 			case 'group':
 			case 'site':
 				$defaults[] = 'name';
@@ -97,9 +101,9 @@ class Export {
 				break;
 		}
 		
-		$metadata_names = elgg_trigger_plugin_hook('export:metadata_names', 'opensearch', $hook->getParams(), $defaults);
+		$metadata_names = elgg_trigger_event_results('export:metadata_names', 'opensearch', $event->getParams(), $defaults);
 		if (empty($metadata_names)) {
-			return;
+			return null;
 		}
 		
 		$metadata = elgg_get_metadata([
@@ -107,14 +111,12 @@ class Export {
 			'metadata_names' => $metadata_names,
 			'limit' => false,
 		]);
-		
 		if (empty($metadata)) {
-			return;
+			return null;
 		}
 		
 		$result = [];
 		foreach ($metadata as $data) {
-			
 			if (elgg_is_empty($data)) {
 				continue;
 			}
@@ -126,7 +128,7 @@ class Export {
 			$result[$data->name][] = $data->value;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		$return->metadata = $result;
 		
 		return $return;
@@ -135,23 +137,22 @@ class Export {
 	/**
 	 * Hook to join user/group profile tag fields with tags
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return void
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function profileTagFieldsToTags(\Elgg\Hook $hook) {
-		
+	public static function profileTagFieldsToTags(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 	
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
 		if (!in_array($entity->getType(), ['user', 'group'])) {
-			return;
+			return null;
 		}
 		
 		$profile_fields = false;
@@ -160,7 +161,7 @@ class Export {
 		}
 		
 		if (empty($profile_fields)) {
-			return;
+			return null;
 		}
 		
 		$tags = [];
@@ -178,10 +179,10 @@ class Export {
 		}
 		
 		if (empty($tags)) {
-			return;
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		if (isset($return->tags)) {
 			$current_tags = (array) $return->tags;
@@ -204,27 +205,26 @@ class Export {
 	/**
 	 * Hook to export entity counters for search
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return void
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function entityCountersToObject(\Elgg\Hook $hook) {
-		
+	public static function entityCountersToObject(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 	
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
-		$counters = elgg_trigger_plugin_hook('export:counters', 'opensearch', $hook->getParams(), []);
-		if (empty($counters)) {
-			return;
+		$counters = elgg_trigger_event_results('export:counters', 'opensearch', $event->getParams(), []);
+		if (empty($counters) || !is_array($counters)) {
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		$return->counters = $counters;
 		
@@ -234,23 +234,23 @@ class Export {
 	/**
 	 * Hook to export relationship entities for search
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return void
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function entityRelationshipsToObject(\Elgg\Hook $hook) {
-		
+	public static function entityRelationshipsToObject(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 	
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 	
 		$relationships = elgg_get_relationships([
 			'batch' => true,
+			'limit' => false,
 			'wheres' => function(QueryBuilder $qb, $main_alias) use ($entity) {
 				return $qb->compare("{$main_alias}.guid_one", '=', $entity->guid, ELGG_VALUE_GUID);
 			}
@@ -260,19 +260,19 @@ class Export {
 		/* @var $relationship \ElggRelationship */
 		foreach ($relationships as $relationship) {
 			$result[] = [
-				'id' => (int) $relationship->id,
+				'id' => $relationship->id,
 				'time_created' => date('c', $relationship->time_created),
-				'guid_one' => (int) $relationship->guid_one,
-				'guid_two' => (int) $relationship->guid_two,
+				'guid_one' => $relationship->guid_one,
+				'guid_two' => $relationship->guid_two,
 				'relationship' => $relationship->relationship,
 			];
 		}
 		
 		if (empty($result)) {
-			return;
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		if (!isset($return->relationships)) {
 			$return->relationships = $result;
@@ -286,22 +286,19 @@ class Export {
 	/**
 	 * Hook to strip tags from selected entity fields
 	 *
-	 * @param \Elgg\Hook $hook 'to:object', 'entity'
+	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
-	 * @return void
+	 * @return null|\Elgg\Export\Data
 	 */
-	public static function stripTags(\Elgg\Hook $hook) {
-		
+	public static function stripTags(\Elgg\Event $event): ?Data {
 		if (!elgg_in_context('search:index')) {
-			return;
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		$fields = ['title', 'name', 'description'];
-		
 		foreach ($fields as $field) {
-			
 			if (!isset($return->$field)) {
 				continue;
 			}
@@ -322,15 +319,14 @@ class Export {
 	/**
 	 * Hook to extend the exportable metadata names
 	 *
-	 * @param \Elgg\Hook $hook 'export:metadata_names', 'opensearch'
+	 * @param \Elgg\Event $event 'export:metadata_names', 'opensearch'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function exportProfileMetadata(\Elgg\Hook $hook) {
-		
-		$entity = $hook->getEntityParam();
+	public static function exportProfileMetadata(\Elgg\Event $event): ?array {
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
 		$fields = false;
@@ -339,33 +335,33 @@ class Export {
 		}
 		
 		if (empty($fields)) {
-			return;
+			return null;
 		}
 		
 		$field_names = [];
 		foreach ($fields as $field) {
 			$field_names[] = elgg_extract('name', $field);
 		}
+		
 		$field_names = array_filter($field_names);
 		
-		return array_merge($hook->getValue(), $field_names);
+		return array_merge($event->getValue(), $field_names);
 	}
 	
 	/**
 	 * Hook to export group members count
 	 *
-	 * @param \Elgg\Hook $hook 'export:counters', 'opensearch'
+	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function exportGroupMemberCount(\Elgg\Hook $hook) {
-		
-		$entity = $hook->getEntityParam();
+	public static function exportGroupMemberCount(\Elgg\Event $event): ?array {
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggGroup) {
-			return;
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		$return['member_count'] = elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 			return $entity->getMembers(['count' => true]);
@@ -377,34 +373,25 @@ class Export {
 	/**
 	 * Hook to export likes count
 	 *
-	 * @param \Elgg\Hook $hook 'export:counters', 'opensearch'
+	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function exportLikesCount(\Elgg\Hook $hook) {
-		
+	public static function exportLikesCount(\Elgg\Event $event): ?array {
 		if (!elgg_is_active_plugin('likes')) {
-			return;
+			return null;
 		}
 		
-		$entity = $hook->getEntityParam();
-		if (!$entity instanceof \ElggEntity) {
-			return;
+		$entity = $event->getEntityParam();
+		if (!$entity instanceof \ElggEntity || !$entity->hasCapability('likable')) {
+			return null;
 		}
 		
-		$entity_type = $entity->getType();
-		$entity_subtype = $entity->getSubtype();
-		$default_likes_allowed = $entity->hasCapability('likable');
+		$count = elgg_call(ELGG_IGNORE_ACCESS, function () use ($entity) {
+			return likes_count($entity);
+		});
 		
-		if (!(bool) elgg_trigger_deprecated_plugin_hook('likes:is_likable', "{$entity_type}:{$entity_subtype}", [], $default_likes_allowed, "Use the capabilities system to register your entity ('{$entity_type}:{$entity_subtype}') as likable.", '4.1')) {
-			$count = 0;
-		} else {
-			$count = elgg_call(ELGG_IGNORE_ACCESS, function () use ($entity) {
-				return likes_count($entity);
-			});
-		}
-		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		$return['likes'] = $count;
 		
@@ -414,18 +401,17 @@ class Export {
 	/**
 	 * Hook to export comments count
 	 *
-	 * @param \Elgg\Hook $hook 'export:counters', 'opensearch'
+	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function exportCommentsCount(\Elgg\Hook $hook) {
-		
-		$entity = $hook->getEntityParam();
+	public static function exportCommentsCount(\Elgg\Event $event): ?array {
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
-		$return = $hook->getValue();
+		$return = $event->getValue();
 		
 		$return['comments'] = elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 			return $entity->countComments();

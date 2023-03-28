@@ -7,17 +7,19 @@ use ColdTrick\OpenSearch\Di\SearchService;
 use Elgg\Database\QueryBuilder;
 use OpenSearch\Common\Exceptions\OpenSearchException;
 
+/**
+ * Cron handler
+ */
 class Cron {
 	
 	/**
 	 * Listen to the minute cron in order to sync data to OpenSearch
 	 *
-	 * @param \Elgg\Hook $hook 'cron', 'minute'
+	 * @param \Elgg\Event $event 'cron', 'minute'
 	 *
 	 * @return void
 	 */
-	public static function minuteSync(\Elgg\Hook $hook) {
-		
+	public static function minuteSync(\Elgg\Event $event): void {
 		if (elgg_get_plugin_setting('sync', 'opensearch') !== 'yes') {
 			// sync not enabled
 			return;
@@ -31,8 +33,8 @@ class Cron {
 		$max_run_time = 30;
 		
 		// delete first
-		echo "Starting OpenSearch indexing: delete" . PHP_EOL;
-		elgg_log("Starting OpenSearch indexing: delete", 'NOTICE');
+		echo 'Starting OpenSearch indexing: delete' . PHP_EOL;
+		elgg_log('Starting OpenSearch indexing: delete', 'NOTICE');
 		
 		$service->bulkDeleteDocuments();
 		
@@ -61,12 +63,11 @@ class Cron {
 	/**
 	 * Listen to the daily cron the do some cleanup jobs
 	 *
-	 * @param \Elgg\Hook $hook 'cron', 'daily'
+	 * @param \Elgg\Event $event 'cron', 'daily'
 	 *
 	 * @return void
 	 */
-	public static function dailyCleanup(\Elgg\Hook $hook) {
-		
+	public static function dailyCleanup(\Elgg\Event $event): void {
 		if (elgg_get_plugin_setting('sync', 'opensearch') !== 'yes') {
 			// sync isn't enabled, so don't validate
 			return;
@@ -98,8 +99,7 @@ class Cron {
 	 *
 	 * @return void
 	 */
-	protected static function cleanupOpenSearch() {
-		
+	protected static function cleanupOpenSearch(): void {
 		$service = SearchService::instance();
 		if (!$service->isClientReady()) {
 			return;
@@ -136,7 +136,6 @@ class Cron {
 		try {
 			// ignore Elgg access
 			elgg_call(ELGG_IGNORE_ACCESS, function() use ($service, &$scroll_params, $search_params) {
-				
 				$searchable_types = opensearch_get_registered_entity_types();
 				
 				while ($result = $service->scroll($scroll_params)) {
@@ -180,9 +179,8 @@ class Cron {
 						continue;
 					}
 					
-					// remove all left over documents
+					// remove all left-over documents
 					foreach ($guids_not_in_elgg as $guid) {
-						
 						// need to get the hist from OpenSearch to get the type, since it's not in Elgg anymore
 						$hit = $search_result->getHit($guid);
 						
@@ -212,8 +210,7 @@ class Cron {
 	 *
 	 * @return void
 	 */
-	protected static function checkElggIndex() {
-		
+	protected static function checkElggIndex(): void {
 		// this could take a while
 		set_time_limit(0);
 		
@@ -227,7 +224,7 @@ class Cron {
 				'type_subtype_pairs' => opensearch_get_registered_entity_types_for_search(),
 				'limit' => false,
 				'batch' => true,
-				'private_setting_name_value_pairs' => [
+				'metadata_name_value_pairs' => [
 					'name' => OPENSEARCH_INDEXED_NAME,
 					'value' => 0,
 					'operand' => '>',
@@ -268,7 +265,7 @@ class Cron {
 				/* @var $entity \ElggEntity */
 				foreach ($reindex as $entity) {
 					// mark for reindex
-					$entity->setPrivateSetting(OPENSEARCH_INDEXED_NAME, 0);
+					$entity->{OPENSEARCH_INDEXED_NAME} = 0;
 				}
 			}
 		});
@@ -281,15 +278,14 @@ class Cron {
 	 *
 	 * @return int[]
 	 */
-	protected static function findUnindexedGUIDs(array $guids = []) {
-		
+	protected static function findUnindexedGUIDs(array $guids = []): array {
 		if (empty($guids)) {
 			return [];
 		}
 		
 		$service = SearchService::instance();
 		if (!$service->isClientReady()) {
-			return;
+			return [];
 		}
 		
 		$search_params = [
@@ -318,7 +314,7 @@ class Cron {
 			
 			return array_diff($guids, $opensearch_guids);
 		} catch (OpenSearchException $e) {
-			// some error occured
+			// some error occurred
 		}
 		
 		return [];

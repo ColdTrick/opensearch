@@ -55,6 +55,14 @@ return [
 				'\ColdTrick\OpenSearch\EventDispatcher::create' => [],
 			],
 		],
+		'cron' => [
+			'daily' => [
+				'\ColdTrick\OpenSearch\Cron::dailyCleanup' => [],
+			],
+			'minute' => [
+				'\ColdTrick\OpenSearch\Cron::minuteSync' => [],
+			],
+		],
 		'delete' => [
 			'all' => [
 				'\ColdTrick\OpenSearch\EventDispatcher::delete' => [],
@@ -63,21 +71,6 @@ return [
 		'disable' => [
 			'all' => [
 				'\ColdTrick\OpenSearch\EventDispatcher::disable' => [],
-			],
-		],
-		'update' => [
-			'all' => [
-				'\ColdTrick\OpenSearch\EventDispatcher::update' => [],
-			],
-		],
-	],
-	'hooks' => [
-		'cron' => [
-			'daily' => [
-				'\ColdTrick\OpenSearch\Cron::dailyCleanup' => [],
-			],
-			'minute' => [
-				'\ColdTrick\OpenSearch\Cron::minuteSync' => [],
 			],
 		],
 		'export:counters' => [
@@ -93,56 +86,56 @@ return [
 			],
 		],
 		'register' => [
+			'menu:admin_header' => [
+				'\ColdTrick\OpenSearch\Menus\AdminHeader::register' => [],
+			],
 			'menu:entity' => [
 				'\ColdTrick\OpenSearch\Menus\Entity::inspect' => [],
-			],
-			'menu:page' => [
-				'\ColdTrick\OpenSearch\Menus\Page::admin' => [],
 			],
 		],
 		'search:params' => [
 			'all' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchParams' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::searchParams' => [],
 			],
 		],
 		'search:fields' => [
 			'all' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchFields' => [
+				'\ColdTrick\OpenSearch\SearchEvents::searchFields' => [
 					'priority' => 999,
 				],
-				'\ColdTrick\OpenSearch\SearchHooks::searchFieldsNameToTitle' => [
+				'\ColdTrick\OpenSearch\SearchEvents::searchFieldsNameToTitle' => [
 					'priority' => 999,
 				],
 			],
 			'group' => [
-				'\ColdTrick\OpenSearch\SearchHooks::groupSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::groupSearchFields' => [],
 			],
 			'object' => [
-				'\ColdTrick\OpenSearch\SearchHooks::objectSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::objectSearchFields' => [],
 			],
 			'user' => [
-				'\ColdTrick\OpenSearch\SearchHooks::userSearchFields' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::userSearchFields' => [],
 			],
 		],
 		'search:results' => [
 			'combined:all' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::searchEntities' => [],
 			],
 			'combined:objects' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::searchEntities' => [],
 			],
 			'entities' => [
-				'\ColdTrick\OpenSearch\SearchHooks::searchEntities' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::searchEntities' => [],
 			],
 		],
 		'search_params' => [
 			'opensearch' => [
-				'\ColdTrick\OpenSearch\SearchHooks::filterProfileFields' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::filterProfileFields' => [],
 			],
 		],
 		'to:entity' => [
 			'opensearch' => [
-				'\ColdTrick\OpenSearch\SearchHooks::sourceToEntity' => [],
+				'\ColdTrick\OpenSearch\SearchEvents::sourceToEntity' => [],
 			],
 		],
 		'to:object' => [
@@ -155,6 +148,11 @@ return [
 				'\ColdTrick\OpenSearch\Export::stripTags' => [
 					'priority' => 9999,
 				],
+			],
+		],
+		'update' => [
+			'all' => [
+				'\ColdTrick\OpenSearch\EventDispatcher::update' => [],
 			],
 		],
 		'view_vars' => [
@@ -177,9 +175,6 @@ return [
 				'\ColdTrick\OpenSearch\Views::displaySearchScoreInImprint' => [],
 			],
 		],
-	],
-	'upgrades' => [
-		\ColdTrick\OpenSearch\Upgrades\AddIndexAliases::class,
 	],
 	'view_extensions' => [
 		'admin.css' => [

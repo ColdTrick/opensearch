@@ -5,20 +5,17 @@ namespace ColdTrick\OpenSearch\Cli;
 use ColdTrick\OpenSearch\Di\IndexManagementService;
 use Elgg\Cli\Command;
 
+/**
+ * CLI command to rebuild the search index
+ */
 class Rebuild extends Command {
 	
-	/**
-	 * @var IndexManagementService
-	 */
-	protected $service;
+	protected IndexManagementService $service;
+	
+	protected \ElggPlugin $plugin;
 	
 	/**
-	 * @var \ElggPlugin
-	 */
-	protected $plugin;
-	
-	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
 	protected function configure() {
 		$this->setName('opensearch:rebuild')
@@ -26,7 +23,7 @@ class Rebuild extends Command {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
 	protected function command() {
 		$quiet = $this->option('quiet');
@@ -99,6 +96,7 @@ class Rebuild extends Command {
 		if (!$result) {
 			return self::FAILURE;
 		}
+		
 		$result = $service->addAlias($new_index_name, "{$index_prefix}_write");
 		$write('add_alias:write', $result);
 		if (!$result) {
@@ -111,6 +109,7 @@ class Rebuild extends Command {
 		if (!$result) {
 			return self::FAILURE;
 		}
+		
 		$result = $service->deleteAlias($current_index, "{$index_prefix}_write");
 		$write('remove_alias:write', $result);
 		if (!$result) {

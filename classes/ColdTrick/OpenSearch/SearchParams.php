@@ -4,6 +4,9 @@ namespace ColdTrick\OpenSearch;
 
 use ColdTrick\OpenSearch\SearchParams\Initialize;
 
+/**
+ * Search params helper for OpenSearch
+ */
 class SearchParams {
 
 	use Initialize;
@@ -20,7 +23,7 @@ class SearchParams {
 	 *
 	 * @var array
 	 */
-	protected $params;
+	protected array $params;
 	
 	/**
 	 * SearchParams constructor
@@ -33,13 +36,13 @@ class SearchParams {
 	}
 	
 	/**
-	 * Build body for opensearch client
+	 * Build body for OpenSearch client
 	 *
 	 * @param bool $count result should be a count (default: false)
 	 *
 	 * @return array
 	 */
-	public function getBody(bool $count = false) {
+	public function getBody(bool $count = false): array {
 		$result = [];
 		
 		// index
@@ -82,6 +85,7 @@ class SearchParams {
 			if (!empty($this->getParam('from'))) {
 				$result['from'] = $this->getParam('from');
 			}
+			
 			if (!empty($this->getParam('size'))) {
 				$result['size'] = $this->getParam('size');
 			}
@@ -142,8 +146,7 @@ class SearchParams {
 	 *
 	 * @return array
 	 */
-	protected static function getScoreFunctions() {
-		
+	protected static function getScoreFunctions(): array {
 		$result = [];
 		
 		// add function scoring for type boosting
@@ -194,7 +197,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setIndex(string $index) {
+	public function setIndex(string $index): void {
 		$this->params['index'] = $index;
 	}
 	
@@ -205,7 +208,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addFilter(array $filter) {
+	public function addFilter(array $filter): void {
 		$this->params['filter'] = array_merge_recursive($this->getParam('filter', []), $filter);
 	}
 	
@@ -216,16 +219,16 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setFilter(array $filter) {
+	public function setFilter(array $filter): void {
 		$this->params['filter'] = $filter;
 	}
 	
 	/**
 	 * Get filter for search
 	 *
-	 * @return mixed
+	 * @return null|array
 	 */
-	public function getFilter() {
+	public function getFilter(): ?array {
 		return $this->getParam('filter');
 	}
 
@@ -236,7 +239,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addNoMatchFilter(array $filter) {
+	public function addNoMatchFilter(array $filter): void {
 		$this->params['no_match_filter'] = array_merge_recursive($this->getParam('no_match_filter', []), $filter);
 	}
 	
@@ -247,16 +250,16 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setNoMatchFilter(array $filter) {
+	public function setNoMatchFilter(array $filter): void {
 		$this->params['no_match_filter'] = $filter;
 	}
 	
 	/**
 	 * Get no match filter for search
 	 *
-	 * @return mixed
+	 * @return null|array
 	 */
-	public function getNoMatchFilter() {
+	public function getNoMatchFilter(): array {
 		return $this->getParam('no_match_filter');
 	}
 	
@@ -267,7 +270,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addQuery(array $query = []) {
+	public function addQuery(array $query = []): void {
 		$this->params['query'] = array_merge_recursive($this->getParam('query', []), $query);
 	}
 
@@ -278,27 +281,27 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setQuery(array $query = []) {
+	public function setQuery(array $query = []): void {
 		$this->params['query'] = $query;
 	}
 
 	/**
 	 * Get query for search
 	 *
-	 * @return mixed
+	 * @return null|array
 	 */
-	public function getQuery() {
+	public function getQuery(): ?array {
 		return $this->getParam('query');
 	}
 	
 	/**
 	 * Track search scores
 	 *
-	 * @param bool $track_scores should scored be tracked
+	 * @param bool $track_scores should scores be tracked
 	 *
 	 * @return void
 	 */
-	public function trackScores(bool $track_scores = true) {
+	public function trackScores(bool $track_scores = true): void {
 		$this->params['track_scores'] = $track_scores;
 	}
 	
@@ -309,7 +312,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setSort(array $sort = []) {
+	public function setSort(array $sort = []): void {
 		$this->params['sort'] = $sort;
 	}
 	
@@ -321,20 +324,20 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addSort(string $field, $sort_config = []) {
+	public function addSort(string $field, $sort_config = []): void {
 		if (empty($field)) {
 			return;
 		}
 		
 		if (empty($sort_config)) {
-			if ($field == '_score') {
+			if ($field === '_score') {
 				$sort_config = ['order' => 'desc'];
 			} else {
 				$sort_config = ['order' => 'asc'];
 			}
 		}
 		
-		if ($field == '_score') {
+		if ($field === '_score') {
 			$this->trackScores(true);
 		}
 		
@@ -344,9 +347,9 @@ class SearchParams {
 	/**
 	 * Get sorting params for search
 	 *
-	 * @return mixed
+	 * @return null|array
 	 */
-	public function getSort() {
+	public function getSort(): ?array {
 		return $this->getParam('sort');
 	}
 	
@@ -357,7 +360,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setSize(int $size) {
+	public function setSize(int $size): void {
 		$this->params['size'] = $size;
 	}
 	
@@ -369,7 +372,7 @@ class SearchParams {
 	 * @return void
 	 * @see self::setSize()
 	 */
-	public function setLimit(int $limit) {
+	public function setLimit(int $limit): void {
 		$this->setSize($limit);
 	}
 	
@@ -380,7 +383,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setFrom(int $from) {
+	public function setFrom(int $from): void {
 		$this->params['from'] = $from;
 	}
 	
@@ -392,7 +395,7 @@ class SearchParams {
 	 * @return void
 	 * @see self::setFrom()
 	 */
-	public function setOffset(int $offset) {
+	public function setOffset(int $offset): void {
 		$this->setFrom($offset);
 	}
 	
@@ -403,8 +406,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setHighlight(array $data = []) {
-	
+	public function setHighlight(array $data = []): void {
 		if (empty($data)) {
 			unset($this->params['highlight']);
 			return;
@@ -416,9 +418,9 @@ class SearchParams {
 	/**
 	 * Gte highlight settings
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public function getHighlight() {
+	public function getHighlight(): array {
 		return $this->getParam('highlight', []);
 	}
 	
@@ -429,7 +431,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addEntityAccessFilter(int $user_guid = 0) {
+	public function addEntityAccessFilter(int $user_guid = 0): void {
 		if ($user_guid < 1) {
 			$user_guid = elgg_get_logged_in_user_guid();
 		}
@@ -465,7 +467,7 @@ class SearchParams {
 	 *
 	 * @return array
 	 */
-	public function getParams() {
+	public function getParams(): array {
 		return $this->params;
 	}
 	
@@ -474,7 +476,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function resetParams() {
+	public function resetParams(): void {
 		$this->params = [];
 	}
 	
@@ -485,7 +487,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setAggregation(array $aggregation = []) {
+	public function setAggregation(array $aggregation = []): void {
 		if (empty($aggregation)) {
 			unset($this->params['aggregation']);
 			return;
@@ -501,16 +503,16 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addAggregation(array $aggregation) {
+	public function addAggregation(array $aggregation): void {
 		$this->params['aggregation'] = array_merge_recursive($this->getParam('aggregation', []), $aggregation);
 	}
 	
 	/**
 	 * Get aggregation search params
 	 *
-	 * @return mixed
+	 * @return null|array
 	 */
-	public function getAggregation() {
+	public function getAggregation(): ?array {
 		return $this->getParam('aggregation');
 	}
 	

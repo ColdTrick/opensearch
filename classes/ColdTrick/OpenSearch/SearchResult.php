@@ -2,17 +2,14 @@
 
 namespace ColdTrick\OpenSearch;
 
+/**
+ * Search result after a query to OpenSearch
+ */
 class SearchResult {
 	
-	/**
-	 * @var array
-	 */
-	protected $result;
+	protected array $result;
 	
-	/**
-	 * @var array
-	 */
-	protected $search_params;
+	protected array $search_params;
 	
 	/**
 	 * Create a new SearchResults helper
@@ -30,7 +27,7 @@ class SearchResult {
 	 *
 	 * @return array
 	 */
-	public function getResult() {
+	public function getResult(): array {
 		return $this->result;
 	}
 	
@@ -39,13 +36,12 @@ class SearchResult {
 	 *
 	 * @return int
 	 */
-	public function getCount() {
-		
+	public function getCount(): int {
 		$hits = elgg_extract('hits', $this->result);
 		if ($hits !== null) {
 			return elgg_extract('total', $hits, 0);
 		}
-
+		
 		return elgg_extract('count', $this->result, 0);
 	}
 	
@@ -54,24 +50,23 @@ class SearchResult {
 	 *
 	 * @return array
 	 */
-	public function getHits() {
+	public function getHits(): array {
 		$hits = elgg_extract('hits', $this->result, []);
 		
-		return elgg_extract('hits', $hits);
+		return elgg_extract('hits', $hits, []);
 	}
 	
 	/**
 	 * Get a single hit from the results
 	 *
-	 * @param int $id the id in opensearch (usualy an Elgg GUID)
+	 * @param int $id the id in OpenSearch (usually an Elgg GUID)
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function getHit($id) {
-		
+	public function getHit(int $id): ?array {
 		$hits = $this->getHits();
 		if (empty($hits)) {
-			return false;
+			return null;
 		}
 		
 		foreach ($hits as $hit) {
@@ -81,7 +76,7 @@ class SearchResult {
 			}
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
@@ -89,8 +84,8 @@ class SearchResult {
 	 *
 	 * @return array
 	 */
-	public function getAggregations() {
-		return elgg_extract('aggregations', $this->result);
+	public function getAggregations(): array {
+		return elgg_extract('aggregations', $this->result, []);
 	}
 	
 	/**
@@ -109,10 +104,8 @@ class SearchResult {
 	 *
 	 * @return \ElggEntity[]
 	 */
-	public function toEntities($params) {
-		
+	public function toEntities($params): array {
 		$hits = $this->getHits();
-		
 		if (empty($hits)) {
 			return [];
 		}
@@ -125,10 +118,10 @@ class SearchResult {
 				'search_params' => $this->search_params,
 			];
 			
-			$hit = elgg_trigger_plugin_hook('to:entity:before', 'opensearch', $params, $hit);
+			$hit = elgg_trigger_event_results('to:entity:before', 'opensearch', $params, $hit);
 			$params['hit'] = $hit;
 			
-			$entity = elgg_trigger_plugin_hook('to:entity', 'opensearch', $params, null);
+			$entity = elgg_trigger_event_results('to:entity', 'opensearch', $params, null);
 			if (!$entity instanceof \ElggEntity) {
 				continue;
 			}
@@ -145,6 +138,7 @@ class SearchResult {
 				if (is_array($title)) {
 					$title = implode('', $title);
 				}
+				
 				$highlight_title = $title;
 			}
 						
@@ -152,6 +146,7 @@ class SearchResult {
 			if (empty($highlight_title)) {
 				$highlight_title = elgg_extract('title', $source);
 			}
+			
 			$entity->setVolatileData('search_matched_title', $highlight_title);
 			
 			// description
@@ -159,9 +154,11 @@ class SearchResult {
 			if (empty($desc)) {
 				$desc = elgg_get_excerpt(elgg_extract('description', $source));
 			}
+			
 			if (is_array($desc)) {
 				$desc = implode('...', $desc);
 			}
+			
 			$entity->setVolatileData('search_matched_description', $desc);
 			
 			// tags
@@ -196,12 +193,11 @@ class SearchResult {
 	}
 	
 	/**
-	 * get the GUIDs of all re results
+	 * Get the GUIDs of all results
 	 *
-	 * return []
+	 * @return int[]
 	 */
-	public function toGuids() {
-		
+	public function toGuids(): array {
 		$hits = $this->getHits();
 		if (empty($hits)) {
 			return [];
@@ -210,13 +206,12 @@ class SearchResult {
 		$guids = [];
 		
 		foreach ($hits as $hit) {
-			
 			$source = elgg_extract('_source', $hit);
 			if (empty($source)) {
 				continue;
 			}
 			
-			$guid = elgg_extract('guid', $source);
+			$guid = (int) elgg_extract('guid', $source);
 			if (empty($guid)) {
 				continue;
 			}

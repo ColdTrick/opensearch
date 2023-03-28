@@ -6,19 +6,21 @@ use Elgg\Exceptions\DataFormatException;
 use Elgg\Traits\Database\LegacyQueryOptionsAdapter;
 use Elgg\Values;
 
+/**
+ * Search param helper
+ */
 trait Initialize {
 	
 	use LegacyQueryOptionsAdapter;
 	
 	/**
-	 * Convert search params from elgg_search to internal workings of opensearch
+	 * Convert search params from elgg_search to internal workings of OpenSearch
 	 *
 	 * @param array $search_params search params as used by elgg_search()
 	 *
 	 * @return void
 	 */
-	public function initializeSearchParams(array $search_params = []) {
-		
+	public function initializeSearchParams(array $search_params = []): void {
 		// normalize everything
 		$search_params = $this->normalizeOptions($search_params);
 		
@@ -43,8 +45,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeQuery(array $search_params = []) {
-		
+	protected function initializeQuery(array $search_params = []): void {
 		$query = elgg_extract('query', $search_params);
 		if (empty($query )) {
 			return;
@@ -83,8 +84,7 @@ trait Initialize {
 	 *
 	 * @return string[]
 	 */
-	protected function getQueryFields(array $search_params = []) {
-		
+	protected function getQueryFields(array $search_params = []): array {
 		$result = [];
 		
 		$search_fields = elgg_extract('fields', $search_params, []);
@@ -110,9 +110,6 @@ trait Initialize {
 							$result[] = "metadata.{$name}";
 							break;
 						}
-						break;
-					case 'private_settings':
-						// no yet supported
 						break;
 				}
 			}
@@ -140,7 +137,7 @@ trait Initialize {
 	 *
 	 * @return array
 	 */
-	protected function getDefaultHighlightParams(string $query) {
+	protected function getDefaultHighlightParams(string $query): array {
 		$result = [];
 		
 		// global settings
@@ -184,8 +181,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeGUID(array $search_params = []) {
-		
+	protected function initializeGUID(array $search_params = []): void {
 		$guid = (array) elgg_extract('guids', $search_params, []);
 		$guid = array_filter(array_map(function ($v) {
 			return (int) $v;
@@ -207,8 +203,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeContainerGUID(array $search_params = []) {
-		
+	protected function initializeContainerGUID(array $search_params = []): void {
 		$container_guid = (array) elgg_extract('container_guids', $search_params, []);
 		$container_guid = array_filter(array_map(function ($v) {
 			return (int) $v;
@@ -230,8 +225,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeOwnerGUID(array $search_params = []) {
-		
+	protected function initializeOwnerGUID(array $search_params = []): void {
 		$owner_guid = (array) elgg_extract('owner_guids', $search_params);
 		$owner_guid = array_filter(array_map(function ($v) {
 			return (int) $v;
@@ -253,8 +247,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeSorting(array $search_params = []) {
-		
+	protected function initializeSorting(array $search_params = []): void {
 		$sort_by = elgg_extract('sort_by', $search_params, []);
 		if (isset($sort_by['property'])) {
 			$sort_by = [$sort_by];
@@ -277,6 +270,7 @@ trait Initialize {
 						'missing' => '_last',
 					]);
 					break;
+				
 				case 'metadata':
 					if (in_array($property, ['name', 'title'])) {
 						$this->addSort('title.raw', [
@@ -297,18 +291,19 @@ trait Initialize {
 							'missing' => '_last',
 						]);
 					}
-					
 					break;
-				case 'private_setting':
+				
 				case 'annotation':
 				case 'relationship':
 					// not supported yet
 					break;
+				
 				case 'score':
 					$this->addSort($property, [
 						'order' => $direction,
 					]);
 					break;
+				
 				case 'counter':
 				case 'counters':
 					$this->addSort("counters.{$property}", [
@@ -328,15 +323,13 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeTypeSubtypePairs(array $search_params = []) {
-		
+	protected function initializeTypeSubtypePairs(array $search_params = []): void {
 		$type_subtype_pairs = elgg_extract('type_subtype_pairs', $search_params);
 		if (empty($type_subtype_pairs)) {
 			return;
 		}
 		
 		$types = [];
-		
 		foreach ($type_subtype_pairs as $type => $subtypes) {
 			if (empty($subtypes)) {
 				$types[] = "{$type}.{$type}";
@@ -364,8 +357,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeTimeConstraints(array $search_params = []) {
-		
+	protected function initializeTimeConstraints(array $search_params = []): void {
 		$make_filter = function($time, $time_field, $direction) {
 			try {
 				$date = Values::normalizeTime($time);
@@ -444,8 +436,7 @@ trait Initialize {
 	 *
 	 * @return void
 	 */
-	protected function initializeAccessConstraints(array $search_params = []) {
-		
+	protected function initializeAccessConstraints(array $search_params = []): void {
 		$access_ids = (array) elgg_extract('access_ids', $search_params);
 		if (empty($access_ids)) {
 			return;

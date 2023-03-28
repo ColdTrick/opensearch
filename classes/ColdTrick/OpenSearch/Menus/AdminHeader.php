@@ -4,19 +4,21 @@ namespace ColdTrick\OpenSearch\Menus;
 
 use Elgg\Menu\MenuItems;
 
-class Page {
+/**
+ * Add menu items to the admin_header menu
+ */
+class AdminHeader {
 
 	/**
 	 * Add menu items to the admin page menu
 	 *
-	 * @param \Elgg\Hook $hook 'register', 'menu:page'
+	 * @param \Elgg\Event $event 'register', 'menu:page'
 	 *
-	 * @return void|MenuItems
+	 * @return null|MenuItems
 	 */
-	public static function admin(\Elgg\Hook $hook) {
-		
+	public static function register(\Elgg\Event $event): ?MenuItems {
 		if (!elgg_in_context('admin') || !elgg_is_admin_logged_in()) {
-			return;
+			return null;
 		}
 		
 		$current_path = parse_url(elgg_get_current_url(), PHP_URL_PATH);
@@ -24,14 +26,14 @@ class Page {
 		$parsed_path = substr($current_path, strlen($site_path));
 		
 		/* @var $returnvalue MenuItems */
-		$returnvalue = $hook->getValue();
+		$returnvalue = $event->getValue();
 		
 		// parent
 		$returnvalue[] = \ElggMenuItem::factory([
 			'name' => 'opensearch',
-			'href' => false,
 			'text' => elgg_echo('admin:opensearch'),
-			'section' => 'administer',
+			'href' => false,
+			'parent_name' => 'administer',
 		]);
 		
 		$returnvalue[] = \ElggMenuItem::factory([
@@ -40,7 +42,6 @@ class Page {
 			'href' => 'admin/opensearch/statistics',
 			'selected' => stristr($parsed_path, 'admin/opensearch/statistics') !== false,
 			'parent_name' => 'opensearch',
-			'section' => 'administer',
 		]);
 		
 		$returnvalue[] = \ElggMenuItem::factory([
@@ -49,7 +50,6 @@ class Page {
 			'href' => 'admin/opensearch/indices',
 			'selected' => stristr($parsed_path, 'admin/opensearch/indices') !== false,
 			'parent_name' => 'opensearch',
-			'section' => 'administer',
 		]);
 		
 		$returnvalue[] = \ElggMenuItem::factory([
@@ -58,7 +58,6 @@ class Page {
 			'href' => 'admin/opensearch/search',
 			'selected' => stristr($parsed_path, 'admin/opensearch/search') !== false,
 			'parent_name' => 'opensearch',
-			'section' => 'administer',
 		]);
 		
 		$returnvalue[] = \ElggMenuItem::factory([
@@ -67,7 +66,6 @@ class Page {
 			'href' => 'admin/plugin_settings/opensearch',
 			'selected' => stristr($parsed_path, 'admin/plugin_settings/opensearch') !== false,
 			'parent_name' => 'opensearch',
-			'section' => 'administer',
 		]);
 		
 		$returnvalue[] = \ElggMenuItem::factory([
@@ -76,7 +74,6 @@ class Page {
 			'href' => 'admin/opensearch/inspect',
 			'selected' => stristr($parsed_path, 'admin/opensearch/inspect') !== false,
 			'parent_name' => 'opensearch',
-			'section' => 'administer',
 		]);
 		
 		return $returnvalue;

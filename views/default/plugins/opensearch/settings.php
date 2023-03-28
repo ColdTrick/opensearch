@@ -110,7 +110,6 @@ echo elgg_view_module('info', elgg_echo('opensearch:settings:features:header'), 
 // boosting of types
 $types = opensearch_get_types_for_boosting();
 if (!empty($types)) {
-	
 	$boosting = elgg_view('output/longtext', [
 		'value' => elgg_echo('opensearch:settings:type_boosting:info'),
 	]);
@@ -147,8 +146,8 @@ if (!empty($types)) {
 		]));
 		
 		$rows[] = elgg_format_element('tr', [], implode(PHP_EOL, $row));
-			
 	}
+	
 	$boosting .= elgg_format_element('table', ['class' => 'elgg-table'], $header . elgg_format_element('tbody', [], implode(PHP_EOL, $rows)));
 
 	echo elgg_view_module('info', elgg_echo('opensearch:settings:type_boosting:title'), $boosting);

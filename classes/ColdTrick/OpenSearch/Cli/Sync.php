@@ -6,10 +6,13 @@ use ColdTrick\OpenSearch\Di\IndexingService;
 use Elgg\Cli\Command;
 use Elgg\Cli\Progress;
 
+/**
+ * CLI command to sync the Elgg data to OpenSearch
+ */
 class Sync extends Command {
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
 	protected function configure() {
 		$this->setName('opensearch:sync')
@@ -17,7 +20,7 @@ class Sync extends Command {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
 	protected function command() {
 		$quite = $this->option('quiet');

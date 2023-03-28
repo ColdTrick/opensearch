@@ -1,7 +1,6 @@
 <?php
 
 $result = elgg_extract('result', $vars);
-
 if (!$result) {
 	return;
 }

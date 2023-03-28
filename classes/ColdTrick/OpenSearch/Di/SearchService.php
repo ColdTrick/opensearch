@@ -6,44 +6,35 @@ use ColdTrick\OpenSearch\SearchParams;
 use ColdTrick\OpenSearch\SearchResult;
 use OpenSearch\Common\Exceptions\OpenSearchException;
 
+/**
+ * Perform searches in the OpenSearch index
+ */
 class SearchService extends BaseClientService {
 
-	/**
-	 * Search aggregations
-	 *
-	 * @var array
-	 */
-	private $aggregations;
+	private ?array $aggregations = null;
+	
+	private ?SearchParams $search_params = null;
+	
+	private ?array $suggestions = null;
 	
 	/**
-	 * @var SearchParams
+	 * {@inheritdoc}
 	 */
-	private $search_params;
-	
-	/**
-	 * @var array
-	 */
-	private $suggestions;
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function name() {
+	public static function name(): string {
 		return 'opensearch.searchservice';
 	}
 	
 	/**
-	 * Inspect a GUID in opensearch
+	 * Inspect a GUID in OpenSearch
 	 *
 	 * @param int  $guid       the GUID to inspect
 	 * @param bool $return_raw return full return or only _source (default: false)
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function inspect(int $guid, bool $return_raw = false) {
-		
+	public function inspect(int $guid, bool $return_raw = false): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -61,20 +52,19 @@ class SearchService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
-	 * Perform a search on the opensearch client
+	 * Perform a search on the OpenSearch client
 	 *
 	 * @param array $params search params
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function rawSearch(array $params = []) {
-		
+	public function rawSearch(array $params = []): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -83,7 +73,7 @@ class SearchService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return [];
+		return null;
 	}
 	
 	/**
@@ -93,7 +83,7 @@ class SearchService extends BaseClientService {
 	 *
 	 * @return void
 	 */
-	public function initializeSearchParams(array $search_params = []) {
+	public function initializeSearchParams(array $search_params = []): void {
 		$this->getSearchParams()->initializeSearchParams($search_params);
 		$this->getSearchParams()->addEntityAccessFilter();
 	}
@@ -103,12 +93,11 @@ class SearchService extends BaseClientService {
 	 *
 	 * @param array $body optional search body
 	 *
-	 * @return false|\ColdTrick\OpenSearch\SearchResult
+	 * @return null|\ColdTrick\OpenSearch\SearchResult
 	 */
-	public function search(array $body = []) {
-		
+	public function search(array $body = []): ?SearchResult {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		if (empty($body)) {
@@ -125,7 +114,7 @@ class SearchService extends BaseClientService {
 		try {
 			$result = $this->getClient()->search($body);
 		} catch (OpenSearchException $e) {
-			// exception already logged by opensearch
+			// exception already logged by OpenSearch
 		}
 		
 		$result = new SearchResult($result, $this->getSearchParams()->getParams());
@@ -151,12 +140,11 @@ class SearchService extends BaseClientService {
 	 *
 	 * @param string $query the original search query which was executed
 	 *
-	 * @return false|\ColdTrick\OpenSearch\SearchResult
+	 * @return null|\ColdTrick\OpenSearch\SearchResult
 	 */
-	public function suggest(string $query) {
-		
+	public function suggest(string $query): ?SearchResult {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		$this->getSearchParams()->setSuggestion($query);
@@ -175,7 +163,7 @@ class SearchService extends BaseClientService {
 		try {
 			$result = $this->getClient()->search($body);
 		} catch (OpenSearchException $e) {
-			// exception already logged by opensearch
+			// exception already logged by OpenSearch
 		}
 		
 		$result = new SearchResult($result, $this->getSearchParams()->getParams());
@@ -196,12 +184,11 @@ class SearchService extends BaseClientService {
 	 *
 	 * @param array $body optional search body
 	 *
-	 * @return false|\ColdTrick\OpenSearch\SearchResult
+	 * @return null|\ColdTrick\OpenSearch\SearchResult
 	 */
-	public function count(array $body = []) {
-		
+	public function count(array $body = []): ?SearchResult {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		if (empty($body)) {
@@ -218,7 +205,7 @@ class SearchService extends BaseClientService {
 		try {
 			$result = $this->getClient()->count($body);
 		} catch (OpenSearchException $e) {
-			// exception already logged by opensearch
+			// exception already logged by OpenSearch
 		}
 		
 		// reset search params after each search
@@ -232,11 +219,11 @@ class SearchService extends BaseClientService {
 	 *
 	 * @param array $params search params
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function scroll(array $params) {
+	public function scroll(array $params): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		return $this->getClient()->scroll($params);
@@ -247,33 +234,33 @@ class SearchService extends BaseClientService {
 	 *
 	 * @param array $params search params
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function clearScroll(array $params) {
+	public function clearScroll(array $params): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		return $this->getClient()->clearScroll($params);
 	}
 	
 	/**
-	 * Set aggregations from search  result
+	 * Set aggregations from search result
 	 *
-	 * @param array $data
+	 * @param array $data Search aggregations
 	 *
 	 * @return void
 	 */
-	public function setAggregations(array $data) {
+	public function setAggregations(array $data): void {
 		$this->aggregations = $data;
 	}
 	
 	/**
 	 * Get aggregations from search result
 	 *
-	 * @return array
+	 * @return null|array
 	 */
-	public function getAggregations() {
+	public function getAggregations(): ?array {
 		return $this->aggregations;
 	}
 	
@@ -282,7 +269,7 @@ class SearchService extends BaseClientService {
 	 *
 	 * @return \ColdTrick\OpenSearch\SearchParams
 	 */
-	public function getSearchParams() {
+	public function getSearchParams(): SearchParams {
 		if (!isset($this->search_params)) {
 			$this->search_params = new SearchParams([
 				'service' => $this,
@@ -306,7 +293,7 @@ class SearchService extends BaseClientService {
 	/**
 	 * Get suggestions from search
 	 *
-	 * @return array|null
+	 * @return null|array
 	 */
 	public function getSuggestions(): ?array {
 		return $this->suggestions;
@@ -315,13 +302,12 @@ class SearchService extends BaseClientService {
 	/**
 	 * Log the current request to developers log
 	 *
-	 * @param array $params  search params
+	 * @param array  $params search params
 	 * @param string $action action name (search, count, etc)
 	 *
 	 * @return void
 	 */
-	protected function requestToScreen($params, $action = '') {
-		
+	protected function requestToScreen(array $params, string $action = ''): void {
 		$cache = elgg_get_config('log_cache');
 		if (empty($cache)) {
 			// developer tools log to screen is disabled

@@ -28,7 +28,7 @@ class DeleteQueue extends DatabaseQueue {
 	 *
 	 * @return string
 	 */
-	public static function name() {
+	public static function name(): string {
 		return 'opensearch.databasequeue';
 	}
 	

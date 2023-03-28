@@ -37,7 +37,7 @@ if (empty($entity)) {
 	$current_content = (array) $entity->toObject();
 	elgg_pop_context();
 	
-	$last_indexed = $entity->getPrivateSetting(OPENSEARCH_INDEXED_NAME);
+	$last_indexed = $entity->{OPENSEARCH_INDEXED_NAME};
 	if (is_null($last_indexed)) {
 		$result = elgg_view('output/longtext', [
 			'value' => elgg_echo('opensearch:inspect:result:last_indexed:none'),
@@ -97,12 +97,14 @@ if (empty($entity)) {
 				if (is_array($elgg_value)) {
 					$elgg_value = implode(', ', $elgg_value);
 				}
+				
 				$es_value = elgg_extract($key, $opensearch_content);
 				$class = [];
 				if ($elgg_value != $es_value) {
 					$class[] = 'elgg-state';
 					$class[] = 'elgg-state-error';
 				}
+				
 				$rows[] = elgg_format_element('tr', ['class' => $class], implode(PHP_EOL, [
 					elgg_format_element('td', [], $key),
 					elgg_format_element('td', [], $elgg_value),

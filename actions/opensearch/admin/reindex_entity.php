@@ -10,11 +10,11 @@ if (empty($entity)) {
 	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
-if (!$entity->getPrivateSetting(OPENSEARCH_INDEXED_NAME)) {
-	// can't be reindexed as it hasn't been indexed yet (or shouldn't)
+if (!$entity->{OPENSEARCH_INDEXED_NAME}) {
+	// can't be re-indexed as it hasn't been indexed yet (or shouldn't)
 	return elgg_error_response(elgg_echo('save:fail'));
 }
 
-$entity->setPrivateSetting(OPENSEARCH_INDEXED_NAME, 0);
+$entity->{OPENSEARCH_INDEXED_NAME} = 0;
 
 return elgg_ok_response('', elgg_echo('opensearch:action:admin:reindex_entity:success'));

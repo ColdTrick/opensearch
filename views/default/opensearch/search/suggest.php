@@ -20,8 +20,8 @@ $client = SearchService::instance();
 
 $suggestions = $client->getSuggestions();
 if (empty($suggestions)) {
-	// maby no search query excuted where we can extract suggestions from
-	// so do a suggest query ourselfs
+	// maybe no search query executed where we can extract suggestions from
+	// so do a suggestion query ourselves
 	$client->suggest($query);
 	
 	$suggestions = $client->getSuggestions();

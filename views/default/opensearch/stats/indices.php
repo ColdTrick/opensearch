@@ -20,7 +20,6 @@ if (empty($stats)) {
 
 ksort($stats);
 foreach ($stats as $index => $index_stats) {
-	
 	$content = '<thead>';
 	$content .= '<tr>';
 	$content .= elgg_format_element('th', [], elgg_echo('opensearch:stats:index:stat'));

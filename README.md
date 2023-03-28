@@ -2,12 +2,11 @@
 
 ![Elgg 4.3](https://img.shields.io/badge/Elgg-4.3-green.svg)
 ![OpenSearch 1.1](https://img.shields.io/badge/OpenSearch-1.1-green.svg)
-[![Build Status](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/build-status/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ColdTrick/opensearch/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/opensearch/?branch=master)
+![Lint Checks](https://github.com/ColdTrick/opensearch/actions/workflows/lint.yml/badge.svg?event=push)
 [![Latest Stable Version](https://poser.pugx.org/coldtrick/opensearch/v/stable.svg)](https://packagist.org/packages/coldtrick/opensearch)
 [![License](https://poser.pugx.org/coldtrick/opensearch/license.svg)](https://packagist.org/packages/coldtrick/opensearch)
 
-An opensearch implementation for Elgg
+An OpenSearch implementation for Elgg
 
 ## Requirements
 
@@ -22,7 +21,7 @@ The current supported version of OpenSearch is: 1.1.x
 
 The plugin settings allow you to configure the following:
 
- - Hosts: 1 or more hosts need to be configured (full URL + optional portnumber). You can provide more hosts comma seperated.
+ - Hosts: 1 or more hosts need to be configured (full URL + optional port number). You can provide more hosts comma seperated.
  - Index: Name of the index used for indexing Elgg data and search queries
  - Search alias (optional): Name of the alias to use in search queries, this allows for easy searching across multiple indices
 
@@ -79,7 +78,7 @@ plugin provides a menu to sort/order the results.
 
 #### 'boostable_types', 'opensearch'
 
-Return an array of type.subtype to be used for configuaring boosting in OpenSearch.
+Return an array of type.subtype to be used for configuring boosting in OpenSearch.
 
 In the format:
 ```php
@@ -197,7 +196,7 @@ Params contain:
 #### field_boosting
 
 In the parameters passed to `elgg_search` you can add a configuration to control field boosting in OpenSearch. Add the key
-`field_boosting` to the array which holds an array with fieldname and the boosting for that field.
+`field_boosting` to the array which holds an array with field-name and the boosting for that field.
 
 Example:
 ```php

@@ -3,22 +3,25 @@
 namespace ColdTrick\OpenSearch;
 
 use ColdTrick\OpenSearch\Di\SearchService;
-use Elgg\Exceptions\InvalidParameterException;
+use Elgg\Exceptions\ExceptionInterface;
+use Elgg\Exceptions\UnexpectedValueException;
 
-class SearchHooks {
+/**
+ * Listen to different search events
+ */
+class SearchEvents {
 	
 	/**
 	 * Check search params for unsupported options
 	 *
-	 * @param \Elgg\Hook $hook 'search:params', 'all'
+	 * @param \Elgg\Event $event 'search:params', 'all'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function searchParams(\Elgg\Hook $hook) {
-		
-		$search_params = $hook->getValue();
+	public static function searchParams(\Elgg\Event $event): ?array {
+		$search_params = $event->getValue();
 		if (isset($search_params['_opensearch_supported'])) {
-			return;
+			return null;
 		}
 		
 		if (!self::handleSearch() || self::detectUnsupportedSearchParams($search_params)) {
@@ -37,14 +40,13 @@ class SearchHooks {
 	}
 	
 	/**
-	 * Transform provided search fields to the correct opensearch fields
+	 * Transform provided search fields to the correct OpenSearch fields
 	 *
 	 * @param array $search_params the search params
 	 *
 	 * @return void
 	 */
-	protected static function transformSearchParamFields(array &$search_params) {
-		
+	protected static function transformSearchParamFields(array &$search_params): void {
 		if (!isset($search_params['fields']) || !empty($search_params['_opensearch_no_transform_fields'])) {
 			return;
 		}
@@ -90,8 +92,7 @@ class SearchHooks {
 	 *
 	 * @return void
 	 */
-	protected static function transformSearchParamQueryInLivesearch(array &$search_params) {
-		
+	protected static function transformSearchParamQueryInLivesearch(array &$search_params): void {
 		if (!elgg_in_context('livesearch') || !isset($search_params['query'])) {
 			return;
 		}
@@ -116,7 +117,7 @@ class SearchHooks {
 	 *
 	 * @return void
 	 */
-	protected static function transformSearchParamSorting(array &$search_params) {
+	protected static function transformSearchParamSorting(array &$search_params): void {
 		$sort = elgg_extract('sort', $search_params);
 		$sort_by = elgg_extract('sort_by', $search_params, []);
 		if (isset($sort_by['property'])) {
@@ -143,6 +144,7 @@ class SearchHooks {
 				];
 				$sort = null;
 				break;
+			
 			case 'member_count':
 				$sort_by = []; // ignore previously set sorts
 				$sort_by[] = [
@@ -166,17 +168,16 @@ class SearchHooks {
 	/**
 	 * Change object search fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'object'
+	 * @param \Elgg\Event $event 'search:fields', 'object'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function objectSearchFields(\Elgg\Hook $hook) {
-		
+	public static function objectSearchFields(\Elgg\Event $event): ?array {
 		if (!self::handleSearch()) {
-			return;
+			return null;
 		}
 		
-		$value = (array) $hook->getValue();
+		$value = (array) $event->getValue();
 		
 		$defaults = [
 			'metadata' => [],
@@ -188,7 +189,7 @@ class SearchHooks {
 		
 		$value = array_merge($defaults, $value);
 		if (empty($value['metadata'])) {
-			return;
+			return null;
 		}
 		
 		// remove user profile tag fields
@@ -229,18 +230,17 @@ class SearchHooks {
 	/**
 	 * Change group search fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'group'
+	 * @param \Elgg\Event $event 'search:fields', 'group'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function groupSearchFields(\Elgg\Hook $hook) {
-		
+	public static function groupSearchFields(\Elgg\Event $event): ?array {
 		if (!self::handleSearch()) {
-			return;
+			return null;
 		}
 		
 		// remove user profile tag fields (not present in group profile fields)
-		$value = (array) $hook->getValue();
+		$value = (array) $event->getValue();
 		
 		$defaults = [
 			'metadata' => [],
@@ -248,12 +248,12 @@ class SearchHooks {
 		
 		$value = array_merge($defaults, $value);
 		if (empty($value['metadata'])) {
-			return;
+			return null;
 		}
 		
 		$user_tags = self::getUserProfileTagsFields();
 		if (empty($user_tags)) {
-			return;
+			return null;
 		}
 		
 		$group_fields = elgg()->fields->get('group', 'group');
@@ -276,18 +276,17 @@ class SearchHooks {
 	/**
 	 * Change user search fields
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'user'
+	 * @param \Elgg\Event $event 'search:fields', 'user'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function userSearchFields(\Elgg\Hook $hook) {
-		
+	public static function userSearchFields(\Elgg\Event $event): ?array {
 		if (!self::handleSearch()) {
-			return;
+			return null;
 		}
 		
 		// remove profile tag fields from metadata
-		$value = (array) $hook->getValue();
+		$value = (array) $event->getValue();
 		
 		$defaults = [
 			'metadata' => [],
@@ -295,14 +294,14 @@ class SearchHooks {
 		
 		$value = array_merge($defaults, $value);
 		if (empty($value['metadata'])) {
-			return;
+			return null;
 		}
 		
 		$group_tags = self::getGroupProfileTagsFields();
 		$user_tags = self::getUserProfileTagsFields();
 		foreach ($value['metadata'] as $index => $metadata_name) {
 			$unset = false;
-			if (in_array($metadata_name, $user_tags) ) {
+			if (in_array($metadata_name, $user_tags)) {
 				$unset = true;
 			} elseif (in_array($metadata_name, $group_tags)) {
 				$unset = true;
@@ -321,21 +320,20 @@ class SearchHooks {
 	/**
 	 * Move some search fields around
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'all'
+	 * @param \Elgg\Event $event 'search:fields', 'all'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function searchFields(\Elgg\Hook $hook) {
-		
+	public static function searchFields(\Elgg\Event $event): ?array {
 		if (!self::handleSearch()) {
-			return;
+			return null;
 		}
 		
-		if ($hook->getParam('_opensearch_supported') === false) {
-			return;
+		if ($event->getParam('_opensearch_supported') === false) {
+			return null;
 		}
 		
-		$value = (array) $hook->getValue();
+		$value = (array) $event->getValue();
 		
 		$defaults = [
 			'attributes' => [],
@@ -369,21 +367,19 @@ class SearchHooks {
 	/**
 	 * When searching in the attribute name, move it to title according to the mapping
 	 *
-	 * @param \Elgg\Hook $hook 'search:fields', 'all'
+	 * @param \Elgg\Event $event 'search:fields', 'all'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function searchFieldsNameToTitle(\Elgg\Hook $hook) {
-		
+	public static function searchFieldsNameToTitle(\Elgg\Event $event): ?array {
 		if (!self::handleSearch()) {
-			return;
+			return null;
 		}
 		
-		$value = (array) $hook->getValue();
+		$value = (array) $event->getValue();
 		if (!isset($value['attributes']) || !in_array('name', $value['attributes'])) {
-			return;
+			return null;
 		}
-		
 		
 		foreach ($value['attributes'] as $index => $name) {
 			if ($name !== 'name') {
@@ -406,8 +402,7 @@ class SearchHooks {
 	 *
 	 * @return string[]
 	 */
-	protected static function getUserProfileTagsFields() {
-		
+	protected static function getUserProfileTagsFields(): array {
 		$fields = elgg()->fields->get('user', 'user');
 		if (empty($fields)) {
 			return [];
@@ -431,8 +426,7 @@ class SearchHooks {
 	 *
 	 * @return string[]
 	 */
-	protected static function getGroupProfileTagsFields() {
-		
+	protected static function getGroupProfileTagsFields(): array {
 		$fields = elgg()->fields->get('group', 'group');
 		if (empty($fields)) {
 			return [];
@@ -453,31 +447,30 @@ class SearchHooks {
 	/**
 	 * Hook to return search results for entity searches
 	 *
-	 * @param \Elgg\Hook $hook 'search:result', 'entities'
+	 * @param \Elgg\Event $event 'search:result', 'entities'
 	 *
 	 * @return void|\ElggEntity[]|int
-	 * @throws InvalidParameterException
+	 * @throws UnexpectedValueException
 	 */
-	public static function searchEntities(\Elgg\Hook $hook) {
-		
-		$value = $hook->getValue();
+	public static function searchEntities(\Elgg\Event $event) {
+		$value = $event->getValue();
 		if (isset($value)) {
-			return;
+			return null;
 		}
 		
-		$params = $hook->getParams();
+		$params = $event->getParams();
 		
 		$service = self::getServiceForHooks($params);
 		if (!$service) {
 			return;
 		}
 		
-		$service = elgg_trigger_plugin_hook('search_params', 'opensearch', ['search_params' => $params], $service);
+		$service = elgg_trigger_event_results('search_params', 'opensearch', ['search_params' => $params], $service);
 		if (!$service instanceof SearchService) {
-			throw new InvalidParameterException('The return value of the search_params opensearch hook should return an instanceof \ColdTrick\opensearch\Di\SearchService');
+			throw new UnexpectedValueException("The return value of the 'search_params' 'opensearch' event should return an instanceof \ColdTrick\OpenSearch\Di\SearchService");
 		}
 		
-		if (elgg_extract('count', $params) == true) {
+		if (elgg_extract('count', $params) === true) {
 			$result = $service->count();
 		} else {
 			$result = $service->search();
@@ -491,13 +484,8 @@ class SearchHooks {
 	 *
 	 * @return bool
 	 */
-	protected static function handleSearch() {
-		
-		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
-			return false;
-		}
-		
-		return true;
+	protected static function handleSearch(): bool {
+		return elgg_get_plugin_setting('search', 'opensearch') === 'yes';
 	}
 	
 	/**
@@ -505,25 +493,24 @@ class SearchHooks {
 	 *
 	 * @param array $params search params
 	 *
-	 * @return false|\ColdTrick\OpenSearch\Di\SearchService
+	 * @return null|\ColdTrick\OpenSearch\Di\SearchService
 	 */
-	protected static function getServiceForHooks($params) {
-		
+	protected static function getServiceForHooks($params): ?SearchService {
 		if (!self::handleSearch()) {
-			return false;
+			return null;
 		}
 		
 		if (self::detectUnsupportedSearchParams($params)) {
-			return false;
+			return null;
 		}
 		
 		$service = SearchService::instance();
 		if (!$service) {
-			return false;
+			return null;
 		}
 		
 		$service->initializeSearchParams($params);
-	
+		
 		return $service;
 	}
 	
@@ -535,7 +522,6 @@ class SearchHooks {
 	 * @return bool
 	 */
 	protected static function detectUnsupportedSearchParams(array $params): bool {
-		
 		$keys = [
 			'metadata_name_value_pair',
 			'metadata_name_value_pairs',
@@ -581,13 +567,12 @@ class SearchHooks {
 	/**
 	 * Transforms search result into hooks result array
 	 *
-	 * @param \ColdTrick\OpenSearch\SearchResult $result      the opensearch results
-	 * @param array                              $hook_params the search hook params
+	 * @param SearchResult $result      the OpenSearch results
+	 * @param array        $hook_params the search hook params
 	 *
 	 * @return array|int
 	 */
-	protected static function transformSearchResults($result, $hook_params) {
-		
+	protected static function transformSearchResults(SearchResult $result, array $hook_params) {
 		if (elgg_extract('count', $hook_params) === true) {
 			return $result->getCount();
 		}
@@ -598,31 +583,29 @@ class SearchHooks {
 	/**
 	 * Hook to add profile field filters to search
 	 *
-	 * @param \Elgg\Hook $hook 'search_params', 'opensearch'
+	 * @param \Elgg\Event $event 'search_params', 'opensearch'
 	 *
-	 * @return void|SearchService
+	 * @return null|SearchService
 	 */
-	public static function filterProfileFields(\Elgg\Hook $hook) {
-		
-		$search_params = $hook->getParam('search_params');
+	public static function filterProfileFields(\Elgg\Event $event): ?SearchService {
+		$search_params = $event->getParam('search_params');
 		if (empty($search_params) || !is_array($search_params)) {
-			return;
+			return null;
 		}
 		
 		$type = elgg_extract('type', $search_params);
 		if ($type !== 'user') {
-			return;
+			return null;
 		}
 		
 		$filter = elgg_extract('search_filter', $search_params, []);
 		$profile_field_filter = elgg_extract('profile_fields', $filter, []);
 		if (empty($profile_field_filter)) {
-			return;
+			return null;
 		}
 		
 		$queries = [];
 		foreach ($profile_field_filter as $field_name => $value) {
-			
 			$value = strtolower($value);
 			$value = str_replace('&amp;', '&', $value);
 			$value = str_replace('\\', ' ', $value);
@@ -663,11 +646,11 @@ class SearchHooks {
 		}
 		
 		if (empty($queries)) {
-			return;
+			return null;
 		}
 		
 		/* @var $service SearchService */
-		$service = $hook->getValue();
+		$service = $event->getValue();
 		
 		$service->getSearchParams()->addQuery($queries);
 		
@@ -675,45 +658,47 @@ class SearchHooks {
 	}
 	
 	/**
-	 * Hook to transform a search result to an Elgg Entity
+	 * Hook to transform a search result to an ElggEntity
 	 *
-	 * @param \Elgg\Hook $hook 'to:entity', 'opensearch'
+	 * @param \Elgg\Event $event 'to:entity', 'opensearch'
 	 *
-	 * @return void|false|\ElggEntity
+	 * @return null|\ElggEntity
 	 */
-	public static function sourceToEntity(\Elgg\Hook $hook) {
-	
-		$hit = $hook->getParam('hit');
+	public static function sourceToEntity(\Elgg\Event $event): ?\ElggEntity {
+		$hit = $event->getParam('hit');
 		$index = elgg_extract('_index', $hit);
 		
 		$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
 		if (!preg_match("/^{$index_prefix}(_[0-9]+)?$/", $index)) {
-			return;
+			return null;
 		}
 		
 		$source = elgg_extract('_source', $hit);
-	
+		
 		$row = new \stdClass();
 		foreach ($source as $key => $value) {
-			switch($key) {
+			switch ($key) {
 				case 'last_action':
 				case 'time_created':
 				case 'time_updated':
 					// convert the timestamps to unix timestamps
 					$value = strtotime($value);
+					// now set it
 				default:
 					$row->$key = $value;
 					break;
 			}
 		}
-	
-		// enabled attribute is not stored in opensearch by default
+		
+		// enabled attribute is not stored in OpenSearch by default
 		$row->enabled = 'yes';
-	
+		
 		try {
 			return _elgg_services()->entityTable->rowToElggStar($row);
-		} catch (\Exception $e) {
+		} catch (ExceptionInterface $e) {
 			elgg_log($e->getMessage(), 'NOTICE');
 		}
+		
+		return null;
 	}
 }

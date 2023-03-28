@@ -2,25 +2,29 @@
 
 namespace ColdTrick\OpenSearch\Di;
 
+use Elgg\Exceptions\UnexpectedValueException;
 use OpenSearch\Common\Exceptions\OpenSearchException;
 
+/**
+ * Manage the OpenSearch Indexes
+ */
 class IndexManagementService extends BaseClientService {
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
-	public static function name() {
+	public static function name(): string {
 		return 'opensearch.indexmanagementservice';
 	}
 	
 	/**
 	 * Get information about the index status
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function getIndexStatus() {
+	public function getIndexStatus(): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -31,17 +35,17 @@ class IndexManagementService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
 	 * Get information about the cluster the client is connected to
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function getClusterInformation() {
+	public function getClusterInformation(): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -50,7 +54,7 @@ class IndexManagementService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
@@ -74,7 +78,7 @@ class IndexManagementService extends BaseClientService {
 			}
 		}
 		
-		return '';
+		return null;
 	}
 	
 	/**
@@ -84,7 +88,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function indexExists(string $index) {
+	public function indexExists(string $index): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -108,7 +112,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function indexHasAlias(string $index, string $alias) {
+	public function indexHasAlias(string $index, string $alias): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -133,7 +137,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function addAlias(string $index, string $alias) {
+	public function addAlias(string $index, string $alias): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -143,7 +147,7 @@ class IndexManagementService extends BaseClientService {
 				'index' => $index,
 				'name' => $alias,
 			]);
-			return elgg_extract('acknowledged', $response, false);
+			return (bool) elgg_extract('acknowledged', $response, false);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
@@ -156,11 +160,11 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @param string $index the index to check
 	 *
-	 * @return false|string[]
+	 * @return null|string[]
 	 */
-	public function getAliases(string $index) {
+	public function getAliases(string $index): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -174,7 +178,7 @@ class IndexManagementService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
@@ -185,7 +189,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function deleteAlias(string $index, string $alias) {
+	public function deleteAlias(string $index, string $alias): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -195,7 +199,7 @@ class IndexManagementService extends BaseClientService {
 				'index' => $index,
 				'name' => $alias,
 			]);
-			return elgg_extract('acknowledged', $response, false);
+			return (bool) elgg_extract('acknowledged', $response, false);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
@@ -210,7 +214,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function flush(string $index) {
+	public function flush(string $index): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -236,7 +240,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function delete(string $index) {
+	public function delete(string $index): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -245,7 +249,7 @@ class IndexManagementService extends BaseClientService {
 			$response = $this->getClient()->indices()->delete([
 				'index' => $index,
 			]);
-			return elgg_extract('acknowledged', $response, false);
+			return (bool) elgg_extract('acknowledged', $response, false);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
@@ -260,7 +264,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function create(string $index) {
+	public function create(string $index): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -269,7 +273,7 @@ class IndexManagementService extends BaseClientService {
 		
 		try {
 			$response = $this->getClient()->indices()->create($config);
-			return elgg_extract('acknowledged', $response, false);
+			return (bool) elgg_extract('acknowledged', $response, false);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
@@ -284,7 +288,7 @@ class IndexManagementService extends BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function addMapping(string $index) {
+	public function addMapping(string $index): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -293,7 +297,7 @@ class IndexManagementService extends BaseClientService {
 		
 		try {
 			$response = $this->getClient()->indices()->putMapping($config);
-			return elgg_extract('acknowledged', $response, false);
+			return (bool) elgg_extract('acknowledged', $response, false);
 		} catch (OpenSearchException $e) {
 			$this->logger->error($e);
 		}
@@ -307,11 +311,11 @@ class IndexManagementService extends BaseClientService {
 	 * @param string $from_index source index
 	 * @param string $to_index   destination index
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	public function reindex(string $from_index, string $to_index) {
+	public function reindex(string $from_index, string $to_index): ?array {
 		if (!$this->isClientReady()) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -330,7 +334,7 @@ class IndexManagementService extends BaseClientService {
 			$this->logger->error($e);
 		}
 		
-		return false;
+		return null;
 	}
 	
 	/**
@@ -339,9 +343,9 @@ class IndexManagementService extends BaseClientService {
 	 * @param string $index index name
 	 *
 	 * @return array
-	 * @throws \InvalidArgumentException
+	 * @throws UnexpectedValueException
 	 */
-	protected function getIndexConfiguration(string $index) {
+	protected function getIndexConfiguration(string $index): array {
 		
 		$params = [
 			'index' => $index,
@@ -354,7 +358,7 @@ class IndexManagementService extends BaseClientService {
 					'analysis' => [
 						'analyzer' => [
 							'default' => [
-								'tokenizer'=> 'standard',
+								'tokenizer' => 'standard',
 								'filter' => [
 									'lowercase',
 									'asciifolding',
@@ -381,9 +385,9 @@ class IndexManagementService extends BaseClientService {
 			],
 		];
 		
-		$return = $this->hooks->trigger('config:index', 'opensearch', $params, $return);
+		$return = $this->events->triggerResults('config:index', 'opensearch', $params, $return);
 		if (!is_array($return)) {
-			throw new \InvalidArgumentException(elgg_echo('opensearch:index_management:exception:config:index'));
+			throw new UnexpectedValueException(elgg_echo('opensearch:index_management:exception:config:index'));
 		}
 		
 		return $return;
@@ -395,9 +399,9 @@ class IndexManagementService extends BaseClientService {
 	 * @param string $index index name
 	 *
 	 * @return array
-	 * @throws \InvalidArgumentException
+	 * @throws UnexpectedValueException
 	 */
-	protected function getMappingConfiguration(string $index) {
+	protected function getMappingConfiguration(string $index): array {
 		
 		$params = [
 			'index' => $index,
@@ -473,9 +477,9 @@ class IndexManagementService extends BaseClientService {
 			],
 		];
 		
-		$return = $this->hooks->trigger('config:mapping', 'opensearch', $params, $return);
+		$return = $this->events->triggerResults('config:mapping', 'opensearch', $params, $return);
 		if (!is_array($return)) {
-			throw new \InvalidArgumentException(elgg_echo('opensearch:index_management:exception:config:mapping'));
+			throw new UnexpectedValueException(elgg_echo('opensearch:index_management:exception:config:mapping'));
 		}
 		
 		return $return;

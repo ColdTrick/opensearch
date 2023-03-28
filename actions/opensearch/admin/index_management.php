@@ -21,11 +21,9 @@ if (!$exists && $task !== 'create') {
 
 switch ($task) {
 	case 'delete':
-		
 		if (!$service->delete($index)) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:delete', [$index]));
 		}
-		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:delete', [$index]));
 	case 'create':
 		$index_prefix = elgg_get_plugin_setting('index', 'opensearch');
@@ -48,20 +46,17 @@ switch ($task) {
 		if (!$service->addAlias($index, "{$index_prefix}_read")) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create', [$index]));
 		}
+		
 		if (!$service->addAlias($index, "{$index_prefix}_write")) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:create', [$index]));
 		}
-		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:create', [$index]));
 	case 'add_mappings':
-		
 		if (!$service->addMapping($index)) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:add_mappings', [$index]));
 		}
-		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:add_mappings', [$index]));
 	case 'add_alias':
-		
 		$alias = elgg_get_plugin_setting('search_alias', 'opensearch');
 		if (empty($alias)) {
 			return elgg_error_response(elgg_echo('opensearch:error:alias_not_configured'));
@@ -74,10 +69,8 @@ switch ($task) {
 		if (!$service->addAlias($index, $alias)) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:add_alias', [$alias, $index]));
 		}
-		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:add_alias', [$alias, $index]));
 	case 'delete_alias':
-		
 		$alias = elgg_get_plugin_setting('search_alias', 'opensearch');
 		if (empty($alias)) {
 			return elgg_error_response(elgg_echo('opensearch:error:alias_not_configured'));
@@ -90,7 +83,6 @@ switch ($task) {
 		if (!$service->deleteAlias($index, $alias)) {
 			return elgg_error_response(elgg_echo('opensearch:action:admin:index_management:error:delete_alias', [$alias, $index]));
 		}
-		
 		return elgg_ok_response('', elgg_echo('opensearch:action:admin:index_management:delete_alias', [$alias, $index]));
 }
 

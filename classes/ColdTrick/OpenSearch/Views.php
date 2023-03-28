@@ -2,26 +2,28 @@
 
 namespace ColdTrick\OpenSearch;
 
+/**
+ * View events listener
+ */
 class Views {
 	
 	/**
 	 * Display the search score in the search results
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'object|user/elements/imprint/contents'
+	 * @param \Elgg\Event $event 'view_vars', 'object|user/elements/imprint/contents'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function displaySearchScoreInImprint(\Elgg\Hook $hook) {
-		
-		$vars = $hook->getValue();
+	public static function displaySearchScoreInImprint(\Elgg\Event $event): ?array {
+		$vars = $event->getValue();
 		
 		if (!(bool) elgg_extract('show_search_score', $vars, false)) {
-			return;
+			return null;
 		}
 		
 		$entity = elgg_extract('entity', $vars);
 		if (!$entity instanceof \ElggEntity || !$entity->getVolatileData('search_score')) {
-			return;
+			return null;
 		}
 		
 		$imprint = elgg_extract('imprint', $vars, []);
@@ -36,23 +38,22 @@ class Views {
 	}
 	
 	/**
-	 * Allow search for banned users in livesearch as no banned users are indexed in opensearch
-	 * and this prevents the addition of unsupported params which would prevent opensearch from
+	 * Allow search for banned users in livesearch as no banned users are indexed in OpenSearch
+	 * and this prevents the addition of unsupported params which would prevent OpenSearch from
 	 * providing the search results
 	 *
-	 * NOTE: opensearch doesn't support searching for banned users as they aren't indexed
+	 * NOTE: OpenSearch doesn't support searching for banned users as they aren't indexed
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'resources/livesearch/users'
+	 * @param \Elgg\Event $event 'view_vars', 'resources/livesearch/users'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function allowBannedUsers(\Elgg\Hook $hook) {
-		
+	public static function allowBannedUsers(\Elgg\Event $event): ?array {
 		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
-			return;
+			return null;
 		}
 		
-		$vars = $hook->getValue();
+		$vars = $event->getValue();
 		
 		$vars['include_banned'] = true;
 		
@@ -63,17 +64,16 @@ class Views {
 	 * Prevent search param manipulation during presentation, to prevent unwanted
 	 * 'search_matched_extra' VolatileData
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'search/entity'
+	 * @param \Elgg\Event $event 'view_vars', 'search/entity'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function preventSearchFieldChanges(\Elgg\Hook $hook) {
-		
+	public static function preventSearchFieldChanges(\Elgg\Event $event): ?array {
 		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
-			return;
+			return null;
 		}
 		
-		$vars = $hook->getValue();
+		$vars = $event->getValue();
 		$search_params = elgg_extract('params', $vars, []);
 		
 		$search_params['_opensearch_no_transform_fields'] = true;
@@ -87,17 +87,16 @@ class Views {
 	/**
 	 * Enable search score presentation (for admins when enabled)
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'search/entity'
+	 * @param \Elgg\Event $event 'view_vars', 'search/entity'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function enableSearchScorePresentation(\Elgg\Hook $hook) {
-		
+	public static function enableSearchScorePresentation(\Elgg\Event $event): ?array {
 		if (!elgg_is_admin_logged_in() || elgg_get_plugin_setting('search_score', 'opensearch') !== 'yes') {
-			return;
+			return null;
 		}
 		
-		$vars = $hook->getValue();
+		$vars = $event->getValue();
 		$vars['show_search_score'] = true;
 		
 		return $vars;
@@ -106,11 +105,11 @@ class Views {
 	/**
 	 * Set the default sorting on the search result page to 'relevance'
 	 *
-	 * @param \Elgg\Hook $hook 'view_vars', 'resources/search/index'
+	 * @param \Elgg\Event $event 'view_vars', 'resources/search/index'
 	 *
 	 * @return void
 	 */
-	public static function setDefaultSearchSorting(\Elgg\Hook $hook): void {
+	public static function setDefaultSearchSorting(\Elgg\Event $event): void {
 		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
 			return;
 		}

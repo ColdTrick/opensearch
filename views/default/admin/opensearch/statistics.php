@@ -5,7 +5,7 @@ use ColdTrick\OpenSearch\Di\IndexManagementService;
 // Elgg configuration
 echo elgg_view('opensearch/stats/elgg');
 
-// opensearch stats require configured client
+// OpenSearch stats require configured client
 $service = IndexManagementService::instance();
 if (!$service->isClientReady()) {
 	echo elgg_echo('opensearch:error:no_client');

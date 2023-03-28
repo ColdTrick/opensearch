@@ -2,6 +2,7 @@
 
 namespace ColdTrick\OpenSearch\Di;
 
+use Elgg\EventsService;
 use Elgg\Logger;
 use Elgg\PluginHooksService;
 use Elgg\Traits\Di\ServiceFacade;
@@ -10,38 +11,35 @@ use OpenSearch\ClientBuilder;
 use OpenSearch\Common\Exceptions\OpenSearchException;
 use OpenSearch\Common\Exceptions\RuntimeException;
 
+/**
+ * Base client for OpenSearch
+ */
 abstract class BaseClientService {
 
 	use ServiceFacade;
 	
 	/**
-	 * @var Client
+	 * @var Client|false
 	 */
 	private $client;
 	
-	/**
-	 * @var string
-	 */
-	private $index_prefix;
+	private string $index_prefix;
+	
+	private string $search_alias;
+	
+	protected Logger $logger;
+	
+	protected EventsService $events;
 	
 	/**
-	 * @var false|string
+	 * Create the service
+	 *
+	 * @param Logger        $logger Logger service
+	 * @param EventsService $events Events service
 	 */
-	private $search_alias;
-	
-	/**
-	 * @var Logger
-	 */
-	protected $logger;
-	
-	/**
-	 * @var PluginHooksService
-	 */
-	protected $hooks;
-	
-	public function __construct(Logger $logger, PluginHooksService $hooks) {
+	public function __construct(Logger $logger, EventsService $events) {
 		$this->logger = $logger;
-		$this->hooks = $hooks;
+		$this->events = $events;
 	}
 	
 	/**
@@ -49,16 +47,16 @@ abstract class BaseClientService {
 	 *
 	 * @return bool
 	 */
-	public function isClientReady() {
+	public function isClientReady(): bool {
 		return !empty($this->getClient());
 	}
 	
 	/**
-	 * Are the opensearch servers reachable
+	 * Are the OpenSearch servers reachable
 	 *
 	 * @return bool
 	 */
-	public function ping() {
+	public function ping(): bool {
 		if (!$this->isClientReady()) {
 			return false;
 		}
@@ -74,17 +72,17 @@ abstract class BaseClientService {
 	}
 	
 	/**
-	 * Get the opensearch client
+	 * Get the OpenSearch client
 	 *
-	 * @return false|\opensearch\Client
+	 * @return null|\OpenSearch\Client
 	 */
-	protected function getClient() {
+	protected function getClient(): ?Client {
 		if (!isset($this->client)) {
 			$this->client = false;
 			
 			$config = $this->getClientConfig();
 			if (empty($config)) {
-				return false;
+				return null;
 			}
 			
 			try {
@@ -94,19 +92,18 @@ abstract class BaseClientService {
 			}
 		}
 		
-		return $this->client;
+		return $this->client ?: null;
 	}
 	
 	/**
 	 * Get client configuration
 	 *
-	 * @return false|array
+	 * @return null|array
 	 */
-	protected function getClientConfig() {
-		
+	protected function getClientConfig(): ?array {
 		$hosts = elgg_get_plugin_setting('host', 'opensearch');
 		if (empty($hosts)) {
-			return false;
+			return null;
 		}
 		
 		$config = [];
@@ -189,7 +186,7 @@ abstract class BaseClientService {
 	 *
 	 * @return string
 	 */
-	public function getSearchIndex() {
+	public function getSearchIndex(): string {
 		if (!isset($this->search_alias)) {
 			$this->search_alias = $this->getReadAlias();
 			

@@ -12,23 +12,22 @@ class Entity {
 	/**
 	 * Add an inspect menu item
 	 *
-	 * @param \Elgg\Hook $hook 'register', 'menu:entity'
+	 * @param \Elgg\Event $event 'register', 'menu:entity'
 	 *
-	 * @return void|MenuItems
+	 * @return null|MenuItems
 	 */
-	public static function inspect(\Elgg\Hook $hook) {
-		
+	public static function inspect(\Elgg\Event $event): ?MenuItems {
 		if (!elgg_is_admin_logged_in()) {
-			return;
+			return null;
 		}
 		
-		$entity = $hook->getEntityParam();
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggEntity) {
-			return;
+			return null;
 		}
 		
 		/* @var $result MenuItems */
-		$result = $hook->getValue();
+		$result = $event->getValue();
 		
 		$result[] = \ElggMenuItem::factory([
 			'name' => 'opensearch_inspect',

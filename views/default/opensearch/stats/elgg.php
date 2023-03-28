@@ -1,6 +1,7 @@
 <?php
 
 use ColdTrick\OpenSearch\Di\DeleteQueue;
+use Elgg\Exceptions\ExceptionInterface;
 
 $content = '<table class="elgg-table">';
 
@@ -20,7 +21,7 @@ $content .= elgg_view('output/longtext', [
 	'value' => elgg_echo('opensearch:stats:elgg:total:help'),
 	'class' => 'elgg-subtext',
 ]) . '</td>';
-$content .= elgg_format_element('td', [], elgg_get_entities($options));
+$content .= elgg_format_element('td', [], elgg_count_entities($options));
 $content .= '</tr>';
 
 // new content to index
@@ -58,20 +59,20 @@ if (!empty($last_ts)) {
 
 $content .= elgg_view('output/url', [
 	'confirm' => true,
-	'href' => 'action/opensearch/admin/reindex',
 	'text' => elgg_view_icon('refresh'),
 	'title' => $reindex_title,
+	'href' => 'action/opensearch/admin/reindex',
 	'class' => 'mlm'
 ]);
 
 $content .= '</td>';
-$content .= "<td>{$count}</td>";
+$content .= elgg_format_element('td', [], $count);
 $content .= '</tr>';
 
 $count = 0;
 try {
 	$count = DeleteQueue::instance()->size();
-} catch (\Exception $e) {
+} catch (ExceptionInterface $e) {
 	// something went wrong
 	$count = elgg_echo('unknown');
 }
