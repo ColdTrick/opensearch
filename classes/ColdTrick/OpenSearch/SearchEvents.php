@@ -445,7 +445,7 @@ class SearchEvents {
 	}
 	
 	/**
-	 * Hook to return search results for entity searches
+	 * Event to return search results for entity searches
 	 *
 	 * @param \Elgg\Event $event 'search:result', 'entities'
 	 *
@@ -460,7 +460,7 @@ class SearchEvents {
 		
 		$params = $event->getParams();
 		
-		$service = self::getServiceForHooks($params);
+		$service = self::getServiceForEvents($params);
 		if (!$service) {
 			return;
 		}
@@ -495,7 +495,7 @@ class SearchEvents {
 	 *
 	 * @return null|\ColdTrick\OpenSearch\Di\SearchService
 	 */
-	protected static function getServiceForHooks($params): ?SearchService {
+	protected static function getServiceForEvents($params): ?SearchService {
 		if (!self::handleSearch()) {
 			return null;
 		}
@@ -565,23 +565,23 @@ class SearchEvents {
 	}
 	
 	/**
-	 * Transforms search result into hooks result array
+	 * Transforms search result into events result array
 	 *
-	 * @param SearchResult $result      the OpenSearch results
-	 * @param array        $hook_params the search hook params
+	 * @param SearchResult $result       the OpenSearch results
+	 * @param array        $event_params the search event params
 	 *
 	 * @return array|int
 	 */
-	protected static function transformSearchResults(SearchResult $result, array $hook_params) {
-		if (elgg_extract('count', $hook_params) === true) {
+	protected static function transformSearchResults(SearchResult $result, array $event_params) {
+		if (elgg_extract('count', $event_params) === true) {
 			return $result->getCount();
 		}
 		
-		return $result->toEntities($hook_params);
+		return $result->toEntities($event_params);
 	}
 	
 	/**
-	 * Hook to add profile field filters to search
+	 * Eevnt to add profile field filters to search
 	 *
 	 * @param \Elgg\Event $event 'search_params', 'opensearch'
 	 *
@@ -658,7 +658,7 @@ class SearchEvents {
 	}
 	
 	/**
-	 * Hook to transform a search result to an ElggEntity
+	 * Event to transform a search result to an ElggEntity
 	 *
 	 * @param \Elgg\Event $event 'to:entity', 'opensearch'
 	 *

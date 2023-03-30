@@ -24,8 +24,8 @@ return array(
 	'opensearch:menu:search_list:sort:member_count' => "Member count",
 	
 	// generic
-	'opensearch:index_management:exception:config:index' => "The hook 'config:index', 'opensearch' should return an array for the index configuration",
-	'opensearch:index_management:exception:config:mapping' => "The hook 'config:mapping', 'opensearch' should return an array for the mapping configuration",
+	'opensearch:index_management:exception:config:index' => "The event 'config:index', 'opensearch' should return an array for the index configuration",
+	'opensearch:index_management:exception:config:mapping' => "The event 'config:mapping', 'opensearch' should return an array for the mapping configuration",
 	
 	'opensearch:admin_search:results' => "Search Results",
 	'opensearch:admin_search:results:info' => "Results will be shown here",

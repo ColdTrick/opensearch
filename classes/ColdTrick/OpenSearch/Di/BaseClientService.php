@@ -4,7 +4,6 @@ namespace ColdTrick\OpenSearch\Di;
 
 use Elgg\EventsService;
 use Elgg\Logger;
-use Elgg\PluginHooksService;
 use Elgg\Traits\Di\ServiceFacade;
 use OpenSearch\Client;
 use OpenSearch\ClientBuilder;

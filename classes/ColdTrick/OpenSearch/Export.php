@@ -11,7 +11,7 @@ use Elgg\Export\Data;
 class Export {
 	
 	/**
-	 * Hook to adjust exportable values of basic entities for search
+	 * Event to adjust exportable values of basic entities for search
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -65,7 +65,7 @@ class Export {
 	}
 
 	/**
-	 * Hook to export entity metadata for search
+	 * Event to export entity metadata for search
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -135,7 +135,7 @@ class Export {
 	}
 
 	/**
-	 * Hook to join user/group profile tag fields with tags
+	 * Event to join user/group profile tag fields with tags
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -203,7 +203,7 @@ class Export {
 	}
 
 	/**
-	 * Hook to export entity counters for search
+	 * Event to export entity counters for search
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -232,7 +232,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to export relationship entities for search
+	 * Event to export relationship entities for search
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -284,7 +284,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to strip tags from selected entity fields
+	 * Event to strip tags from selected entity fields
 	 *
 	 * @param \Elgg\Event $event 'to:object', 'entity'
 	 *
@@ -317,7 +317,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to extend the exportable metadata names
+	 * Event to extend the exportable metadata names
 	 *
 	 * @param \Elgg\Event $event 'export:metadata_names', 'opensearch'
 	 *
@@ -349,7 +349,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to export group members count
+	 * Event to export group members count
 	 *
 	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *
@@ -371,7 +371,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to export likes count
+	 * Event to export likes count
 	 *
 	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *
@@ -399,7 +399,7 @@ class Export {
 	}
 	
 	/**
-	 * Hook to export comments count
+	 * Event to export comments count
 	 *
 	 * @param \Elgg\Event $event 'export:counters', 'opensearch'
 	 *

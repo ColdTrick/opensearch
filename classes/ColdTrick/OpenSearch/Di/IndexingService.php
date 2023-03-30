@@ -204,11 +204,11 @@ class IndexingService extends BaseClientService {
 			/* @var $entity \ElggEntity */
 			foreach ($entities as $entity) {
 				// is this entity prevented from being indexed
-				$hook_params = [
+				$event_params = [
 					'entity' => $entity,
 				];
 				
-				if ((bool) elgg_trigger_event_results('index:entity:prevent', 'opensearch', $hook_params, false)) {
+				if ((bool) elgg_trigger_event_results('index:entity:prevent', 'opensearch', $event_params, false)) {
 					$this->markEntityDone($entity);
 					continue;
 				}

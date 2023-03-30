@@ -74,7 +74,7 @@ plugin provides a menu to sort/order the results.
 
 ## Developers
 
-### Plugin hooks
+### Plugin events
 
 #### 'boostable_types', 'opensearch'
 
