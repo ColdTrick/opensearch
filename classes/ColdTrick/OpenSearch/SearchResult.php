@@ -152,7 +152,7 @@ class SearchResult {
 			// description
 			$desc = elgg_extract('description', $highlight);
 			if (empty($desc)) {
-				$desc = elgg_get_excerpt(elgg_extract('description', $source));
+				$desc = elgg_get_excerpt((string) elgg_extract('description', $source));
 			}
 			
 			if (is_array($desc)) {
