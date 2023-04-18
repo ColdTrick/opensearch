@@ -77,7 +77,6 @@ function opensearch_get_types_for_boosting(): array {
 function opensearch_get_bulk_options(string $type = 'no_index_ts'): ?array {
 	$type_subtypes = opensearch_get_registered_entity_types();
 	if (empty($type_subtypes)) {
-		var_dump(1);
 		return null;
 	}
 	
