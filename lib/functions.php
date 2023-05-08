@@ -125,13 +125,13 @@ function opensearch_get_bulk_options(string $type = 'no_index_ts'): ?array {
 						'name' => OPENSEARCH_INDEXED_NAME,
 						'value' => $setting,
 						'operand' => '<',
-						'as' => 'integer',
+						'type' => ELGG_VALUE_INTEGER,
 					],
 					[
 						'name' => OPENSEARCH_INDEXED_NAME,
 						'value' => 0,
 						'operand' => '>',
-						'as' => 'integer',
+						'type' => ELGG_VALUE_INTEGER,
 					],
 				],
 			]);
