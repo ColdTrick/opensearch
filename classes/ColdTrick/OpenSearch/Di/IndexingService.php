@@ -21,7 +21,7 @@ class IndexingService extends BaseClientService {
 		'reindex',
 	];
 	
-	protected ?ProgressBar $progress_bar;
+	protected ?ProgressBar $progress_bar = null;
 	
 	/**
 	 * @var int[] GUIDs to skip during indexing
