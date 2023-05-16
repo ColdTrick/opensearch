@@ -247,13 +247,23 @@ class Export {
 		if (!$entity instanceof \ElggEntity) {
 			return null;
 		}
+		
+		$relationship_names = elgg_trigger_event_results('export:relationship_names', 'opensearch', $event->getParams(), []);
+		if (empty($relationship_names) || !is_array($relationship_names)) {
+			return null;
+		}
 	
 		$relationships = elgg_get_relationships([
 			'batch' => true,
 			'limit' => false,
-			'wheres' => function(QueryBuilder $qb, $main_alias) use ($entity) {
-				return $qb->compare("{$main_alias}.guid_one", '=', $entity->guid, ELGG_VALUE_GUID);
-			}
+			'wheres' => [
+				function(QueryBuilder $qb, $main_alias) use ($entity) {
+					return $qb->compare("{$main_alias}.guid_one", '=', $entity->guid, ELGG_VALUE_GUID);
+				},
+				function(QueryBuilder $qb, $main_alias) use ($relationship_names) {
+					return $qb->compare("{$main_alias}.relationship", 'in', $relationship_names, ELGG_VALUE_STRING);
+				},
+			],
 		]);
 		
 		$result = [];

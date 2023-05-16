@@ -118,6 +118,13 @@ Return an array of metadata names to be exported to OpenSearch.
 Params contain:
 - `entity`: the `ElggEntity` being exported
 
+#### 'export:relationship_names', 'opensearch'
+
+Return an array of relationship names to be exported to OpenSearch.
+
+Params contain:
+- `entity`: the `ElggEntity` being exported
+
 #### 'index_entity_type_subtypes', 'opensearch'
 
 Return an array of type/subtypes allowed to be indexed by OpenSearch.

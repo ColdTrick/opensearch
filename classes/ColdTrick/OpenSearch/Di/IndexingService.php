@@ -215,7 +215,7 @@ class IndexingService extends BaseClientService {
 				
 				// not prevented so add to the next batch
 				$index_entities[] = $entity;
-				if (count($index_entities) >= 50) {
+				if (count($index_entities) >= 100) {
 					// process a batch of allowed entities
 					$this->processBulkIndexEntities($index_entities);
 					// reset
