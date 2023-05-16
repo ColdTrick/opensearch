@@ -267,7 +267,7 @@ function opensearch_inspect_show_values($key, array $merged_values, array $elgg_
 	
 	foreach ($merged_values as $key => $values) {
 		if (is_array($values)) {
-			$subvalues = opensearch_inspect_show_values($key, $values, elgg_extract($key, $elgg_values), elgg_extract($key, $opensearch_values), $depth + 1);
+			$subvalues = opensearch_inspect_show_values($key, $values, (array) elgg_extract($key, $elgg_values), (array) elgg_extract($key, $opensearch_values), $depth + 1);
 			if (empty($subvalues)) {
 				continue;
 			}
@@ -276,14 +276,14 @@ function opensearch_inspect_show_values($key, array $merged_values, array $elgg_
 			continue;
 		}
 		
-		$elgg_value = elgg_extract($key, $elgg_values);
+		$elgg_value = elgg_extract($key, $elgg_values, '');
 		if (is_array($elgg_value)) {
 			$elgg_value = implode(', ', $elgg_value);
 		}
 		
-		$es_value = elgg_extract($key, $opensearch_values);
+		$opensearch_value = elgg_extract($key, $opensearch_values, '');
 		$class = [];
-		if ($elgg_value != $es_value) {
+		if ($elgg_value !== $opensearch_value) {
 			$class[] = 'elgg-state';
 			$class[] = 'elgg-state-error';
 		}
@@ -291,7 +291,7 @@ function opensearch_inspect_show_values($key, array $merged_values, array $elgg_
 		$rows[] = elgg_format_element('tr', ['class' => $class], implode(PHP_EOL, [
 			elgg_format_element('td', [], $key),
 			elgg_format_element('td', [], $elgg_value),
-			elgg_format_element('td', [], $es_value),
+			elgg_format_element('td', [], $opensearch_value),
 		]));
 	}
 	

@@ -112,7 +112,7 @@ if (empty($entity)) {
 				]));
 			} else {
 				// has subvalues
-				$subvalues = opensearch_inspect_show_values($key, $values, elgg_extract($key, $current_content), elgg_extract($key, $opensearch_content));
+				$subvalues = opensearch_inspect_show_values($key, $values, (array) elgg_extract($key, $current_content), (array) elgg_extract($key, $opensearch_content));
 				if (!empty($subvalues)) {
 					$extras = array_merge($extras, $subvalues);
 				}
