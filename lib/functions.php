@@ -94,14 +94,14 @@ function opensearch_get_bulk_options(string $type = 'no_index_ts'): ?array {
 			return array_merge($defaults, [
 				'wheres' => [
 					function (QueryBuilder $qb, $main_alias) {
-						$select = Select::fromTable('metadata', 'mdi');
+						$select = $qb->subquery('metadata', 'mdi');
 						$select->select('mdi.entity_guid')
 							->where($qb->compare('mdi.name', '=', OPENSEARCH_INDEXED_NAME, ELGG_VALUE_STRING));
 						
 						return $qb->compare("{$main_alias}.guid", 'NOT IN', $select->getSQL());
 					},
 					function (QueryBuilder $qb, $main_alias) {
-						$select = Select::fromTable('metadata', 'b');
+						$select = $qb->subquery('metadata', 'b');
 						$select->select('b.entity_guid')
 							->joinEntitiesTable('b', 'entity_guid', 'inner', 'be');
 						$select->where($qb->compare('be.type', '=', 'user', ELGG_VALUE_STRING))
