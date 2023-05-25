@@ -92,6 +92,9 @@ return [
 			'menu:entity' => [
 				'\ColdTrick\OpenSearch\Menus\Entity::inspect' => [],
 			],
+			'menu:entity_explorer' => [
+				'\ColdTrick\OpenSearch\Menus\EntityExplorer::inspect' => [],
+			],
 		],
 		'search:params' => [
 			'all' => [
