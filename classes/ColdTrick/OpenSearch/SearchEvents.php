@@ -581,7 +581,7 @@ class SearchEvents {
 	}
 	
 	/**
-	 * Eevnt to add profile field filters to search
+	 * Event to add profile field filters to search
 	 *
 	 * @param \Elgg\Event $event 'search_params', 'opensearch'
 	 *
