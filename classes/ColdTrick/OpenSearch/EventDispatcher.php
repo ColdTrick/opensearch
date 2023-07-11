@@ -155,7 +155,9 @@ class EventDispatcher {
 			return;
 		}
 		
-		$entity->{OPENSEARCH_INDEXED_NAME} = 0;
+		elgg_call(ELGG_DISABLE_SYSTEM_LOG, function() use ($entity) {
+			$entity->{OPENSEARCH_INDEXED_NAME} = 0;
+		});
 	}
 	
 	/**

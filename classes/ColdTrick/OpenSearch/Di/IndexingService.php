@@ -266,8 +266,10 @@ class IndexingService extends BaseClientService {
 	 * @return void
 	 */
 	protected function markEntityDone(\ElggEntity $entity): void {
-		$entity->{OPENSEARCH_INDEXED_NAME} = time();
-		$entity->invalidateCache();
+		elgg_call(ELGG_DISABLE_SYSTEM_LOG, function() use ($entity) {
+			$entity->{OPENSEARCH_INDEXED_NAME} = time();
+			$entity->invalidateCache();
+		});
 		
 		// advance progress bar
 		if ($this->progress_bar instanceof ProgressBar) {

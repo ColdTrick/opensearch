@@ -206,7 +206,7 @@ function opensearch_add_document_for_deletion(int $guid, array $info, $time_offs
 function opensearch_remove_document_for_deletion(int $guid): void {
 	// check if the entity still exists in Elgg (could be unregistered as searchable)
 	// and remove indexing timestamp so it can be reindexed when needed
-	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES, function() use ($guid) {
+	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES | ELGG_DISABLE_SYSTEM_LOG, function() use ($guid) {
 		$entity = get_entity($guid);
 		if ($entity instanceof \ElggEntity) {
 			unset($entity->{OPENSEARCH_INDEXED_NAME});
