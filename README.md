@@ -1,7 +1,7 @@
 # opensearch
 
 ![Elgg 5.0](https://img.shields.io/badge/Elgg-5.0-green.svg)
-![OpenSearch 1.1](https://img.shields.io/badge/OpenSearch-1.1-green.svg)
+![OpenSearch 2.5](https://img.shields.io/badge/OpenSearch-2.5-green.svg)
 ![Lint Checks](https://github.com/ColdTrick/opensearch/actions/workflows/lint.yml/badge.svg?event=push)
 [![Latest Stable Version](https://poser.pugx.org/coldtrick/opensearch/v/stable.svg)](https://packagist.org/packages/coldtrick/opensearch)
 [![License](https://poser.pugx.org/coldtrick/opensearch/license.svg)](https://packagist.org/packages/coldtrick/opensearch)
@@ -13,7 +13,7 @@ An OpenSearch implementation for Elgg
 A working [OpenSearch](https://www.opensearch.org/) server is required. Also the minute cron has to be working on your Elgg installation. 
 The minute cron is used to update the index with all the required changes (create/update/delete).
 
-The current supported version of OpenSearch is: 1.1.x
+The current supported version of OpenSearch is: 2.5.x
 
 ## Configuration
 
@@ -64,7 +64,7 @@ Only use this command when a change was made to the index configuration and/or m
 
 #### opensearch:sync
 
-This command will synchronize all pending entities to the OpenSearch index. This is especialy usefull during the reindexing 
+This command will synchronize all pending entities to the OpenSearch index. This is especially usefull during the reindexing 
 process of the database because a lot of entities need to be indexed. Using the normal cron task in this case could take a long time.
 
 ## Recommendations

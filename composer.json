@@ -11,7 +11,7 @@
 	},
 	"require": {
 		"composer/installers": "^1.0.8",
-		"opensearch-project/opensearch-php": "~1.0.0"
+		"opensearch-project/opensearch-php": "^2.0.0"
 	},
 	"conflict": {
 		"elgg/elgg": "<5.0"
