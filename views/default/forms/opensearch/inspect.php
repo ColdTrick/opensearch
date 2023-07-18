@@ -13,7 +13,7 @@ echo elgg_view_field([
 $footer = elgg_view_field([
 	'#type' => 'submit',
 	'icon' => 'search',
-	'value' => elgg_echo('opensearch:inspect:submit'),
+	'text' => elgg_echo('opensearch:inspect:submit'),
 ]);
 
 elgg_set_form_footer($footer);
