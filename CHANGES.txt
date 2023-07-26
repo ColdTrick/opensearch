@@ -1,6 +1,13 @@
 Version history
 ===============
 
+5.0 (2023-07-26):
+
+- changed: updated OpenSearch client to support OpenSearch 2.5+
+- fixed: buttons have a discernible text
+- fixed: disable system log tracking of last indexed timestamp
+- fixed: prevent reindexing of prevented entities
+
 4.0 (2023-06-02):
 
 - added: entity explorer menu item
