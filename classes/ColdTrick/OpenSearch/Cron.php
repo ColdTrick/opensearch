@@ -30,11 +30,12 @@ class Cron {
 			return;
 		}
 		
+		/* @var $logger \Elgg\Logger\Cron */
+		$logger = $event->getParam('logger');
 		$max_run_time = 30;
 		
 		// delete first
-		echo 'Starting OpenSearch indexing: delete' . PHP_EOL;
-		elgg_log('Starting OpenSearch indexing: delete', 'NOTICE');
+		$logger->notice('Starting OpenSearch indexing: delete');
 		
 		$service->bulkDeleteDocuments();
 		
@@ -42,8 +43,7 @@ class Cron {
 		foreach (IndexingService::INDEXING_TYPES as $action) {
 			$batch_starttime = time();
 			
-			echo "Starting OpenSearch indexing: {$action}" . PHP_EOL;
-			elgg_log("Starting OpenSearch indexing: {$action}", 'NOTICE');
+			$logger->notice("Starting OpenSearch indexing: {$action}");
 			
 			$service->bulkIndexDocuments([
 				'type' => $action,
@@ -55,9 +55,6 @@ class Cron {
 				break;
 			}
 		}
-		
-		echo 'Done with OpenSearch indexing' . PHP_EOL;
-		elgg_log('Done with OpenSearch indexing', 'NOTICE');
 	}
 	
 	/**
@@ -78,20 +75,18 @@ class Cron {
 			return;
 		}
 		
-		echo 'Starting OpenSearch cleanup: ES' . PHP_EOL;
-		elgg_log('Starting OpenSearch cleanup: ES', 'NOTICE');
+		/* @var $logger \Elgg\Logger\Cron */
+		$logger = $event->getParam('logger');
 		
 		// find documents in ES which don't exist in Elgg anymore
+		$logger->notice('Starting OpenSearch cleanup: ES');
+		
 		self::cleanupOpenSearch();
 		
-		echo 'Starting OpenSearch cleanup: Elgg' . PHP_EOL;
-		elgg_log('Starting OpenSearch cleanup: Elgg', 'NOTICE');
-		
 		// find entities in Elgg which should be in ES but aren't
-		self::checkElggIndex();
+		$logger->notice('Starting OpenSearch cleanup: Elgg');
 		
-		echo 'Done with OpenSearch cleanup' . PHP_EOL;
-		elgg_log('Done with OpenSearch cleanup', 'NOTICE');
+		self::checkElggIndex();
 	}
 	
 	/**

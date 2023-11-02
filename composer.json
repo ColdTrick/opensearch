@@ -14,7 +14,7 @@
 		"opensearch-project/opensearch-php": "^2.0.0"
 	},
 	"conflict": {
-		"elgg/elgg": "<5.0"
+		"elgg/elgg": "<5.1"
 	},
 	"config": {
 		"allow-plugins": {
