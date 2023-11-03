@@ -10,15 +10,9 @@
 		"issues": "https://github.com/ColdTrick/opensearch/issues"
 	},
 	"require": {
-		"composer/installers": "^1.0.8",
 		"opensearch-project/opensearch-php": "^2.0.0"
 	},
 	"conflict": {
 		"elgg/elgg": "<5.1"
-	},
-	"config": {
-		"allow-plugins": {
-			"composer/installers": true
-		}
 	}
 }
