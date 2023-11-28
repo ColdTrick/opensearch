@@ -197,12 +197,13 @@ class IndexingService extends BaseClientService {
 			};
 			
 			$index_entities = [];
+			$batch_size = (int) elgg_extract('batch_size', $options, 25);
 			
 			/* @var $entities \ElggBatch */
 			$entities = elgg_get_entities($options);
 			
 			/* @var $entity \ElggEntity */
-			foreach ($entities as $entity) {
+			foreach ($entities as $index => $entity) {
 				// is this entity prevented from being indexed
 				$event_params = [
 					'entity' => $entity,
@@ -210,12 +211,12 @@ class IndexingService extends BaseClientService {
 				
 				if ((bool) elgg_trigger_event_results('index:entity:prevent', 'opensearch', $event_params, false)) {
 					$this->markEntityDone($entity);
-					continue;
+				} else {
+					// not prevented so add to the next batch
+					$index_entities[] = $entity;
 				}
 				
-				// not prevented so add to the next batch
-				$index_entities[] = $entity;
-				if (count($index_entities) >= 100) {
+				if (count($index_entities) > 0 && (($index + 1) % $batch_size) === 0) {
 					// process a batch of allowed entities
 					$this->processBulkIndexEntities($index_entities);
 					// reset
