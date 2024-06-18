@@ -138,7 +138,6 @@ Meer informatie over content type boosting kun je kijken op de OpenSearch docume
   'opensearch:stats:elgg:delete' => 'Content die nog verwijderd moet worden',
   'opensearch:indices:index' => 'Index',
   'opensearch:indices:alias' => 'Alias',
-  'opensearch:indices:create' => 'Aanmaken',
   'opensearch:menu:search_list:sort:title' => 'Wijzig de volgorde van de zoekresultaten',
   'opensearch:menu:search_list:sort:relevance' => 'Relevantie',
   'opensearch:menu:search_list:sort:alpha_az' => 'Alfabetisch (A-Z)',

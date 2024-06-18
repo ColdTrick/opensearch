@@ -115,7 +115,6 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:indices:index' => "Index",
 	'opensearch:indices:alias' => "Alias",
 	'opensearch:indices:aliases' => "aliases",
-	'opensearch:indices:create' => "Create",
 	'opensearch:indices:mappings' => "Mappings",
 	'opensearch:indices:mappings:add' => "Add / update",
 	
