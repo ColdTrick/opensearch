@@ -28,6 +28,7 @@ try {
 
 $elgg_index = elgg_get_plugin_setting('index', 'opensearch');
 $indices = array_keys($status);
+natcasesort($indices);
 
 echo elgg_view_field([
 	'#type' => 'fieldset',
