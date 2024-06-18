@@ -37,7 +37,7 @@ class DeleteQueue extends DatabaseQueue {
 	 *
 	 * @param int $number number of items to dequeue
 	 */
-	public function dequeue(int $number = 100) {
+	public function dequeue(int $number = 100): ?array {
 		// get a record for processing
 		$select = Select::fromTable(self::TABLE_NAME);
 		$select->select('*')
@@ -49,7 +49,7 @@ class DeleteQueue extends DatabaseQueue {
 		
 		$rows = $this->db->getData($select);
 		if (empty($rows)) {
-			return;
+			return null;
 		}
 		
 		$ids = [];
@@ -65,7 +65,7 @@ class DeleteQueue extends DatabaseQueue {
 			->andWhere($update->expr()->isNull('worker'));
 		
 		if ($this->db->updateData($update, true) < 1) {
-			return;
+			return null;
 		}
 		
 		// remove locked record from database

@@ -537,7 +537,7 @@ class SearchEvents {
 		
 		if (!elgg_in_context('search')) {
 			// make sure all supplied type_subtype_pairs are supported for search
-			// if a non supported type/subtype is found don't handle the search through OpenSearch
+			// if a non-supported type/subtype is found don't handle the search through OpenSearch
 			// if not in the search context
 			$temp = new SearchParams();
 			$normalized_params = $temp->normalizeOptions($params);
@@ -577,7 +577,7 @@ class SearchEvents {
 			return $result->getCount();
 		}
 		
-		return $result->toEntities($event_params);
+		return $result->toEntities();
 	}
 	
 	/**

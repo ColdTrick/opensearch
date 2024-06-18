@@ -133,7 +133,7 @@ class SearchParams {
 	 *
 	 * @return mixed
 	 */
-	protected function getParam($name, $default = null) {
+	protected function getParam(string $name, mixed $default = null): mixed {
 		if (!isset($this->params[$name])) {
 			return $default;
 		}
@@ -259,7 +259,7 @@ class SearchParams {
 	 *
 	 * @return null|array
 	 */
-	public function getNoMatchFilter(): array {
+	public function getNoMatchFilter(): ?array {
 		return $this->getParam('no_match_filter');
 	}
 	
@@ -324,7 +324,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function addSort(string $field, $sort_config = []): void {
+	public function addSort(string $field, array $sort_config = []): void {
 		if (empty($field)) {
 			return;
 		}
@@ -519,7 +519,7 @@ class SearchParams {
 	/**
 	 * Set suggestion params for search
 	 *
-	 * @param string $query search query
+	 * @param null|string $query search query
 	 *
 	 * @return void
 	 */

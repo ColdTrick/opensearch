@@ -124,7 +124,7 @@ class IndexingService extends BaseClientService {
 						// document was removed
 						opensearch_remove_document_for_deletion($guid);
 					} else {
-						// some error occured, reschedule delete
+						// some error occurred, reschedule delete
 						opensearch_add_document_for_deletion($guid, $documents[$guid], '+1 hour');
 					}
 				}

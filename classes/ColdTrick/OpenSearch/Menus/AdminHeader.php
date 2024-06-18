@@ -12,7 +12,7 @@ class AdminHeader {
 	/**
 	 * Add menu items to the admin page menu
 	 *
-	 * @param \Elgg\Event $event 'register', 'menu:page'
+	 * @param \Elgg\Event $event 'register', 'menu:admin_header'
 	 *
 	 * @return null|MenuItems
 	 */

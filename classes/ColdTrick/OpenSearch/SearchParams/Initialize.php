@@ -105,7 +105,7 @@ trait Initialize {
 						break;
 					case 'annotations':
 						// support user profile fields
-						if (strpos($name, 'profile:') === 0) {
+						if (str_starts_with($name, 'profile:')) {
 							$name = substr($name, strlen('profile:'));
 							$result[] = "metadata.{$name}";
 							break;

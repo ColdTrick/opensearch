@@ -59,9 +59,10 @@ if (!empty($last_ts)) {
 
 $content .= elgg_view('output/url', [
 	'confirm' => true,
-	'text' => elgg_view_icon('refresh'),
+	'icon' => 'refresh',
+	'text' => false,
 	'title' => $reindex_title,
-	'href' => 'action/opensearch/admin/reindex',
+	'href' => elgg_generate_action_url('opensearch/admin/reindex'),
 	'class' => 'mlm'
 ]);
 
@@ -78,8 +79,8 @@ try {
 }
 
 $content .= '<tr>';
-$content .= '<td>' . elgg_echo('opensearch:stats:elgg:delete') . '</td>';
-$content .= "<td>{$count}</td>";
+$content .= elgg_format_element('td', [], elgg_echo('opensearch:stats:elgg:delete'));
+$content .= elgg_format_element('td', [], $count);
 $content .= '</tr>';
 
 $content .= '</table>';

@@ -1,7 +1,5 @@
 <?php
 
-use Elgg\Database\DbConfig;
-
 /* @var $plugin \ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
@@ -140,7 +138,7 @@ if (!empty($types)) {
 			'#type' => 'text',
 			'#class' => 'man',
 			'name' => "params[{$setting_name}]",
-			'value' => $plugin->$setting_name,
+			'value' => $plugin->{$setting_name},
 			'pattern' => '[0-9.]+',
 			'title' => elgg_echo('opensearch:settings:pattern:float'),
 		]));

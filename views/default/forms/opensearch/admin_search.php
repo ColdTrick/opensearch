@@ -9,7 +9,7 @@ if (!$index_client->isClientReady()) {
 	return;
 }
 
-elgg_require_js('forms/opensearch/admin_search');
+elgg_import_esm('forms/opensearch/admin_search');
 
 echo elgg_view_field([
 	'#type' => 'plaintext',
@@ -26,17 +26,24 @@ try {
 	return;
 }
 
+$elgg_index = elgg_get_plugin_setting('index', 'opensearch');
 $indices = array_keys($status);
 
 echo elgg_view_field([
-	'#type' => 'select',
-	'name' => 'index',
-	'options' => $indices,
-	'value' => $index_client->getReadAlias(),
+	'#type' => 'fieldset',
+	'align' => 'horizontal',
+	'class' => 'elgg-level',
+	'fields' => [
+		[
+			'#type' => 'submit',
+			'icon' => 'search',
+			'text' => elgg_echo('search'),
+		],
+		[
+			'#type' => 'select',
+			'name' => 'index',
+			'options' => $indices,
+			'value' => $index_client->getElggIndex($elgg_index),
+		],
+	],
 ]);
-
-$footer = elgg_view_field([
-	'#type' => 'submit',
-	'text' => elgg_echo('search'),
-]);
-elgg_set_form_footer($footer);

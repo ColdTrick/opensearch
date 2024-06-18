@@ -7,19 +7,13 @@ namespace ColdTrick\OpenSearch;
  */
 class SearchResult {
 	
-	protected array $result;
-	
-	protected array $search_params;
-	
 	/**
 	 * Create a new SearchResults helper
 	 *
 	 * @param array $result        results from OpenSearch
 	 * @param array $search_params original search params
 	 */
-	public function __construct(array $result, array $search_params) {
-		$this->result = $result;
-		$this->search_params = $search_params;
+	public function __construct(protected array $result, protected array $search_params) {
 	}
 	
 	/**
@@ -100,11 +94,9 @@ class SearchResult {
 	/**
 	 * Convert search results to entities
 	 *
-	 * @param array $params additional params
-	 *
 	 * @return \ElggEntity[]
 	 */
-	public function toEntities($params): array {
+	public function toEntities(): array {
 		$hits = $this->getHits();
 		if (empty($hits)) {
 			return [];

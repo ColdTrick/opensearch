@@ -4,6 +4,7 @@
  */
 
 use ColdTrick\OpenSearch\Di\DeleteQueue;
+use Elgg\Database\MetadataTable;
 use Elgg\Database\QueryBuilder;
 use Elgg\Database\Select;
 use Elgg\Exceptions\ExceptionInterface;
@@ -94,19 +95,19 @@ function opensearch_get_bulk_options(string $type = 'no_index_ts'): ?array {
 			return array_merge($defaults, [
 				'wheres' => [
 					function (QueryBuilder $qb, $main_alias) {
-						$select = $qb->subquery('metadata', 'mdi');
-						$select->select('mdi.entity_guid')
-							->where($qb->compare('mdi.name', '=', OPENSEARCH_INDEXED_NAME, ELGG_VALUE_STRING));
+						$select = $qb->subquery(MetadataTable::TABLE_NAME, 'mdi');
+						$select->select("{$select->getTableAlias()}.entity_guid")
+							->where($qb->compare("{$select->getTableAlias()}.name", '=', OPENSEARCH_INDEXED_NAME, ELGG_VALUE_STRING));
 						
 						return $qb->compare("{$main_alias}.guid", 'NOT IN', $select->getSQL());
 					},
 					function (QueryBuilder $qb, $main_alias) {
-						$select = $qb->subquery('metadata', 'b');
-						$select->select('b.entity_guid')
-							->joinEntitiesTable('b', 'entity_guid', 'inner', 'be');
+						$select = $qb->subquery(MetadataTable::TABLE_NAME, 'b');
+						$select->select("{$select->getTableAlias()}.entity_guid")
+							->joinEntitiesTable($select->getTableAlias(), 'entity_guid', 'inner', 'be');
 						$select->where($qb->compare('be.type', '=', 'user', ELGG_VALUE_STRING))
-							->andWhere($qb->compare('b.name', '=', 'banned', ELGG_VALUE_STRING))
-							->andWhere($qb->compare('b.value', '=', 'yes', ELGG_VALUE_STRING));
+							->andWhere($qb->compare("{$select->getTableAlias()}.name", '=', 'banned', ELGG_VALUE_STRING))
+							->andWhere($qb->compare("{$select->getTableAlias()}.value", '=', 'yes', ELGG_VALUE_STRING));
 						
 						return $qb->compare("{$main_alias}.guid", 'NOT IN', $select->getSQL());
 					},
@@ -167,7 +168,7 @@ function opensearch_get_bulk_options(string $type = 'no_index_ts'): ?array {
  *
  * @return void
  */
-function opensearch_add_document_for_deletion(int $guid, array $info, $time_offset = null): void {
+function opensearch_add_document_for_deletion(int $guid, array $info, mixed $time_offset = null): void {
 	try {
 		$queue = DeleteQueue::instance();
 	} catch (\Exception $e) {
@@ -205,7 +206,7 @@ function opensearch_add_document_for_deletion(int $guid, array $info, $time_offs
  */
 function opensearch_remove_document_for_deletion(int $guid): void {
 	// check if the entity still exists in Elgg (could be unregistered as searchable)
-	// and remove indexing timestamp so it can be reindexed when needed
+	// and remove indexing timestamp, so it can be reindexed when needed
 	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES | ELGG_DISABLE_SYSTEM_LOG, function() use ($guid) {
 		$entity = get_entity($guid);
 		if ($entity instanceof \ElggEntity) {
@@ -257,7 +258,7 @@ function opensearch_get_documents_for_deletion(): array {
  *
  * @return null|array
  */
-function opensearch_inspect_show_values($key, array $merged_values, array $elgg_values, array $opensearch_values, int $depth = 0): ?array {
+function opensearch_inspect_show_values(mixed $key, array $merged_values, array $elgg_values, array $opensearch_values, int $depth = 0): ?array {
 	$rows = [];
 	if (empty($depth)) {
 		$rows[] = elgg_format_element('tr', [], elgg_format_element('th', ['colspan' => 3], $key));
