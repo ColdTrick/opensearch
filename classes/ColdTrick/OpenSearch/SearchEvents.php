@@ -690,9 +690,6 @@ class SearchEvents {
 			}
 		}
 		
-		// enabled attribute is not stored in OpenSearch by default
-		$row->enabled = 'yes';
-		
 		try {
 			return _elgg_services()->entityTable->rowToElggStar($row);
 		} catch (ExceptionInterface $e) {
