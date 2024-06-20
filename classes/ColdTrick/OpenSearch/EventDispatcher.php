@@ -46,7 +46,7 @@ class EventDispatcher {
 	/**
 	 * Listen to all delete events and update OpenSearch as needed
 	 *
-	 * @param \Elgg\Event $event 'delete', 'all'
+	 * @param \Elgg\Event $event 'delete|trash:after', 'all'
 	 *
 	 * @return void
 	 */

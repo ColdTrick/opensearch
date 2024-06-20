@@ -7,6 +7,7 @@ $form_vars = [
 	'method' => 'GET',
 	'action' => 'admin/opensearch/inspect',
 	'disable_security' => true,
+	'class' => 'mbl',
 ];
 echo elgg_view_form('opensearch/inspect', $form_vars);
 
@@ -20,9 +21,12 @@ if (empty($guid)) {
 
 $registered_types = opensearch_get_registered_entity_types();
 
-$entity = get_entity($guid);
-if (empty($entity)) {
-	// Entity doesn't exist in Elgg
+$entity = elgg_call(ELGG_SHOW_DELETED_ENTITIES, function() use ($guid) {
+	return get_entity($guid);
+});
+
+if (!$entity instanceof \ElggEntity) {
+	// Entity doesn't exist in Elgg or was trashed
 	$result = elgg_view('output/longtext', [
 		'value' => elgg_echo('notfound'),
 	]);

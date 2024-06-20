@@ -153,6 +153,11 @@ return [
 				],
 			],
 		],
+		'trash:after' => [
+			'all' => [
+				'\ColdTrick\OpenSearch\EventDispatcher::delete' => [],
+			],
+		],
 		'update' => [
 			'all' => [
 				'\ColdTrick\OpenSearch\EventDispatcher::update' => [],
