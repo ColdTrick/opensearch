@@ -1,6 +1,11 @@
 Version history
 ===============
 
+7.0 (2024-06-28):
+
+- added: support for restorable / trashed entities
+- changed: updated for Elgg 6
+
 6.0 (2023-11-30):
 
 - changed: updated for Elgg 5.1
