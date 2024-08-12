@@ -168,9 +168,13 @@ class EventDispatcher {
 	 * @return void
 	 */
 	protected static function deleteEntity(\ElggEntity $entity): void {
-		$last_indexed = $entity->{OPENSEARCH_INDEXED_NAME};
-		if (elgg_is_empty($last_indexed)) {
-			return;
+		try {
+			$last_indexed = $entity->{OPENSEARCH_INDEXED_NAME};
+			if (elgg_is_empty($last_indexed)) {
+				return;
+			}
+		} catch (\Elgg\Exceptions\ExceptionInterface $e) {
+			// unable to determine if the entity should be removed, so remove it just to be safe
 		}
 		
 		$service = IndexingService::instance();
