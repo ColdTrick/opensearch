@@ -20,7 +20,7 @@ $format_table = function($results) {
 			$row[] = elgg_format_element('td', ['colspan' => 2], elgg_format_element('b', [], $key));
 		} else {
 			$row[] = elgg_format_element('td', [], $key);
-			$row[] = elgg_format_element('td', [], $value);
+			$row[] = elgg_format_element('td', [], $value ?? '&nbsp;');
 		}
 		
 		$rows[] = elgg_format_element('tr', [], implode(PHP_EOL, $row));
