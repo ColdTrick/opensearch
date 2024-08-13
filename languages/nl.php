@@ -1,10 +1,12 @@
 <?php
 /**
- * This file was created by Translation Editor v11.1
- * On 2023-05-17 15:01
+ * This file was created by Translation Editor v14.0
+ * On 2024-08-13 12:04
  */
 
 return array (
+  'opensearch:inspect:result:not_found:elgg' => 'De entiteit kon niet worden gevonden in Elgg en de OpenSearch index',
+  'opensearch:inspect:result:not_found:index' => 'De entiteit kon niet worden gevonden in Elgg, maar bestaat nog wel in de OpenSearch index',
   'opensearch:upgrade:2022061500:title' => 'Voeg aliassen toe aan de OpenSearch index',
   'opensearch:upgrade:2022061500:description' => 'Wegens een aanpassing in de werking van de plugin moet de OpenSearch index een aantal extra aliassen krijgen. Deze upgrade zal deze toevoegen aan de index.',
   'opensearch:cli:rebuild:description' => 'Herbouw de index met een nieuwe configuratie en/of mappings',

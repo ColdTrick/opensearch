@@ -19,17 +19,36 @@ if (empty($guid)) {
 	return;
 }
 
+$service = SearchService::instance();
 $registered_types = opensearch_get_registered_entity_types();
 
 $entity = elgg_call(ELGG_SHOW_DELETED_ENTITIES, function() use ($guid) {
 	return get_entity($guid);
 });
 
+$opensearch_content = $service->inspect($guid);
+
 if (!$entity instanceof \ElggEntity) {
 	// Entity doesn't exist in Elgg or was trashed
-	$result = elgg_view('output/longtext', [
-		'value' => elgg_echo('notfound'),
-	]);
+	if (!empty($opensearch_content)) {
+		// entity still exists in OpenSearch index add button to delete entity from index
+		$result = elgg_view('output/longtext', [
+			'value' => elgg_echo('opensearch:inspect:result:not_found:index'),
+		]);
+		
+		$result .= elgg_view('output/url', [
+			'icon' => 'delete',
+			'text' => elgg_echo('opensearch:inspect:result:delete'),
+			'href' => elgg_generate_action_url('opensearch/admin/delete_entity', [
+				'guid' => $entity->guid,
+			]),
+			'class' => 'elgg-button elgg-button-action',
+		]);
+	} else {
+		$result = elgg_view('output/longtext', [
+			'value' => elgg_echo('opensearch:inspect:result:not_found:elgg'),
+		]);
+	}
 } elseif (!array_key_exists($entity->getType(), $registered_types) || (array_key_exists($entity->getType(), $registered_types) && !empty($entity->getSubtype()) && !in_array($entity->getSubtype(), $registered_types[$entity->getType()]))) {
 	// entity won't be exported to ES
 	$result = elgg_view('output/longtext', [
@@ -64,9 +83,6 @@ if (!$entity instanceof \ElggEntity) {
 		]);
 	}
 	
-	$service = SearchService::instance();
-	
-	$opensearch_content = $service->inspect($guid);
 	if (empty($opensearch_content)) {
 		$result = elgg_view('output/longtext', [
 			'value' => elgg_echo('opensearch:inspect:result:error:not_indexed'),

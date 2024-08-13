@@ -133,6 +133,8 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:inspect:result:last_indexed:time' => "This entity was last indexed: %s",
 	'opensearch:inspect:result:reindex' => "Schedule for reindexing",
 	'opensearch:inspect:result:delete' => "Remove entity from index",
+	'opensearch:inspect:result:not_found:elgg' => "The entity could not be found in Elgg and the OpenSearch index",
+	'opensearch:inspect:result:not_found:index' => "The entity could not be found in Elgg, but still exists in the OpenSearch index",
 	
 	// forms
 	'opensearch:forms:admin_search:query:placeholder' => "Enter your search query here",
