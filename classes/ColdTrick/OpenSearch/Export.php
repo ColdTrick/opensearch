@@ -106,26 +106,18 @@ class Export {
 			return null;
 		}
 		
-		$metadata = elgg_get_metadata([
-			'guid' => $entity->guid,
-			'metadata_names' => $metadata_names,
-			'limit' => false,
-		]);
-		if (empty($metadata)) {
-			return null;
-		}
-		
 		$result = [];
-		foreach ($metadata as $data) {
+		foreach ($metadata_names as $name) {
+			$data = $entity->getMetadata($name);
 			if (elgg_is_empty($data)) {
 				continue;
 			}
 			
-			if (!isset($result[$data->name])) {
-				$result[$data->name] = [];
-			}
-			
-			$result[$data->name][] = $data->value;
+			$result[$name] = is_array($data) ? $data : [$data];
+		}
+		
+		if (empty($result)) {
+			return null;
 		}
 		
 		$return = $event->getValue();
