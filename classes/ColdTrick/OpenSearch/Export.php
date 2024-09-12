@@ -310,9 +310,18 @@ class Export {
 				continue;
 			}
 			
-			$curval = html_entity_decode($curval, ENT_QUOTES, 'UTF-8');
+			if (is_array($curval)) {
+				// should not happen
+				$curval = array_map(function($value) {
+					$value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+					return elgg_strip_tags($value);
+				}, $curval);
+			} else {
+				$curval = html_entity_decode($curval, ENT_QUOTES, 'UTF-8');
+				$curval = elgg_strip_tags($curval);
+			}
 			
-			$return->$field = elgg_strip_tags($curval);
+			$return->$field = $curval;
 		}
 		
 		return $return;
