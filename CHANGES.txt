@@ -1,6 +1,10 @@
 Version history
 ===============
 
+7.0.1 (2024-10-10):
+
+- fixed: crash on admin search result when no hits
+
 7.0 (2024-06-28):
 
 - added: support for restorable / trashed entities
