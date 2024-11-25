@@ -2,6 +2,7 @@
 
 use ColdTrick\OpenSearch\Di\IndexManagementService;
 use Elgg\Exceptions\ExceptionInterface;
+use Psr\Log\LogLevel;
 
 $index_client = IndexManagementService::instance();
 if (!$index_client->isClientReady()) {
@@ -20,7 +21,7 @@ echo elgg_view_field([
 try {
 	$status = $index_client->getIndexStatus();
 } catch (ExceptionInterface $e) {
-	elgg_log($e, 'ERROR');
+	elgg_log($e, LogLevel::ERROR);
 	
 	echo elgg_echo('opensearch:error:no_index');
 	return;

@@ -5,6 +5,7 @@ namespace ColdTrick\OpenSearch\Di;
 use Elgg\Database\QueryBuilder;
 use Elgg\Cli\Progress;
 use OpenSearch\Common\Exceptions\OpenSearchException;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
@@ -301,7 +302,7 @@ class IndexingService extends BaseClientService {
 				$this->skip_guids[] = $guid;
 				
 				$error = elgg_extract('error', elgg_extract('index', $item));
-				elgg_log("OpenSearch failed to index {$guid} with error [{$status}][{$error['type']}]: {$error['reason']}", 'WARNING');
+				elgg_log("OpenSearch failed to index {$guid} with error [{$status}][{$error['type']}]: {$error['reason']}", LogLevel::WARNING);
 				continue;
 			}
 			

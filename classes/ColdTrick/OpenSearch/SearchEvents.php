@@ -5,6 +5,7 @@ namespace ColdTrick\OpenSearch;
 use ColdTrick\OpenSearch\Di\SearchService;
 use Elgg\Exceptions\ExceptionInterface;
 use Elgg\Exceptions\UnexpectedValueException;
+use Psr\Log\LogLevel;
 
 /**
  * Listen to different search events
@@ -693,7 +694,7 @@ class SearchEvents {
 		try {
 			return _elgg_services()->entityTable->rowToElggStar($row);
 		} catch (ExceptionInterface $e) {
-			elgg_log($e->getMessage(), 'NOTICE');
+			elgg_log($e->getMessage(), LogLevel::NOTICE);
 		}
 		
 		return null;

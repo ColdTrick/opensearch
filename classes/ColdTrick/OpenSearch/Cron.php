@@ -6,6 +6,7 @@ use ColdTrick\OpenSearch\Di\IndexingService;
 use ColdTrick\OpenSearch\Di\SearchService;
 use Elgg\Database\QueryBuilder;
 use OpenSearch\Common\Exceptions\OpenSearchException;
+use Psr\Log\LogLevel;
 
 /**
  * Cron handler
@@ -189,7 +190,7 @@ class Cron {
 			});
 		} catch (OpenSearchException $e) {
 			// probably reached the end of the scroll
-			// elgg_log('OpenSearch cleanup: ' . $e->getMessage(), 'ERROR');
+//			 elgg_log('OpenSearch cleanup: ' . $e->getMessage(), LogLevel::ERROR);
 		}
 		
 		// clear scroll

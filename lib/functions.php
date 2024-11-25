@@ -9,6 +9,7 @@ use Elgg\Database\QueryBuilder;
 use Elgg\Database\Select;
 use Elgg\Exceptions\ExceptionInterface;
 use Elgg\Values;
+use Psr\Log\LogLevel;
 
 /**
  * Get the type/subtypes to index in OpenSearch
@@ -172,7 +173,7 @@ function opensearch_add_document_for_deletion(int $guid, array $info, mixed $tim
 	try {
 		$queue = DeleteQueue::instance();
 	} catch (\Exception $e) {
-		elgg_log($e, 'WARNING');
+		elgg_log($e, LogLevel::WARNING);
 		return;
 	}
 	
@@ -224,7 +225,7 @@ function opensearch_get_documents_for_deletion(): array {
 	try {
 		$queue = DeleteQueue::instance();
 	} catch (ExceptionInterface $e) {
-		elgg_log($e, 'WARNING');
+		elgg_log($e, LogLevel::WARNING);
 		return [];
 	}
 	
