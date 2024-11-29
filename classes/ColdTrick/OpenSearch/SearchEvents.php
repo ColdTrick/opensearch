@@ -25,7 +25,7 @@ class SearchEvents {
 			return null;
 		}
 		
-		if (!self::handleSearch() || self::detectUnsupportedSearchParams($search_params)) {
+		if (!self::handleSearch() || self::isInAdminContext() || self::detectUnsupportedSearchParams($search_params)) {
 			$search_params['_opensearch_supported'] = false;
 			
 			return $search_params;
@@ -490,6 +490,26 @@ class SearchEvents {
 	}
 	
 	/**
+	 * Are we using the search in an admin context
+	 *
+	 * @return bool
+	 */
+	protected static function isInAdminContext(): bool {
+		if (elgg_in_context('admin')) {
+			return true;
+		}
+		
+		if (elgg_is_xhr()) {
+			$referer = (string) _elgg_services()->request->headers->get('referer');
+			$admin = rtrim(elgg_generate_url('admin'), '/');
+			
+			return str_starts_with($referer, $admin);
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Get the search service
 	 *
 	 * @param array $params search params
@@ -498,6 +518,10 @@ class SearchEvents {
 	 */
 	protected static function getServiceForEvents($params): ?SearchService {
 		if (!self::handleSearch()) {
+			return null;
+		}
+		
+		if (self::isInAdminContext()) {
 			return null;
 		}
 		
