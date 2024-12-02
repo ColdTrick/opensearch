@@ -165,8 +165,8 @@ class SearchResult {
 				], elgg_echo('tags'));
 				
 				// format output
-				$tags = elgg_format_element('p', [
-					'class' => 'elgg-output search-match-extra',
+				$tags = elgg_format_element('span', [
+					'class' => 'search-match-extra',
 				], $label . ': ' . $tags);
 				
 				$entity->setVolatileData('search_matched_extra', $tags);
