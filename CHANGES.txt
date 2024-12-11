@@ -1,6 +1,11 @@
 Version history
 ===============
 
+7.1 (2024-12-11):
+
+- changed: no longer use OpenSearch in admin context
+- fixed: highlighting of search tags
+
 7.0.1 (2024-10-10):
 
 - fixed: crash on admin search result when no hits
