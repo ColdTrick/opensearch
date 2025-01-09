@@ -1,6 +1,10 @@
 Version history
 ===============
 
+7.1.1 (2025-01-09):
+
+- fixed: correctly invalidate metadata cache
+
 7.1 (2024-12-11):
 
 - changed: no longer use OpenSearch in admin context
