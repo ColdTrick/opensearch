@@ -10,7 +10,7 @@
 		"issues": "https://github.com/ColdTrick/opensearch/issues"
 	},
 	"require": {
-		"opensearch-project/opensearch-php": "^2.0.0"
+		"opensearch-project/opensearch-php": "~2.3.0"
 	},
 	"conflict": {
 		"elgg/elgg": "<6.1"
