@@ -8,6 +8,7 @@ require_once(__DIR__ . '/lib/functions.php');
 
 return [
 	'plugin' => [
+		'name' => 'OpenSearch',
 		'version' => '8.0',
 		'dependencies' => [
 			'search' => [
