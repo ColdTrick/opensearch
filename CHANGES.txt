@@ -1,6 +1,10 @@
 Version history
 ===============
 
+8.0.1 (2025-03-27):
+
+- several small chores/fixes
+
 8.0 (2025-01-23):
 
 - changed: locked OpenSearch client to v2.3.x
