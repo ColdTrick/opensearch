@@ -4,7 +4,7 @@ namespace ColdTrick\OpenSearch\Di;
 
 use ColdTrick\OpenSearch\SearchParams;
 use ColdTrick\OpenSearch\SearchResult;
-use OpenSearch\Common\Exceptions\OpenSearchException;
+use OpenSearch\Exception\OpenSearchExceptionInterface;
 
 /**
  * Perform searches in the OpenSearch index
@@ -48,7 +48,7 @@ class SearchService extends BaseClientService {
 			}
 			
 			return elgg_extract('_source', $result);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			$this->logger->error($e);
 		}
 		
@@ -69,7 +69,7 @@ class SearchService extends BaseClientService {
 		
 		try {
 			return $this->getClient()->search($params);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			$this->logger->error($e);
 		}
 		
@@ -113,7 +113,7 @@ class SearchService extends BaseClientService {
 		$result = [];
 		try {
 			$result = $this->getClient()->search($body);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// exception already logged by OpenSearch
 		}
 		
@@ -162,7 +162,7 @@ class SearchService extends BaseClientService {
 		$result = [];
 		try {
 			$result = $this->getClient()->search($body);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// exception already logged by OpenSearch
 		}
 		
@@ -204,7 +204,7 @@ class SearchService extends BaseClientService {
 		$result = [];
 		try {
 			$result = $this->getClient()->count($body);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// exception already logged by OpenSearch
 		}
 		

@@ -3,6 +3,8 @@
 /* @var $plugin \ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
+echo elgg_view('opensearch/admin/tabs');
+
 // host configuration
 $host = elgg_view_field([
 	'#type' => 'text',

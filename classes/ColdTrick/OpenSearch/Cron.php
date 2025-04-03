@@ -5,7 +5,7 @@ namespace ColdTrick\OpenSearch;
 use ColdTrick\OpenSearch\Di\IndexingService;
 use ColdTrick\OpenSearch\Di\SearchService;
 use Elgg\Database\QueryBuilder;
-use OpenSearch\Common\Exceptions\OpenSearchException;
+use OpenSearch\Exception\OpenSearchExceptionInterface;
 use Psr\Log\LogLevel;
 
 /**
@@ -117,7 +117,7 @@ class Cron {
 		
 		try {
 			$scroll_setup = $service->rawSearch($search_params);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			return;
 		}
 		
@@ -188,7 +188,7 @@ class Cron {
 					}
 				}
 			});
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// probably reached the end of the scroll
 //			 elgg_log('OpenSearch cleanup: ' . $e->getMessage(), LogLevel::ERROR);
 		}
@@ -196,7 +196,7 @@ class Cron {
 		// clear scroll
 		try {
 			$service->clearScroll($scroll_params);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// unable to clean, could be because we came to the end of the scroll
 		}
 	}
@@ -320,7 +320,7 @@ class Cron {
 			$opensearch_guids = $search_result->toGuids();
 			
 			return array_diff($guids, $opensearch_guids);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// some error occurred
 		}
 		

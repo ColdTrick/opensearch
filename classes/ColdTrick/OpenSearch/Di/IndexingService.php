@@ -4,7 +4,7 @@ namespace ColdTrick\OpenSearch\Di;
 
 use Elgg\Database\QueryBuilder;
 use Elgg\Cli\Progress;
-use OpenSearch\Common\Exceptions\OpenSearchException;
+use OpenSearch\Exception\OpenSearchExceptionInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Helper\ProgressBar;
 
@@ -79,7 +79,7 @@ class IndexingService extends BaseClientService {
 		
 		try {
 			return $this->getClient()->bulk($params);
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			$this->logger->error($e);
 		}
 		
@@ -129,7 +129,7 @@ class IndexingService extends BaseClientService {
 						opensearch_add_document_for_deletion($guid, $documents[$guid], '+1 hour');
 					}
 				}
-			} catch (OpenSearchException $e) {
+			} catch (OpenSearchExceptionInterface $e) {
 				$this->logger->error($e);
 				return false;
 			}

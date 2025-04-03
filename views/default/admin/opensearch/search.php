@@ -1,5 +1,7 @@
 <?php
 
+echo elgg_view('opensearch/admin/tabs');
+
 echo elgg_view_form('opensearch/admin_search', [
 	'prevent_double_submit' => false,
 	'class' => 'mbl',

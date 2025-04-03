@@ -10,9 +10,22 @@
 		"issues": "https://github.com/ColdTrick/opensearch/issues"
 	},
 	"require": {
-		"opensearch-project/opensearch-php": "~2.3.0"
+		"opensearch-project/opensearch-php": "~2.4.0"
+	},
+	"require-dev": {
+		"guzzlehttp/guzzle": "~7.9.0"
 	},
 	"conflict": {
 		"elgg/elgg": "<6.1"
+	},
+	"config": {
+		"allow-plugins": {
+			"php-http/discovery": true
+		}
+	},
+	"extra": {
+		"discovery": {
+			"psr/http-factory-implementation": "GuzzleHttp\\\\Psr7\\\\HttpFactory"
+		}
 	}
 }

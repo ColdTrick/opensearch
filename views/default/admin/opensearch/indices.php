@@ -2,6 +2,8 @@
 
 use ColdTrick\OpenSearch\Di\IndexManagementService;
 
+echo elgg_view('opensearch/admin/tabs');
+
 $service = IndexManagementService::instance();
 
 if (!$service->isClientReady()) {

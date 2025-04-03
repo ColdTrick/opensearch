@@ -7,8 +7,8 @@ use Elgg\Logger;
 use Elgg\Traits\Di\ServiceFacade;
 use OpenSearch\Client;
 use OpenSearch\ClientBuilder;
-use OpenSearch\Common\Exceptions\OpenSearchException;
-use OpenSearch\Common\Exceptions\RuntimeException;
+use OpenSearch\Exception\OpenSearchExceptionInterface;
+use OpenSearch\Exception\RuntimeException;
 
 /**
  * Base client for OpenSearch
@@ -62,7 +62,7 @@ abstract class BaseClientService {
 		
 		try {
 			return $this->getClient()->ping();
-		} catch (OpenSearchException $e) {
+		} catch (OpenSearchExceptionInterface $e) {
 			// no need to log
 			$this->logger->notice($e);
 		}

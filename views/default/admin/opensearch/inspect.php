@@ -2,6 +2,8 @@
 
 use ColdTrick\OpenSearch\Di\SearchService;
 
+echo elgg_view('opensearch/admin/tabs');
+
 // form for inspect
 $form_vars = [
 	'method' => 'GET',
