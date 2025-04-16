@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebc06d4b2c9540be2b4cbe6d46ba5bc5",
+    "content-hash": "93d3bad8b0d938a57410f06b483a93bd",
     "packages": [
         {
             "name": "ezimuel/guzzlestreams",

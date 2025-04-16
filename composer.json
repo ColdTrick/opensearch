@@ -16,7 +16,7 @@
 		"guzzlehttp/guzzle": "~7.9.0"
 	},
 	"conflict": {
-		"elgg/elgg": "<6.1"
+		"elgg/elgg": "<6.2"
 	},
 	"config": {
 		"allow-plugins": {
