@@ -27,7 +27,7 @@ class Cron {
 		}
 		
 		$service = IndexingService::instance();
-		if (!$service->isClientReady()) {
+		if (!$service->isClientReady() || !$service->ping()) {
 			return;
 		}
 		
