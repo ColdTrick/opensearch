@@ -135,7 +135,7 @@ Meer informatie over content type boosting kun je kijken op de OpenSearch docume
   'opensearch:stats:elgg:no_index_ts' => 'Nieuwe content die geïndexeerd moet worden',
   'opensearch:stats:elgg:update' => 'Bijgewerkte content die geïndexeerd moet worden',
   'opensearch:stats:elgg:reindex' => 'Content die geherindexeerd moet worden',
-  'opensearch:stats:elgg:reindex:action' => 'Je kunt een herindexatie forceren van alle content door hier te klikken.',
+  'opensearch:stats:elgg:reindex:action:title' => 'Je kunt een herindexatie forceren van alle content door hier te klikken.',
   'opensearch:stats:elgg:reindex:last_ts' => 'Huidige tijd die gebruikt wordt om te bepalen of er geherindexeerd moet worden: %s',
   'opensearch:stats:elgg:delete' => 'Content die nog verwijderd moet worden',
   'opensearch:indices:index' => 'Index',

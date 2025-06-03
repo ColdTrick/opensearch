@@ -48,25 +48,7 @@ if (!empty($options)) {
 }
 
 $content .= '<tr>';
-$content .= '<td>' . elgg_echo('opensearch:stats:elgg:reindex');
-
-$reindex_title = elgg_echo('opensearch:stats:elgg:reindex:action');
-$last_ts = (int) elgg_get_plugin_setting('reindex_ts', 'opensearch');
-
-if (!empty($last_ts)) {
-	$reindex_title .= '&#10;&#10;' . elgg_echo('opensearch:stats:elgg:reindex:last_ts', [date('c', $last_ts)]);
-}
-
-$content .= elgg_view('output/url', [
-	'confirm' => true,
-	'icon' => 'refresh',
-	'text' => false,
-	'title' => $reindex_title,
-	'href' => elgg_generate_action_url('opensearch/admin/reindex'),
-	'class' => 'mlm'
-]);
-
-$content .= '</td>';
+$content .= elgg_format_element('td', [], elgg_echo('opensearch:stats:elgg:reindex'));
 $content .= elgg_format_element('td', [], $count);
 $content .= '</tr>';
 
@@ -85,4 +67,20 @@ $content .= '</tr>';
 
 $content .= '</table>';
 
-echo elgg_view_module('info', elgg_echo('opensearch:stats:elgg'), $content);
+// reindex option
+$reindex_title = elgg_echo('opensearch:stats:elgg:reindex:action:title');
+$last_ts = (int) elgg_get_plugin_setting('reindex_ts', 'opensearch');
+if (!empty($last_ts)) {
+	$reindex_title .= '&#10;&#10;' . elgg_echo('opensearch:stats:elgg:reindex:last_ts', [date('c', $last_ts)]);
+}
+
+$menu = elgg_view('output/url', [
+	'confirm' => true,
+	'icon' => 'refresh',
+	'text' => elgg_echo('opensearch:stats:elgg:reindex:action:text'),
+	'title' => $reindex_title,
+	'href' => elgg_generate_action_url('opensearch/admin/reindex'),
+	'class' => ['elgg-button', 'elgg-button-action']
+]);
+
+echo elgg_view_module('info', elgg_echo('opensearch:stats:elgg'), $content, ['menu' => $menu]);

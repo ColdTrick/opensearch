@@ -107,7 +107,8 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:stats:elgg:no_index_ts' => "New content to be indexed",
 	'opensearch:stats:elgg:update' => "Updated content to be reindexed",
 	'opensearch:stats:elgg:reindex' => "Content to be reindexed",
-	'opensearch:stats:elgg:reindex:action' => "You can force a refresh of all already indexed entities by clicking on this action.",
+	'opensearch:stats:elgg:reindex:action:text' => "Reindex all content",
+	'opensearch:stats:elgg:reindex:action:title' => "You can force a refresh of all already indexed entities by clicking on this action.",
 	'opensearch:stats:elgg:reindex:last_ts' => "Current time to be used to compare if reindex is needed: %s",
 	'opensearch:stats:elgg:delete' => "Content waiting to be deleted",
 	
