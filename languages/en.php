@@ -104,13 +104,16 @@ More information on query time boosting can be found in the OpenSearch documenta
 	'opensearch:stats:elgg' => "Elgg information",
 	'opensearch:stats:elgg:total' => "Content that should have been indexed",
 	'opensearch:stats:elgg:total:help' => "This could include content (like banned users) which isn't actually indexed by OpenSearch.",
-	'opensearch:stats:elgg:no_index_ts' => "New content to be indexed",
-	'opensearch:stats:elgg:update' => "Updated content to be reindexed",
-	'opensearch:stats:elgg:reindex' => "Content to be reindexed",
-	'opensearch:stats:elgg:reindex:action:text' => "Reindex all content",
-	'opensearch:stats:elgg:reindex:action:title' => "You can force a refresh of all already indexed entities by clicking on this action.",
-	'opensearch:stats:elgg:reindex:last_ts' => "Current time to be used to compare if reindex is needed: %s",
 	'opensearch:stats:elgg:delete' => "Content waiting to be deleted",
+	
+	'opensearch:stats:elgg_content' => "Elgg content statistics",
+	'opensearch:stats:elgg_content:no_index_ts' => "New content to be indexed",
+	'opensearch:stats:elgg_content:update' => "Updated content to be reindexed",
+	'opensearch:stats:elgg_content:reindex' => "Content to be reindexed",
+	'opensearch:stats:elgg_content:reindex:action' => "Reindex",
+	'opensearch:stats:elgg_content:reindex:action:text' => "Reindex all content",
+	'opensearch:stats:elgg_content:reindex:action:title' => "You can force a refresh of all already indexed entities by clicking on this action.",
+	'opensearch:stats:elgg_content:reindex:last_ts' => "Current time to be used to compare if reindex is needed: %s",
 	
 	// index management
 	'opensearch:indices:index' => "Index",

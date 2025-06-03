@@ -1,10 +1,13 @@
 <?php
 /**
- * This file was created by Translation Editor v14.0
- * On 2024-08-13 12:04
+ * This file was created by Translation Editor v14.0.3
+ * On 2025-06-03 15:25
  */
 
 return array (
+  'opensearch:stats:elgg_content' => 'Elgg content statistieken',
+  'opensearch:stats:elgg_content:reindex:action' => 'Herindexeren',
+  'opensearch:stats:elgg_content:reindex:action:text' => 'Herindexeer alle content',
   'opensearch:inspect:result:not_found:elgg' => 'De entiteit kon niet worden gevonden in Elgg en de OpenSearch index',
   'opensearch:inspect:result:not_found:index' => 'De entiteit kon niet worden gevonden in Elgg, maar bestaat nog wel in de OpenSearch index',
   'opensearch:upgrade:2022061500:title' => 'Voeg aliassen toe aan de OpenSearch index',
@@ -132,11 +135,11 @@ Meer informatie over content type boosting kun je kijken op de OpenSearch docume
   'opensearch:stats:index:value' => 'Waarde',
   'opensearch:stats:elgg' => 'Elgg informatie',
   'opensearch:stats:elgg:total' => 'Content die geïndexeerd moet worden',
-  'opensearch:stats:elgg:no_index_ts' => 'Nieuwe content die geïndexeerd moet worden',
-  'opensearch:stats:elgg:update' => 'Bijgewerkte content die geïndexeerd moet worden',
-  'opensearch:stats:elgg:reindex' => 'Content die geherindexeerd moet worden',
-  'opensearch:stats:elgg:reindex:action:title' => 'Je kunt een herindexatie forceren van alle content door hier te klikken.',
-  'opensearch:stats:elgg:reindex:last_ts' => 'Huidige tijd die gebruikt wordt om te bepalen of er geherindexeerd moet worden: %s',
+  'opensearch:stats:elgg_content:no_index_ts' => 'Nieuwe content die geïndexeerd moet worden',
+  'opensearch:stats:elgg_content:update' => 'Bijgewerkte content die geïndexeerd moet worden',
+  'opensearch:stats:elgg_content:reindex' => 'Content die geherindexeerd moet worden',
+  'opensearch:stats:elgg_content:reindex:action:title' => 'Je kunt een herindexatie forceren van alle content door hier te klikken.',
+  'opensearch:stats:elgg_content:reindex:last_ts' => 'Huidige tijd die gebruikt wordt om te bepalen of er geherindexeerd moet worden: %s',
   'opensearch:stats:elgg:delete' => 'Content die nog verwijderd moet worden',
   'opensearch:indices:index' => 'Index',
   'opensearch:indices:alias' => 'Alias',
