@@ -3,7 +3,7 @@
  * Show indexing stats about Elgg content
  */
 
-$searchable = elgg_entity_types_with_capability('searchable');
+$searchable = opensearch_get_registered_entity_types();
 if (empty($searchable)) {
 	return;
 }
