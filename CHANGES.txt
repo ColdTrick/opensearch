@@ -1,6 +1,10 @@
 Version history
 ===============
 
+9.1 (2025-06-18):
+
+- added: option to reindex one content type
+
 9.0.1 (2025-05-28):
 
 - several small chores/fixes
