@@ -42,7 +42,7 @@ if (!$entity instanceof \ElggEntity) {
 			'icon' => 'delete',
 			'text' => elgg_echo('opensearch:inspect:result:delete'),
 			'href' => elgg_generate_action_url('opensearch/admin/delete_entity', [
-				'guid' => $entity->guid,
+				'guid' => $guid,
 			]),
 			'class' => 'elgg-button elgg-button-action',
 		]);
