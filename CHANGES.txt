@@ -1,6 +1,10 @@
 Version history
 ===============
 
+9.1.1 (2025-07-30):
+
+- fixed: correctly remove non-existing entity from search index
+
 9.1 (2025-06-18):
 
 - added: option to reindex one content type
