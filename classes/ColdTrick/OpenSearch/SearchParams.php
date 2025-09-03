@@ -521,7 +521,7 @@ class SearchParams {
 	 *
 	 * @return void
 	 */
-	public function setSuggestion(string $query = null): void {
+	public function setSuggestion(?string $query = null): void {
 		if (empty($query)) {
 			unset($this->params['suggest']);
 			return;
