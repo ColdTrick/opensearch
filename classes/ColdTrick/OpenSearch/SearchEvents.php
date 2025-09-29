@@ -450,7 +450,7 @@ class SearchEvents {
 	 *
 	 * @param \Elgg\Event $event 'search:result', 'entities'
 	 *
-	 * @return void|\ElggEntity[]|int
+	 * @return null|\ElggEntity[]|int
 	 * @throws UnexpectedValueException
 	 */
 	public static function searchEntities(\Elgg\Event $event) {
@@ -463,7 +463,7 @@ class SearchEvents {
 		
 		$service = self::getServiceForEvents($params);
 		if (!$service) {
-			return;
+			return null;
 		}
 		
 		$service = elgg_trigger_event_results('search_params', 'opensearch', ['search_params' => $params], $service);
@@ -475,6 +475,10 @@ class SearchEvents {
 			$result = $service->count();
 		} else {
 			$result = $service->search();
+		}
+		
+		if (!$result instanceof SearchResult) {
+			return null;
 		}
 		
 		return self::transformSearchResults($result, $params);
@@ -516,7 +520,11 @@ class SearchEvents {
 	 *
 	 * @return null|\ColdTrick\OpenSearch\Di\SearchService
 	 */
-	protected static function getServiceForEvents($params): ?SearchService {
+	protected static function getServiceForEvents(array $params): ?SearchService {
+		if (elgg_extract('_opensearch_supported', $params) === false) {
+			return null;
+		}
+		
 		if (!self::handleSearch()) {
 			return null;
 		}
