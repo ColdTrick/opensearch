@@ -1,6 +1,11 @@
 Version history
 ===============
 
+9.1.2 (2025-10-01):
+
+- fixed: PHP implicit null declaration
+- fixed: respect disabled opensearch params
+
 9.1.1 (2025-07-30):
 
 - fixed: correctly remove non-existing entity from search index
