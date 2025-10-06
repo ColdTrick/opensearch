@@ -16,13 +16,16 @@
 		"guzzlehttp/guzzle": "~7.9.0"
 	},
 	"conflict": {
-		"elgg/elgg": "<6.2"
+		"elgg/elgg": "<6.3"
 	},
 	"config": {
 		"allow-plugins": {
 			"php-http/discovery": true
-		}
-	},
+		},
+        "platform": {
+            "php": "8.1"
+        }
+    },
 	"extra": {
 		"discovery": {
 			"psr/http-factory-implementation": "GuzzleHttp\\\\Psr7\\\\HttpFactory"

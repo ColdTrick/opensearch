@@ -27,7 +27,7 @@ class Sync extends Command {
 		$service = IndexingService::instance();
 		
 		if (!$service->isClientReady()) {
-			$this->error(elgg_echo('opensearch:cli:error:client'));
+			$this->write(elgg_echo('opensearch:cli:error:client'), 'error');
 			return self::FAILURE;
 		}
 		
@@ -38,7 +38,7 @@ class Sync extends Command {
 			}
 			
 			if (!$result) {
-				$this->error(elgg_echo("opensearch:cli:sync:{$action}:error"));
+				$this->write(elgg_echo("opensearch:cli:sync:{$action}:error"), 'error');
 				return;
 			}
 			

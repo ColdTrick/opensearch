@@ -31,7 +31,7 @@ class Rebuild extends Command {
 		$plugin = $this->getPlugin();
 		
 		if (!$service->isClientReady()) {
-			$this->error(elgg_echo('opensearch:cli:error:client'));
+			$this->write(elgg_echo('opensearch:cli:error:client'), 'error');
 			return self::FAILURE;
 		}
 		
@@ -45,7 +45,7 @@ class Rebuild extends Command {
 			}
 			
 			if (!$result) {
-				$this->error(elgg_echo("opensearch:cli:rebuild:{$action}:error"));
+				$this->write(elgg_echo("opensearch:cli:rebuild:{$action}:error"), 'error');
 				return;
 			}
 			

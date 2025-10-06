@@ -26,19 +26,13 @@ abstract class BaseClientService {
 	
 	private string $search_alias;
 	
-	protected Logger $logger;
-	
-	protected EventsService $events;
-	
 	/**
 	 * Create the service
 	 *
 	 * @param Logger        $logger Logger service
 	 * @param EventsService $events Events service
 	 */
-	public function __construct(Logger $logger, EventsService $events) {
-		$this->logger = $logger;
-		$this->events = $events;
+	public function __construct(protected Logger $logger, protected EventsService $events) {
 	}
 	
 	/**

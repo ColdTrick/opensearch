@@ -6,7 +6,6 @@ use ColdTrick\OpenSearch\Di\IndexingService;
 use ColdTrick\OpenSearch\Di\SearchService;
 use Elgg\Database\QueryBuilder;
 use OpenSearch\Exception\OpenSearchExceptionInterface;
-use Psr\Log\LogLevel;
 
 /**
  * Cron handler
@@ -79,8 +78,8 @@ class Cron {
 		/* @var $logger \Elgg\Logger\Cron */
 		$logger = $event->getParam('logger');
 		
-		// find documents in ES which don't exist in Elgg anymore
-		$logger->notice('Starting OpenSearch cleanup: ES');
+		// find documents in OpenSearch which don't exist in Elgg anymore
+		$logger->notice('Starting OpenSearch cleanup: OpenSearch');
 		
 		self::cleanupOpenSearch();
 		
