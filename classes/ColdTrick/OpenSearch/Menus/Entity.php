@@ -33,7 +33,8 @@ class Entity {
 			'name' => 'opensearch_inspect',
 			'icon' => 'search',
 			'text' => elgg_echo('opensearch:menu:entity:inspect'),
-			'href' => elgg_http_add_url_query_elements('admin/opensearch/inspect', [
+			'href' => elgg_generate_url('admin', [
+				'segments' => 'opensearch/inspect',
 				'guid' => $entity->guid,
 			]),
 		]);
