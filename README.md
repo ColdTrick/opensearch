@@ -1,6 +1,7 @@
 # OpenSearch
 
 ![Elgg 6.2](https://img.shields.io/badge/Elgg-6.2-green.svg)
+![Elgg 7.0](https://img.shields.io/badge/Elgg-7.0-green.svg)
 ![OpenSearch 2.5](https://img.shields.io/badge/OpenSearch-2.5-green.svg)
 ![Lint Checks](https://github.com/ColdTrick/opensearch/actions/workflows/lint.yml/badge.svg?event=push)
 [![Latest Stable Version](https://poser.pugx.org/coldtrick/opensearch/v/stable.svg)](https://packagist.org/packages/coldtrick/opensearch)
