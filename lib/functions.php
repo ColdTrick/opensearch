@@ -6,7 +6,6 @@
 use ColdTrick\OpenSearch\Di\DeleteQueue;
 use Elgg\Database\MetadataTable;
 use Elgg\Database\QueryBuilder;
-use Elgg\Database\Select;
 use Elgg\Exceptions\ExceptionInterface;
 use Elgg\Values;
 use Psr\Log\LogLevel;
