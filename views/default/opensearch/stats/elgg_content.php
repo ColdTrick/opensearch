@@ -8,10 +8,6 @@ if (empty($searchable)) {
 	return;
 }
 
-$format_number = function (int $number) {
-	return number_format($number, 0, elgg_echo('number_counter:decimal_separator'), elgg_echo('number_counter:thousands_separator'));
-};
-
 $header = [
 	elgg_format_element('th', [], elgg_echo('admin:statistics:numentities:type')),
 	elgg_format_element('th', ['class' => 'center'], elgg_echo('total')),
@@ -53,7 +49,7 @@ foreach ($searchable as $type => $subtypes) {
 		// total
 		$count = elgg_count_entities($type_subtype_options);
 		$totals['content'] += $count;
-		$row[] = elgg_format_element('td', ['class' => 'center'], $format_number($count));
+		$row[] = elgg_format_element('td', ['class' => 'center'], elgg_number_format($count));
 		
 		// new to index
 		$options = opensearch_get_bulk_options();
@@ -61,7 +57,7 @@ foreach ($searchable as $type => $subtypes) {
 		$options = array_merge($options, $type_subtype_options);
 		$count = elgg_count_entities($options);
 		$totals['new'] += $count;
-		$row[] = elgg_format_element('td', ['class' => 'center'], $format_number($count));
+		$row[] = elgg_format_element('td', ['class' => 'center'], elgg_number_format($count));
 		
 		// update
 		$options = opensearch_get_bulk_options('update');
@@ -69,7 +65,7 @@ foreach ($searchable as $type => $subtypes) {
 		$options = array_merge($options, $type_subtype_options);
 		$count = elgg_count_entities($options);
 		$totals['update'] += $count;
-		$row[] = elgg_format_element('td', ['class' => 'center'], $format_number($count));
+		$row[] = elgg_format_element('td', ['class' => 'center'], elgg_number_format($count));
 		
 		// reindex
 		$options = opensearch_get_bulk_options('reindex');
@@ -82,7 +78,7 @@ foreach ($searchable as $type => $subtypes) {
 		}
 		
 		$totals['reindex'] += $count;
-		$row[] = elgg_format_element('td', ['class' => 'center'], $format_number($count));
+		$row[] = elgg_format_element('td', ['class' => 'center'], elgg_number_format($count));
 		
 		// reindex action
 		$link = elgg_view('output/url', [
@@ -110,10 +106,10 @@ $body = elgg_format_element('tbody', [], implode(PHP_EOL, $rows));
 
 $footer = [
 	elgg_format_element('th', [], elgg_echo('total')),
-	elgg_format_element('th', ['class' => 'center'], $format_number($totals['content'])),
-	elgg_format_element('th', ['class' => 'center'], $format_number($totals['new'])),
-	elgg_format_element('th', ['class' => 'center'], $format_number($totals['update'])),
-	elgg_format_element('th', ['class' => 'center'], $format_number($totals['reindex'])),
+	elgg_format_element('th', ['class' => 'center'], elgg_number_format($totals['content'])),
+	elgg_format_element('th', ['class' => 'center'], elgg_number_format($totals['new'])),
+	elgg_format_element('th', ['class' => 'center'], elgg_number_format($totals['update'])),
+	elgg_format_element('th', ['class' => 'center'], elgg_number_format($totals['reindex'])),
 	elgg_format_element('th', [], '&nbsp;'),
 ];
 $footer = elgg_format_element('tr', [], implode(PHP_EOL, $footer));

@@ -23,7 +23,7 @@ $content .= elgg_view('output/longtext', [
 ]) . '</td>';
 
 $count = elgg_count_entities($options);
-$content .= elgg_format_element('td', [], number_format($count, 0, elgg_echo('number_counter:decimal_separator'), elgg_echo('number_counter:thousands_separator')));
+$content .= elgg_format_element('td', [], elgg_number_format($count));
 $content .= '</tr>';
 
 $count = 0;
