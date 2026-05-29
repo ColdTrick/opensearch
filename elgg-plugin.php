@@ -9,7 +9,7 @@ require_once(__DIR__ . '/lib/functions.php');
 return [
 	'plugin' => [
 		'name' => 'OpenSearch',
-		'version' => '10.0',
+		'version' => '10.0.1',
 		'dependencies' => [
 			'search' => [
 				'position' => 'after',
