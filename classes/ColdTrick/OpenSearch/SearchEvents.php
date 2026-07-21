@@ -639,7 +639,11 @@ class SearchEvents {
 		
 		$queries = [];
 		foreach ($profile_field_filter as $field_name => $value) {
-			$value = strtolower($value);
+			if (!is_scalar($value)) {
+				continue;
+			}
+			
+			$value = strtolower((string) $value);
 			$value = str_replace('&amp;', '&', $value);
 			$value = str_replace('\\', ' ', $value);
 			$value = str_replace('/', ' ', $value);
