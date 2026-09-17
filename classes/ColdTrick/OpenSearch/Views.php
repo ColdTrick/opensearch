@@ -49,7 +49,7 @@ class Views {
 	 * @return null|array
 	 */
 	public static function allowBannedUsers(\Elgg\Event $event): ?array {
-		if (elgg_get_plugin_setting('search', 'opensearch') !== 'yes') {
+		if (!SearchEvents::handleSearch() || SearchEvents::isInAdminContext()) {
 			return null;
 		}
 		

@@ -489,7 +489,7 @@ class SearchEvents {
 	 *
 	 * @return bool
 	 */
-	protected static function handleSearch(): bool {
+	public static function handleSearch(): bool {
 		return elgg_get_plugin_setting('search', 'opensearch') === 'yes';
 	}
 	
@@ -498,7 +498,7 @@ class SearchEvents {
 	 *
 	 * @return bool
 	 */
-	protected static function isInAdminContext(): bool {
+	public static function isInAdminContext(): bool {
 		if (elgg_in_context('admin')) {
 			return true;
 		}
