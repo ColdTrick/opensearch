@@ -686,7 +686,7 @@ class SearchEvents {
 			return null;
 		}
 		
-		/* @var $service SearchService */
+		/** @var SearchService $service */
 		$service = $event->getValue();
 		
 		$service->getSearchParams()->addQuery($queries);

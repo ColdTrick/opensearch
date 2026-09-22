@@ -259,7 +259,7 @@ class Export {
 		]);
 		
 		$result = [];
-		/* @var $relationship \ElggRelationship */
+		/** @var \ElggRelationship $relationship */
 		foreach ($relationships as $relationship) {
 			$result[] = [
 				'id' => $relationship->id,

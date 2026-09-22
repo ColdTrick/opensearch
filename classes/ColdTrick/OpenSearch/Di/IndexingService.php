@@ -200,10 +200,10 @@ class IndexingService extends BaseClientService {
 			$index_entities = [];
 			$batch_size = (int) elgg_extract('batch_size', $options, 25);
 			
-			/* @var $entities \ElggBatch */
+			/** @var \ElggBatch $entities */
 			$entities = elgg_get_entities($options);
 			
-			/* @var $entity \ElggEntity */
+			/** @var \ElggEntity $entity */
 			foreach ($entities as $index => $entity) {
 				// is this entity prevented from being indexed
 				$event_params = [

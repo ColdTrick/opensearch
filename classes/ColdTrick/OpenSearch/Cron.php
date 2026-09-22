@@ -30,7 +30,7 @@ class Cron {
 			return;
 		}
 		
-		/* @var $logger \Elgg\Logger\Cron */
+		/** @var \Elgg\Logger\Cron $logger */
 		$logger = $event->getParam('logger');
 		$max_run_time = 30;
 		
@@ -75,7 +75,7 @@ class Cron {
 			return;
 		}
 		
-		/* @var $logger \Elgg\Logger\Cron */
+		/** @var \Elgg\Logger\Cron $logger */
 		$logger = $event->getParam('logger');
 		
 		// find documents in OpenSearch which don't exist in Elgg anymore
@@ -257,7 +257,7 @@ class Cron {
 					'limit' => false,
 					'batch' => true,
 				]);
-				/* @var $entity \ElggEntity */
+				/** @var \ElggEntity $entity */
 				foreach ($reindex as $entity) {
 					// is this entity prevented from being indexed
 					$event_params = [
