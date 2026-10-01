@@ -1,6 +1,10 @@
 Version history
 ===============
 
+10.0.3 (2026-10-01):
+
+- fixed: unexpected search behaviour in livesearch
+
 10.0.2 (2026-07-30):
 
 - fixed: handle invalid profile fields search values
