@@ -37,6 +37,7 @@ class Entity {
 				'segments' => 'opensearch/inspect',
 				'guid' => $entity->guid,
 			]),
+			'parent_name' => 'admin',
 		]);
 		
 		return $result;
