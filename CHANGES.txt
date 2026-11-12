@@ -1,6 +1,10 @@
 Version history
 ===============
 
+11.0 (2026-11-12):
+
+- changed: minimal Elgg version to 7.1
+
 10.0.3 (2026-10-01):
 
 - fixed: unexpected search behaviour in livesearch
